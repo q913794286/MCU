@@ -1,0 +1,111 @@
+C51 COMPILER V9.01   PACKET                                                                07/19/2019 13:06:28 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE PACKET
+OBJECT MODULE PLACED IN .\list\packet.obj
+COMPILER INVOKED BY: D:\Program Files (x86)\Keil\C51\BIN\C51.EXE app\service\packet\packet.c LARGE BROWSE INCDIR(.\stcli
+                    -b;..\stc_lib;.\app;.\app\service\app;.\app\service\AES128;.\app\service\CRC16;.\app\service\packet) DEBUG OBJECTEXTEND P
+                    -RINT(.\list\packet.lst) TABS(2) OBJECT(.\list\packet.obj)
+
+line level    source
+
+   1          #include "config.h"
+   2          #include "packet.h"
+   3          #include "usart1.h"
+   4          #include "sys_clock.h"
+   5          #include "crc16.h"
+   6          
+   7          #if 1
+   8          //01 03 00 00 00 06 c5 c8
+   9          uint8_t code send_cmd[]={0x01,0x03,0x00,0x00,0x00,0x06,0xc5,0xc8}; //查询所有数据
+  10          /*返回实例：01 03 0C 09 C4 1B 8F 1F 40 01 90 01 1E 00 00 96 A7 */
+  11          void RS485_coil()
+  12          {
+  13   1          static uint32_t timer0_1=0, timer0_2=0;
+  14   1          timer0_1 = get_sys_ticks();
+  15   1          if((timer0_1 - timer0_2)>1000)  //每 30秒轮询一次
+  16   1          { 
+  17   2            /*执行函数*/
+  18   2            Printf1(send_cmd,sizeof(send_cmd));
+  19   2            /**/
+  20   2            timer0_2 = get_sys_ticks(); 
+  21   2          }
+  22   1      }
+  23          uint8_t code DAT[]  = "\"data\":{"; 
+  24          uint8_t code T[]  = "\"tmp\":";      //温度
+  25          uint8_t code PH[] = "\"PH\":";     // PH
+  26          uint8_t code DO[] = "\"DO\":";     //余氯
+  27          uint8_t code NTU[]= "\"NTU\":";    //浊度
+  28          uint8_t code GC[] = "\"GC\":";     //电导
+  29          //char text1[]="\n{\n\"name\": \"Jack (\\\"Bee\\\") Nimble\", \n\"format\": {\"type\":       \"rect\", \n\
+             -"width\":      1920, \n\"height\":     1080, \n\"interlace\":  false,\"frame rate\": 24\n}\n}";
+  30          void Unpack(uint8_t byte)
+  31          {
+  32   1        static uint16_t received_bytes = 0;
+  33   1        uint8_t read_index = 0;
+  34   1        struct frame *packet;
+  35   1        uint16_t crc;
+  36   1        
+  37   1        if(received_bytes >= sizeof(RX1_Buffer)) received_bytes=0;
+  38   1        RX1_Buffer[received_bytes] = byte;
+  39   1        received_bytes++;
+  40   1        
+  41   1        while(received_bytes>=17)
+  42   1        {  
+  43   2           
+  44   2           packet = (struct frame*) &RX1_Buffer[read_index];
+  45   2      //     packet->data12 = (uint8_t *)malloc(sizeof(uint8_t)*12);
+  46   2           if(packet->addr == 0x01 && packet->func == 0x03)
+  47   2           {
+  48   3             if(packet->data_size + 5 > received_bytes) return;
+  49   3             crc = crc16(&RX1_Buffer[read_index],packet->data_size+3);
+  50   3      //       TX1_write2buff(crc>>8&0xff);
+  51   3      //       TX1_write2buff(crc&0xff);
+  52   3      //       TX1_write2buff(packet->crcH);
+C51 COMPILER V9.01   PACKET                                                                07/19/2019 13:06:28 PAGE 2   
+
+  53   3      //       TX1_write2buff(packet->crcL);
+  54   3             if((packet->crcL == (crc>>8&0xff))&&(packet->crcH == (crc&0xff)))
+  55   3             {
+  56   4      //        printf(text1);
+  57   4                UsartX_send = 2;
+  58   4                printf("%s","{");
+  59   4                printf("\"devid\":\"WH%s\",",chip_ID);
+  60   4                printf("%s",DAT);
+  61   4                printf("%s%.2f,",T,(float)(packet->data12[0]<<8|packet->data12[1])/100);
+  62   4                printf("%s%.3f,",PH,(float)(packet->data12[2]<<8|packet->data12[3])/1000);
+  63   4                printf("%s%.3f,",DO,(float)(packet->data12[4]<<8|packet->data12[5])/1000);
+  64   4                printf("%s%.2f,",NTU,(float)(packet->data12[6]<<8|packet->data12[7])/100); 
+  65   4                printf("%s%d",GC,(int)(packet->data12[8]<<8|packet->data12[9]));
+  66   4                printf("%s","}");
+  67   4                printf("%s","}");
+  68   4                UsartX_send = 1;
+  69   4                
+  70   4                received_bytes -= packet->data_size+5;
+  71   4                read_index += packet->data_size+5;
+  72   4                continue;
+  73   4             }       
+  74   3           }
+  75   2           received_bytes--;
+  76   2           read_index++;
+  77   2           
+  78   2        }
+  79   1        if(read_index != 0)
+  80   1              memmove(RX1_Buffer, &RX1_Buffer [read_index], received_bytes);
+  81   1      }
+  82          
+  83          #endif
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    927    ----
+   CONSTANT SIZE    =     93    ----
+   XDATA SIZE       =     10       6
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

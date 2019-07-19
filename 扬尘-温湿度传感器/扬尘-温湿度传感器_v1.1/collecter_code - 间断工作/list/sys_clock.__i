@@ -1,0 +1,1 @@
+"app\sys_clock.c" LARGE BROWSE INCDIR(.\stclib;..\stc_lib;.\app;.\app\service\app;.\app\service\AES128;.\app\service\CRC16;.\app\service\GPRS) DEBUG OBJECTEXTEND CODE LISTINCLUDE SYMBOLS PRINT(.\list\sys_clock.lst) TABS (2) PREPRINT(.\list\sys_clock.i) OBJECT(.\list\sys_clock.obj)

@@ -1,0 +1,1 @@
+"app\service\GPRS\GPRS.c" LARGE BROWSE INCDIR(.\stclib;..\stc_lib;.\app;.\app\service\app;.\app\service\AES128;.\app\service\CRC16;.\app\service\GPRS;.\app\service\cjsion;.\app\service\print) DEBUG OBJECTEXTEND CODE LISTINCLUDE SYMBOLS PRINT(.\list\GPRS.lst) TABS (2) PREPRINT(.\list\GPRS.i) OBJECT(.\list\GPRS.obj)

@@ -1,0 +1,116 @@
+C51 COMPILER V9.01   RELAY                                                                 11/27/2018 17:38:26 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE RELAY
+OBJECT MODULE PLACED IN .\list\relay.obj
+COMPILER INVOKED BY: D:\Program Files (x86)\Keil\C51\BIN\C51.EXE app\service\relay\relay.c LARGE BROWSE INCDIR(.\stclib;
+                    -..\stc_lib;.\app;.\app\service\webserver;.\drivers\enc28j60;.\uip\c51;.\uip;.\app\service\idle;.\app\service\client;.\ap
+                    -p\service\reader;.\app\service\relay;.\app\service\wr_ip) DEBUG OBJECTEXTEND PRINT(.\list\relay.lst) OBJECT(.\list\relay
+                    -.obj)
+
+line level    source
+
+   1          //
+   2          // Created by anche on 2017/7/26.
+   3          
+   4          
+   5          #include "relay.h"
+*** WARNING C318 IN LINE 10 OF APP\SERVICE\RELAY\RELAY.H: can't open file 'timer.h'
+   6          #include <gpio.h>
+   7          #include "pins.h"
+*** WARNING C318 IN LINE 7 OF app\service\relay\relay.c: can't open file 'pins.h'
+   8          
+   9          
+  10          
+  11          static volatile interval_t relay_cb[RELAYS];
+  12          
+  13          void release_relay_in(uint8_t ch, uint16_t ms) {
+  14   1      
+  15   1              uint16_t current;
+  16   1              if(ch >= RELAYS) return;
+  17   1                      
+  18   1              current = get_sys_ticks();
+*** WARNING C206 IN LINE 18 OF APP\SERVICE\RELAY\RELAY.C: 'get_sys_ticks': missing function-prototype
+  19   1              relay_cb[ch].open_in = 1;   //打开砸机
+  20   1              
+  21   1              switch(ch)
+  22   1              {
+  23   2                      case 0x00:
+  24   2                                              relay_cb[0].start = current;
+  25   2                                              relay_cb[0].expired_in = ms / 10;
+  26   2                                              break;
+  27   2                      case 0x01:
+  28   2                                              relay_cb[1].start = current;
+  29   2                                              relay_cb[1].expired_in = ms / 10;
+  30   2                                              break;
+  31   2              }
+  32   1      }
+  33          
+  34          void relay_control(uint8_t ch, uint8_t state) {
+  35   1      
+  36   1              
+  37   1              relay_cb[ch].open_in = 0;   //关闭砸机
+  38   1      
+  39   1              switch(ch) 
+  40   1              {
+  41   2                      case 0:
+  42   2                                      if(state) 
+  43   2                                      {
+  44   3                                              RELAY_ENTER_ON; 
+*** ERROR C202 IN LINE 44 OF APP\SERVICE\RELAY\RELAY.C: 'RELAY_ENTER_ON': undefined identifier
+  45   3                                              RELAY_LEDI_ON;
+*** ERROR C202 IN LINE 45 OF APP\SERVICE\RELAY\RELAY.C: 'RELAY_LEDI_ON': undefined identifier
+  46   3                                      }
+  47   2                                      else
+C51 COMPILER V9.01   RELAY                                                                 11/27/2018 17:38:26 PAGE 2   
+
+  48   2                                      {
+  49   3                                              RELAY_ENTER_OFF; 
+*** ERROR C202 IN LINE 49 OF APP\SERVICE\RELAY\RELAY.C: 'RELAY_ENTER_OFF': undefined identifier
+  50   3                                              RELAY_LEDI_OFF;
+*** ERROR C202 IN LINE 50 OF APP\SERVICE\RELAY\RELAY.C: 'RELAY_LEDI_OFF': undefined identifier
+  51   3                                      }
+  52   2                                      break;
+  53   2                      case 1:
+  54   2                                      if(state)
+  55   2                                      {
+  56   3                                              RELAY_EXIT_ON; 
+*** ERROR C202 IN LINE 56 OF APP\SERVICE\RELAY\RELAY.C: 'RELAY_EXIT_ON': undefined identifier
+  57   3                                              RELAY_LEDO_ON;
+*** ERROR C202 IN LINE 57 OF APP\SERVICE\RELAY\RELAY.C: 'RELAY_LEDO_ON': undefined identifier
+  58   3                                      }
+  59   2                                      else 
+  60   2                                      {
+  61   3                                              RELAY_EXIT_OFF;
+*** ERROR C202 IN LINE 61 OF APP\SERVICE\RELAY\RELAY.C: 'RELAY_EXIT_OFF': undefined identifier
+  62   3                                              RELAY_LEDO_OFF;
+*** ERROR C202 IN LINE 62 OF APP\SERVICE\RELAY\RELAY.C: 'RELAY_LEDO_OFF': undefined identifier
+  63   3                                      }
+  64   2                                      break;
+  65   2              }
+  66   1      //   printf("关闭进的砸机");
+  67   1      }
+  68          
+  69          
+  70          void poll_relays(void) 
+  71          {
+  72   1              uint8_t i;
+  73   1              uint16_t current;
+  74   1              
+  75   1              for(i=0; i<RELAYS; i++) 
+  76   1              {
+  77   2                      if(relay_cb[i].open_in)
+  78   2                      {
+  79   3                              current = get_sys_ticks();
+  80   3                              if((current - relay_cb[i].start) > relay_cb[i].expired_in) 
+  81   3                              {
+  82   4                                      relay_control(i,0);    //关闭砸机
+  83   4                                      // printf("关闭砸机\n");
+  84   4                              }
+  85   3                      }
+  86   2              }
+  87   1      }
+  88          
+  89          
+
+C51 COMPILATION COMPLETE.  3 WARNING(S),  8 ERROR(S)

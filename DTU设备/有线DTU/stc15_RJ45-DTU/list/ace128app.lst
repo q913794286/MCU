@@ -1,0 +1,108 @@
+C51 COMPILER V9.01   ACE128APP                                                             11/29/2018 15:49:24 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE ACE128APP
+OBJECT MODULE PLACED IN .\list\ace128app.obj
+COMPILER INVOKED BY: D:\Program Files (x86)\Keil\C51\BIN\C51.EXE app\service\AES128\ace128app.c LARGE BROWSE INCDIR(.\st
+                    -clib;..\stc_lib;.\app;.\app\service\app;.\app\service\AES128;.\app\service\CRC16) DEBUG OBJECTEXTEND PRINT(.\list\ace128
+                    -app.lst) OBJECT(.\list\ace128app.obj)
+
+line level    source
+
+   1                                                                     
+   2          #include <stdio.h>
+   3          #include <string.h>
+   4          #include <stdint.h>
+   5          #include "aes.h"
+   6          #include "aes128app.h"
+*** WARNING C318 IN LINE 6 OF app\service\AES128\ace128app.c: can't open file 'aes128app.h'
+   7          
+   8          // Enable both ECB and CBC mode. Note this can be done before including aes.h or at compile-time.
+   9          // E.g. with GCC by using the -D flag: gcc -c aes.c -DCBC=0 -DECB=1
+  10          #define CBC 1
+  11          //#define ECB 1
+  12          
+  13          #include "aes.h"
+  14          
+  15           void phex(uint8_t* str);
+  16          
+  17          
+  18          
+  19          
+  20          
+  21          int ace128(void)
+  22          {
+  23   1      //    app_encrypt_cbc();
+  24   1      //    app_decrypt_cbc();
+  25   1          
+  26   1          return 0;
+  27   1      }
+  28          
+  29          
+  30          
+  31          // prints string as hex
+  32          void phex(uint8_t* str)
+  33          {
+  34   1          unsigned char i;
+  35   1          for(i = 0; i < 16; ++i)
+  36   1              printf("%.2x", str[i]);
+  37   1          printf("\n");
+  38   1      }
+  39          
+  40          
+  41          /*
+  42          CBC解密
+  43          */
+  44          int app_decrypt_cbc(uint8_t *key, uint8_t *iv, uint8_t *in, uint8_t *out)
+  45          {
+  46   1              uint16_t len;
+  47   1              uint16_t cnt, Sa, Re;
+  48   1              //确保数组大小为16的倍数
+  49   1              len = sizeof(in);
+  50   1              Sa = len/16;
+  51   1              Re = len%16;
+  52   1              for(cnt=len; cnt<(Sa+1)*16; cnt++)
+C51 COMPILER V9.01   ACE128APP                                                             11/29/2018 15:49:24 PAGE 2   
+
+  53   1              {in[cnt]=Re;}
+  54   1              AES128_CBC_decrypt_buffer(out+0, in+0,  64, key, iv);
+  55   1              printf("AES128_CBC_decrypt SUCCESS!\n");
+  56   1              return len;
+  57   1      }
+  58          
+  59          /*
+  60          CBC加密
+  61          */
+  62          int app_encrypt_cbc(uint8_t *key, uint8_t *iv, uint8_t *in, uint8_t *out)
+  63          {
+  64   1              uint16_t len;
+  65   1              uint16_t cnt, Sa, Re;
+  66   1              //确保数组大小为16的倍数
+  67   1              len = sizeof(in);
+  68   1              Sa = len/16;
+  69   1              Re = len%16;
+  70   1              for(cnt=len; cnt<(Sa+1)*16; cnt++)
+  71   1              {in[cnt]=Re;}
+  72   1      
+  73   1              AES128_CBC_encrypt_buffer(out, in, cnt, key, iv);
+  74   1          printf("AES128_CBC_encrypt SUCCESS!\n");
+  75   1      
+  76   1              return len;
+  77   1      }
+  78          
+  79          
+  80          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    532    ----
+   CONSTANT SIZE    =     65    ----
+   XDATA SIZE       =   ----      40
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

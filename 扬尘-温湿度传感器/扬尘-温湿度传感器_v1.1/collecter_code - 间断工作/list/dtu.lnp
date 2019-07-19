@@ -1,0 +1,14 @@
+".\list\main.obj",
+".\list\function.obj",
+".\list\sys_clock.obj",
+".\list\mystring.obj",
+".\list\packet_dust.obj",
+".\list\packet_route.obj",
+".\list\delay.obj",
+".\list\GPIO.obj",
+".\list\USART1.obj",
+".\list\stc_timer.obj",
+".\list\eeprom.obj" 
+TO ".\list\dtu" 
+PRINT(".\list\dtu.m51") IXREF 
+DISABLEWARNING (16) 

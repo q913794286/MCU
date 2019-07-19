@@ -1,0 +1,1 @@
+"app\service\app\function.c" LARGE BROWSE INCDIR(.\stclib;..\stc_lib;.\app;.\app\service\app;.\app\service\AES128;.\app\service\CRC16) DEBUG OBJECTEXTEND PRINT(.\list\function.lst) OBJECT(.\list\function.obj)

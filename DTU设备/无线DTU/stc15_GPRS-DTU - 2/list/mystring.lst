@@ -1,0 +1,1102 @@
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MYSTRING
+OBJECT MODULE PLACED IN .\list\mystring.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE app\mystring.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(.\stclib;..\stc_lib
+                    -;.\app;.\app\service\app;.\app\service\AES128;.\app\service\CRC16;.\app\service\GPRS) DEBUG OBJECTEXTEND CODE LISTINCLUD
+                    -E SYMBOLS PRINT(.\list\mystring.lst) TABS(2) PREPRINT(.\list\mystring.i) OBJECT(.\list\mystring.obj)
+
+line level    source
+
+   1          #include "mystring.h"
+   1      =1  #ifndef __MYSTRING__h
+   2      =1  #define __MYSTRING__H
+   3      =1  
+   4      =1  
+   5      =1  char *strpbrk(const char *cs, const char *ct);
+   6      =1  char *strsep(char **s, const char *ct);
+   7      =1  char * strtrim(char *s);
+   8      =1  void trim(char *strIn, char *strOut);
+   9      =1  char * strtrim_fast(char *s) ;
+  10      =1  #endif
+   2          
+   3          
+   4          #define NULL 0
+   5          /**
+   6           * strpbrk - Find the first occurrence of a set of characters
+   7           * @cs: The string to be searched
+   8           * @ct: The characters to search for
+   9           */
+  10          char *strpbrk(const char *cs, const char *ct)
+  11          {
+  12   1          const char *sc1, *sc2;
+  13   1      
+  14   1          for (sc1 = cs; *sc1 != '\0'; ++sc1) {
+  15   2              for (sc2 = ct; *sc2 != '\0'; ++sc2) {
+  16   3                  if (*sc1 == *sc2)
+  17   3                      return (char *)sc1;
+  18   3              }
+  19   2          }
+  20   1          return NULL;
+  21   1      }
+  22          
+  23          
+  24          /**
+  25           * strsep - Split a string into tokens
+  26           * @s: The string to be searched
+  27           * @ct: The characters to search for
+  28           *
+  29           * strsep() updates @s to point after the token, ready for the next call.
+  30           *
+  31           * It returns empty tokens, too, behaving exactly like the libc function
+  32           * of that name. In fact, it was stolen from glibc2 and de-fancy-fied.
+  33           * Same semantics, slimmer shape. ;)
+  34           */
+  35          char *strsep(char **s, const char *ct)
+  36          {
+  37   1          char *sbegin = *s;
+  38   1          char *end;
+  39   1      
+  40   1          if (sbegin == NULL)
+  41   1              return NULL;
+  42   1      
+  43   1          end = strpbrk(sbegin, ct);
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 2   
+
+  44   1          if (end)
+  45   1              *end++ = '\0';
+  46   1          *s = end;
+  47   1          return sbegin;
+  48   1      }
+  49          
+  50          //char *rtrim(char *str)
+  51          //{
+  52          //    if (str == NULL || *str == '\0')
+  53          //    {
+  54          //        return str;
+  55          //    }
+  56          //
+  57          //    int len = strlen(str);
+  58          //    char *p = str + len - 1;
+  59          //    while (p >= str  && isspace(*p))
+  60          //    {
+  61          //        *p = '\0';
+  62          //        --p;
+  63          //    }
+  64          //
+  65          //    return str;
+  66          //}
+  67          
+  68          /*
+  69           * strtrim 去掉字符串前后的空格和制表符
+  70           */ 
+  71          
+  72          #include<stdlib.h>
+   1      =1  /*--------------------------------------------------------------------------
+   2      =1  STDLIB.H
+   3      =1  
+   4      =1  Standard functions.
+   5      =1  Copyright (c) 1988-2005 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =1  All rights reserved.
+   7      =1  --------------------------------------------------------------------------*/
+   8      =1  
+   9      =1  #ifndef __STDLIB_H__
+  10      =1  #define __STDLIB_H__
+  11      =1  
+  12      =1  #ifndef _SIZE_T
+  13      =1   #define _SIZE_T
+  14      =1   typedef unsigned int size_t;
+  15      =1  #endif
+  16      =1  
+  17      =1  #ifndef NULL
+           =1  #define NULL ((void *) 0L)
+           =1 #endif
+  20      =1  
+  21      =1  #ifndef _WCHAR_T_DEFINED_
+  22      =1  #define _WCHAR_T_DEFINED_
+  23      =1  typedef char wchar_t;
+  24      =1  #endif
+  25      =1  
+  26      =1  #ifndef RAND_MAX
+  27      =1   #define RAND_MAX  32767u
+  28      =1  #endif
+  29      =1  
+  30      =1  #pragma SAVE
+  31      =1  #pragma REGPARMS
+  32      =1  
+  33      =1  extern int    abs  (int   val);
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 3   
+
+  34      =1  extern long  labs  (long  val);
+  35      =1  
+  36      =1  extern float atof (char *s1);
+  37      =1  extern long  atol (char *s1);
+  38      =1  extern int   atoi (char *s1);
+  39      =1  extern int   rand ();
+  40      =1  extern void  srand (int);
+  41      =1  
+  42      =1  extern float         strtod  (char *, char **);
+  43      =1  extern long          strtol  (char *, char **, unsigned char);
+  44      =1  extern unsigned long strtoul (char *, char **, unsigned char);
+  45      =1  
+  46      =1  #define _MALLOC_MEM_  xdata
+  47      =1  
+  48      =1  extern void init_mempool          (void _MALLOC_MEM_ *p, unsigned int size);
+  49      =1  extern void _MALLOC_MEM_ *malloc  (unsigned int size);
+  50      =1  extern void free                  (void _MALLOC_MEM_ *p);
+  51      =1  extern void _MALLOC_MEM_ *realloc (void _MALLOC_MEM_ *p, unsigned int size);
+  52      =1  extern void _MALLOC_MEM_ *calloc  (unsigned int size, unsigned int len);
+  53      =1  
+  54      =1  #pragma RESTORE
+  55      =1  
+  56      =1  #endif
+  73          #include<stdio.h>
+   1      =1  /*--------------------------------------------------------------------------
+   2      =1  STDIO.H
+   3      =1  
+   4      =1  Prototypes for standard I/O functions.
+   5      =1  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =1  All rights reserved.
+   7      =1  --------------------------------------------------------------------------*/
+   8      =1  
+   9      =1  #ifndef __STDIO_H__
+  10      =1  #define __STDIO_H__
+  11      =1  
+  12      =1  #ifndef EOF
+  13      =1   #define EOF -1
+  14      =1  #endif
+  15      =1  
+  16      =1  #ifndef NULL
+           =1  #define NULL ((void *) 0)
+           =1 #endif
+  19      =1  
+  20      =1  #ifndef _SIZE_T
+           =1  #define _SIZE_T
+           =1  typedef unsigned int size_t;
+           =1 #endif
+  24      =1  
+  25      =1  #pragma SAVE
+  26      =1  #pragma REGPARMS
+  27      =1  extern char _getkey (void);
+  28      =1  extern char getchar (void);
+  29      =1  extern char ungetchar (char);
+  30      =1  extern char putchar (char);
+  31      =1  extern int printf   (const char *, ...);
+  32      =1  extern int sprintf  (char *, const char *, ...);
+  33      =1  extern int vprintf  (const char *, char *);
+  34      =1  extern int vsprintf (char *, const char *, char *);
+  35      =1  extern char *gets (char *, int n);
+  36      =1  extern int scanf (const char *, ...);
+  37      =1  extern int sscanf (char *, const char *, ...);
+  38      =1  extern int puts (const char *);
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 4   
+
+  39      =1  
+  40      =1  #pragma RESTORE
+  41      =1  
+  42      =1  #endif
+  43      =1  
+  74          #include<string.h>
+   1      =1  /*--------------------------------------------------------------------------
+   2      =1  STRING.H
+   3      =1  
+   4      =1  String functions.
+   5      =1  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =1  All rights reserved.
+   7      =1  --------------------------------------------------------------------------*/
+   8      =1  
+   9      =1  #ifndef __STRING_H__
+  10      =1  #define __STRING_H__
+  11      =1  
+  12      =1  #ifndef _SIZE_T
+           =1  #define _SIZE_T
+           =1  typedef unsigned int size_t;
+           =1 #endif
+  16      =1  
+  17      =1  #ifndef NULL
+           =1  #define NULL ((void *) 0L)
+           =1 #endif
+  20      =1  
+  21      =1  #pragma SAVE
+  22      =1  #pragma REGPARMS
+  23      =1  extern char *strcat (char *s1, char *s2);
+  24      =1  extern char *strncat (char *s1, char *s2, int n);
+  25      =1  
+  26      =1  extern char strcmp (char *s1, char *s2);
+  27      =1  extern char strncmp (char *s1, char *s2, int n);
+  28      =1  
+  29      =1  extern char *strcpy (char *s1, char *s2);
+  30      =1  extern char *strncpy (char *s1, char *s2, int n);
+  31      =1  
+  32      =1  extern int strlen (char *);
+  33      =1  
+  34      =1  extern char *strchr (const char *s, char c);
+  35      =1  extern int strpos (const char *s, char c);
+  36      =1  extern char *strrchr (const char *s, char c);
+  37      =1  extern int strrpos (const char *s, char c);
+  38      =1  
+  39      =1  extern int strspn (char *s, char *set);
+  40      =1  extern int strcspn (char *s, char *set);
+  41      =1  extern char *strpbrk (char *s, char *set);
+  42      =1  extern char *strrpbrk (char *s, char *set);
+  43      =1  extern char *strstr  (char *s, char *sub);
+  44      =1  extern char *strtok  (char *str, const char *set);
+  45      =1  
+  46      =1  extern char memcmp (void *s1, void *s2, int n);
+  47      =1  extern void *memcpy (void *s1, void *s2, int n);
+  48      =1  extern void *memchr (void *s, char val, int n);
+  49      =1  extern void *memccpy (void *s1, void *s2, char val, int n);
+  50      =1  extern void *memmove (void *s1, void *s2, int n);
+  51      =1  extern void *memset  (void *s, char val, int n);
+  52      =1  #pragma RESTORE
+  53      =1  
+  54      =1  #endif
+  75          
+  76          char * strtrim(char *s) {
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 5   
+
+  77   1          char *p = s;
+  78   1          char *q = s;
+  79   1          while (*p==' ' || *p=='\t') ++p;
+  80   1          while (*q++=*p++)
+  81   1              ;
+  82   1          q -= 2;
+  83   1          while (*q==' ' || *q=='\t') --q;
+  84   1          *(q+1) ='\0';
+  85   1          return s;
+  86   1      }
+  87          
+  88          char * strtrim_fast(char *s) {
+  89   1          char *p = s;
+  90   1          char *q = s;
+  91   1          char *end = s;
+  92   1          while (*p==' ' || *p=='\t') ++p;
+  93   1          while (*q = *p) {
+  94   2              if (*q!=' ' && *q!='\t') end = q+1;
+  95   2              ++q, ++p;
+  96   2          }
+  97   1          *end = '\0';
+  98   1      
+  99   1          return s;
+ 100   1      }
+ 101          
+ 102          void trim(char *strIn, char *strOut){
+ 103   1       
+ 104   1              int i, j ;
+ 105   1       
+ 106   1              i = 0;
+ 107   1       
+ 108   1              j = strlen(strIn) - 1;
+ 109   1       
+ 110   1              while(strIn[i] == ' ' || strIn[i] == '\t')
+ 111   1                      ++i;
+ 112   1       
+ 113   1              while(strIn[j] == ' ' || strIn[j] == '\t')
+ 114   1                      --j;
+ 115   1              strncpy(strOut, strIn + i , j - i + 1);
+ 116   1              strOut[j - i + 1] = '\0';
+ 117   1      }
+ 118          
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 6   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _strpbrk (BEGIN)
+                                           ; SOURCE LINE # 10
+;---- Variable 'cs' assigned to Register 'R1/R2/R3' ----
+                                           ; SOURCE LINE # 11
+                                           ; SOURCE LINE # 14
+0000 900000      R     MOV     DPTR,#sc1
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+000B         ?C0001:
+000B 900000      R     MOV     DPTR,#sc1
+000E E0                MOVX    A,@DPTR
+000F FB                MOV     R3,A
+0010 A3                INC     DPTR
+0011 E0                MOVX    A,@DPTR
+0012 FA                MOV     R2,A
+0013 A3                INC     DPTR
+0014 E0                MOVX    A,@DPTR
+0015 F9                MOV     R1,A
+0016 120000      E     LCALL   ?C?CLDPTR
+0019 6050              JZ      ?C0002
+                                           ; SOURCE LINE # 15
+001B 900000      R     MOV     DPTR,#ct
+001E E0                MOVX    A,@DPTR
+001F F9                MOV     R1,A
+0020 A3                INC     DPTR
+0021 E0                MOVX    A,@DPTR
+0022 FA                MOV     R2,A
+0023 A3                INC     DPTR
+0024 E0                MOVX    A,@DPTR
+0025 900000      R     MOV     DPTR,#sc2
+0028 C9                XCH     A,R1
+0029 F0                MOVX    @DPTR,A
+002A A3                INC     DPTR
+002B EA                MOV     A,R2
+002C F0                MOVX    @DPTR,A
+002D A3                INC     DPTR
+002E E9                MOV     A,R1
+002F F0                MOVX    @DPTR,A
+0030         ?C0004:
+0030 900000      R     MOV     DPTR,#sc2
+0033 E0                MOVX    A,@DPTR
+0034 FB                MOV     R3,A
+0035 A3                INC     DPTR
+0036 E0                MOVX    A,@DPTR
+0037 FA                MOV     R2,A
+0038 A3                INC     DPTR
+0039 E0                MOVX    A,@DPTR
+003A F9                MOV     R1,A
+003B 120000      E     LCALL   ?C?CLDPTR
+003E FF                MOV     R7,A
+003F 601E              JZ      ?C0003
+                                           ; SOURCE LINE # 16
+0041 900000      R     MOV     DPTR,#sc1
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 7   
+
+0044 E0                MOVX    A,@DPTR
+0045 FB                MOV     R3,A
+0046 A3                INC     DPTR
+0047 E0                MOVX    A,@DPTR
+0048 FA                MOV     R2,A
+0049 A3                INC     DPTR
+004A E0                MOVX    A,@DPTR
+004B F9                MOV     R1,A
+004C 120000      E     LCALL   ?C?CLDPTR
+004F B50701            CJNE    A,AR7,?C0006
+                                           ; SOURCE LINE # 17
+0052 22                RET     
+                                           ; SOURCE LINE # 18
+0053         ?C0006:
+0053 900000      R     MOV     DPTR,#sc2+01H
+0056 E4                CLR     A
+0057 75F001            MOV     B,#01H
+005A 120000      E     LCALL   ?C?IILDX
+005D 80D1              SJMP    ?C0004
+                                           ; SOURCE LINE # 19
+005F         ?C0003:
+005F 900000      R     MOV     DPTR,#sc1+01H
+0062 E4                CLR     A
+0063 75F001            MOV     B,#01H
+0066 120000      E     LCALL   ?C?IILDX
+0069 80A0              SJMP    ?C0001
+006B         ?C0002:
+                                           ; SOURCE LINE # 20
+006B 7B00              MOV     R3,#00H
+006D 7A00              MOV     R2,#00H
+006F 7900              MOV     R1,#00H
+                                           ; SOURCE LINE # 21
+0071         ?C0008:
+0071 22                RET     
+             ; FUNCTION _strpbrk (END)
+
+             ; FUNCTION _strsep (BEGIN)
+                                           ; SOURCE LINE # 35
+0000 900000      R     MOV     DPTR,#s
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 36
+                                           ; SOURCE LINE # 37
+000B 120000      E     LCALL   ?C?PLDPTR
+000E 900000      R     MOV     DPTR,#sbegin
+0011 EB                MOV     A,R3
+0012 F0                MOVX    @DPTR,A
+0013 A3                INC     DPTR
+0014 EA                MOV     A,R2
+0015 F0                MOVX    @DPTR,A
+0016 A3                INC     DPTR
+0017 E9                MOV     A,R1
+0018 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 40
+0019 AE02              MOV     R6,AR2
+001B 4E                ORL     A,R6
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 8   
+
+001C 7004              JNZ     ?C0009
+                                           ; SOURCE LINE # 41
+001E FB                MOV     R3,A
+001F FA                MOV     R2,A
+0020 F9                MOV     R1,A
+0021 22                RET     
+0022         ?C0009:
+                                           ; SOURCE LINE # 43
+0022 900000      R     MOV     DPTR,#ct
+0025 E0                MOVX    A,@DPTR
+0026 F9                MOV     R1,A
+0027 A3                INC     DPTR
+0028 E0                MOVX    A,@DPTR
+0029 FA                MOV     R2,A
+002A A3                INC     DPTR
+002B E0                MOVX    A,@DPTR
+002C 900000      R     MOV     DPTR,#?_strpbrk?BYTE+03H
+002F C9                XCH     A,R1
+0030 F0                MOVX    @DPTR,A
+0031 A3                INC     DPTR
+0032 EA                MOV     A,R2
+0033 F0                MOVX    @DPTR,A
+0034 A3                INC     DPTR
+0035 E9                MOV     A,R1
+0036 F0                MOVX    @DPTR,A
+0037 900000      R     MOV     DPTR,#sbegin
+003A E0                MOVX    A,@DPTR
+003B FB                MOV     R3,A
+003C A3                INC     DPTR
+003D E0                MOVX    A,@DPTR
+003E FA                MOV     R2,A
+003F A3                INC     DPTR
+0040 E0                MOVX    A,@DPTR
+0041 F9                MOV     R1,A
+0042 120000      R     LCALL   _strpbrk
+0045 900000      R     MOV     DPTR,#end
+0048 EB                MOV     A,R3
+0049 F0                MOVX    @DPTR,A
+004A A3                INC     DPTR
+004B EA                MOV     A,R2
+004C F0                MOVX    @DPTR,A
+004D A3                INC     DPTR
+004E E9                MOV     A,R1
+004F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 44
+0050 4A                ORL     A,R2
+0051 4B                ORL     A,R3
+0052 6014              JZ      ?C0011
+                                           ; SOURCE LINE # 45
+0054 900000      R     MOV     DPTR,#end
+0057 E0                MOVX    A,@DPTR
+0058 FB                MOV     R3,A
+0059 A3                INC     DPTR
+005A E4                CLR     A
+005B 75F001            MOV     B,#01H
+005E 120000      E     LCALL   ?C?ILDIX
+0061 A9F0              MOV     R1,B
+0063 FA                MOV     R2,A
+0064 E4                CLR     A
+0065 120000      E     LCALL   ?C?CSTPTR
+0068         ?C0011:
+                                           ; SOURCE LINE # 46
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 9   
+
+0068 900000      R     MOV     DPTR,#end
+006B E0                MOVX    A,@DPTR
+006C FB                MOV     R3,A
+006D A3                INC     DPTR
+006E E0                MOVX    A,@DPTR
+006F FA                MOV     R2,A
+0070 A3                INC     DPTR
+0071 E0                MOVX    A,@DPTR
+0072 F9                MOV     R1,A
+0073 C003              PUSH    AR3
+0075 C002              PUSH    AR2
+0077 C001              PUSH    AR1
+0079 900000      R     MOV     DPTR,#s
+007C E0                MOVX    A,@DPTR
+007D FB                MOV     R3,A
+007E A3                INC     DPTR
+007F E0                MOVX    A,@DPTR
+0080 FA                MOV     R2,A
+0081 A3                INC     DPTR
+0082 E0                MOVX    A,@DPTR
+0083 F9                MOV     R1,A
+0084 120000      E     LCALL   ?C?PSTPTR
+                                           ; SOURCE LINE # 47
+0087 900000      R     MOV     DPTR,#sbegin
+008A E0                MOVX    A,@DPTR
+008B FB                MOV     R3,A
+008C A3                INC     DPTR
+008D E0                MOVX    A,@DPTR
+008E FA                MOV     R2,A
+008F A3                INC     DPTR
+0090 E0                MOVX    A,@DPTR
+0091 F9                MOV     R1,A
+                                           ; SOURCE LINE # 48
+0092         ?C0010:
+0092 22                RET     
+             ; FUNCTION _strsep (END)
+
+             ; FUNCTION _strtrim (BEGIN)
+                                           ; SOURCE LINE # 76
+0000 900000      R     MOV     DPTR,#s
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 77
+000B A3                INC     DPTR
+000C EB                MOV     A,R3
+000D F0                MOVX    @DPTR,A
+000E A3                INC     DPTR
+000F EA                MOV     A,R2
+0010 F0                MOVX    @DPTR,A
+0011 A3                INC     DPTR
+0012 E9                MOV     A,R1
+0013 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 78
+0014 900000      R     MOV     DPTR,#s
+0017 E0                MOVX    A,@DPTR
+0018 F9                MOV     R1,A
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 10  
+
+0019 A3                INC     DPTR
+001A E0                MOVX    A,@DPTR
+001B FA                MOV     R2,A
+001C A3                INC     DPTR
+001D E0                MOVX    A,@DPTR
+001E 900000      R     MOV     DPTR,#q
+0021 C9                XCH     A,R1
+0022 F0                MOVX    @DPTR,A
+0023 A3                INC     DPTR
+0024 EA                MOV     A,R2
+0025 F0                MOVX    @DPTR,A
+0026 A3                INC     DPTR
+0027 E9                MOV     A,R1
+0028 F0                MOVX    @DPTR,A
+0029         ?C0012:
+                                           ; SOURCE LINE # 79
+0029 900000      R     MOV     DPTR,#p
+002C E0                MOVX    A,@DPTR
+002D FB                MOV     R3,A
+002E A3                INC     DPTR
+002F E0                MOVX    A,@DPTR
+0030 FA                MOV     R2,A
+0031 A3                INC     DPTR
+0032 E0                MOVX    A,@DPTR
+0033 F9                MOV     R1,A
+0034 120000      E     LCALL   ?C?CLDPTR
+0037 FF                MOV     R7,A
+0038 6420              XRL     A,#020H
+003A 6004              JZ      ?C0014
+003C EF                MOV     A,R7
+003D B4090C            CJNE    A,#09H,?C0015
+0040         ?C0014:
+0040 900000      R     MOV     DPTR,#p+01H
+0043 E4                CLR     A
+0044 75F001            MOV     B,#01H
+0047 120000      E     LCALL   ?C?IILDX
+004A 80DD              SJMP    ?C0012
+004C         ?C0015:
+                                           ; SOURCE LINE # 80
+004C 900000      R     MOV     DPTR,#p
+004F E0                MOVX    A,@DPTR
+0050 FB                MOV     R3,A
+0051 A3                INC     DPTR
+0052 E4                CLR     A
+0053 75F001            MOV     B,#01H
+0056 120000      E     LCALL   ?C?ILDIX
+0059 A9F0              MOV     R1,B
+005B FA                MOV     R2,A
+005C 120000      E     LCALL   ?C?CLDPTR
+005F FF                MOV     R7,A
+0060 900000      R     MOV     DPTR,#q
+0063 E0                MOVX    A,@DPTR
+0064 FB                MOV     R3,A
+0065 A3                INC     DPTR
+0066 E4                CLR     A
+0067 75F001            MOV     B,#01H
+006A 120000      E     LCALL   ?C?ILDIX
+006D A9F0              MOV     R1,B
+006F FA                MOV     R2,A
+0070 EF                MOV     A,R7
+0071 120000      E     LCALL   ?C?CSTPTR
+0074 70D6              JNZ     ?C0015
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 11  
+
+0076         ?C0016:
+                                           ; SOURCE LINE # 82
+0076 900000      R     MOV     DPTR,#q+01H
+0079 74FF              MOV     A,#0FFH
+007B 75F0FE            MOV     B,#0FEH
+007E 801E              SJMP    ?C0036
+0080         ?C0017:
+                                           ; SOURCE LINE # 83
+0080 900000      R     MOV     DPTR,#q
+0083 E0                MOVX    A,@DPTR
+0084 FB                MOV     R3,A
+0085 A3                INC     DPTR
+0086 E0                MOVX    A,@DPTR
+0087 FA                MOV     R2,A
+0088 A3                INC     DPTR
+0089 E0                MOVX    A,@DPTR
+008A F9                MOV     R1,A
+008B 120000      E     LCALL   ?C?CLDPTR
+008E FF                MOV     R7,A
+008F 6420              XRL     A,#020H
+0091 6004              JZ      ?C0019
+0093 EF                MOV     A,R7
+0094 B4090C            CJNE    A,#09H,?C0018
+0097         ?C0019:
+0097 900000      R     MOV     DPTR,#q+01H
+009A 74FF              MOV     A,#0FFH
+009C F5F0              MOV     B,A
+009E         ?C0036:
+009E 120000      E     LCALL   ?C?IILDX
+00A1 80DD              SJMP    ?C0017
+00A3         ?C0018:
+                                           ; SOURCE LINE # 84
+00A3 900001            MOV     DPTR,#01H
+00A6 E4                CLR     A
+00A7 120000      E     LCALL   ?C?CSTOPTR
+                                           ; SOURCE LINE # 85
+00AA 900000      R     MOV     DPTR,#s
+00AD E0                MOVX    A,@DPTR
+00AE FB                MOV     R3,A
+00AF A3                INC     DPTR
+00B0 E0                MOVX    A,@DPTR
+00B1 FA                MOV     R2,A
+00B2 A3                INC     DPTR
+00B3 E0                MOVX    A,@DPTR
+00B4 F9                MOV     R1,A
+                                           ; SOURCE LINE # 86
+00B5         ?C0020:
+00B5 22                RET     
+             ; FUNCTION _strtrim (END)
+
+             ; FUNCTION _strtrim_fast (BEGIN)
+                                           ; SOURCE LINE # 88
+0000 900000      R     MOV     DPTR,#s
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 89
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 12  
+
+000B A3                INC     DPTR
+000C EB                MOV     A,R3
+000D F0                MOVX    @DPTR,A
+000E A3                INC     DPTR
+000F EA                MOV     A,R2
+0010 F0                MOVX    @DPTR,A
+0011 A3                INC     DPTR
+0012 E9                MOV     A,R1
+0013 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 90
+0014 900000      R     MOV     DPTR,#s
+0017 E0                MOVX    A,@DPTR
+0018 F9                MOV     R1,A
+0019 A3                INC     DPTR
+001A E0                MOVX    A,@DPTR
+001B FA                MOV     R2,A
+001C A3                INC     DPTR
+001D E0                MOVX    A,@DPTR
+001E 900000      R     MOV     DPTR,#q
+0021 C9                XCH     A,R1
+0022 F0                MOVX    @DPTR,A
+0023 A3                INC     DPTR
+0024 EA                MOV     A,R2
+0025 F0                MOVX    @DPTR,A
+0026 A3                INC     DPTR
+0027 E9                MOV     A,R1
+0028 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 91
+0029 900000      R     MOV     DPTR,#s
+002C E0                MOVX    A,@DPTR
+002D F9                MOV     R1,A
+002E A3                INC     DPTR
+002F A3                INC     DPTR
+0030 E0                MOVX    A,@DPTR
+0031 900000      R     MOV     DPTR,#end
+0034 C9                XCH     A,R1
+0035 F0                MOVX    @DPTR,A
+0036 A3                INC     DPTR
+0037 EA                MOV     A,R2
+0038 F0                MOVX    @DPTR,A
+0039 A3                INC     DPTR
+003A E9                MOV     A,R1
+003B F0                MOVX    @DPTR,A
+003C         ?C0021:
+                                           ; SOURCE LINE # 92
+003C 900000      R     MOV     DPTR,#p
+003F E0                MOVX    A,@DPTR
+0040 FB                MOV     R3,A
+0041 A3                INC     DPTR
+0042 E0                MOVX    A,@DPTR
+0043 FA                MOV     R2,A
+0044 A3                INC     DPTR
+0045 E0                MOVX    A,@DPTR
+0046 F9                MOV     R1,A
+0047 120000      E     LCALL   ?C?CLDPTR
+004A FF                MOV     R7,A
+004B 6420              XRL     A,#020H
+004D 6004              JZ      ?C0023
+004F EF                MOV     A,R7
+0050 B4090C            CJNE    A,#09H,?C0024
+0053         ?C0023:
+0053 900000      R     MOV     DPTR,#p+01H
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 13  
+
+0056 E4                CLR     A
+0057 75F001            MOV     B,#01H
+005A 120000      E     LCALL   ?C?IILDX
+005D 80DD              SJMP    ?C0021
+005F         ?C0024:
+                                           ; SOURCE LINE # 93
+005F 900000      R     MOV     DPTR,#p
+0062 E0                MOVX    A,@DPTR
+0063 FB                MOV     R3,A
+0064 A3                INC     DPTR
+0065 E0                MOVX    A,@DPTR
+0066 FA                MOV     R2,A
+0067 A3                INC     DPTR
+0068 E0                MOVX    A,@DPTR
+0069 F9                MOV     R1,A
+006A 120000      E     LCALL   ?C?CLDPTR
+006D FF                MOV     R7,A
+006E 900000      R     MOV     DPTR,#q
+0071 E0                MOVX    A,@DPTR
+0072 FB                MOV     R3,A
+0073 A3                INC     DPTR
+0074 E0                MOVX    A,@DPTR
+0075 FA                MOV     R2,A
+0076 A3                INC     DPTR
+0077 E0                MOVX    A,@DPTR
+0078 F9                MOV     R1,A
+0079 EF                MOV     A,R7
+007A 120000      E     LCALL   ?C?CSTPTR
+007D 6040              JZ      ?C0025
+                                           ; SOURCE LINE # 94
+007F 900000      R     MOV     DPTR,#q
+0082 E0                MOVX    A,@DPTR
+0083 FB                MOV     R3,A
+0084 A3                INC     DPTR
+0085 E0                MOVX    A,@DPTR
+0086 FA                MOV     R2,A
+0087 A3                INC     DPTR
+0088 E0                MOVX    A,@DPTR
+0089 F9                MOV     R1,A
+008A 120000      E     LCALL   ?C?CLDPTR
+008D FF                MOV     R7,A
+008E 6420              XRL     A,#020H
+0090 6017              JZ      ?C0026
+0092 EF                MOV     A,R7
+0093 6409              XRL     A,#09H
+0095 6012              JZ      ?C0026
+0097 E9                MOV     A,R1
+0098 2401              ADD     A,#01H
+009A F9                MOV     R1,A
+009B E4                CLR     A
+009C 3A                ADDC    A,R2
+009D FA                MOV     R2,A
+009E 900000      R     MOV     DPTR,#end
+00A1 EB                MOV     A,R3
+00A2 F0                MOVX    @DPTR,A
+00A3 A3                INC     DPTR
+00A4 EA                MOV     A,R2
+00A5 F0                MOVX    @DPTR,A
+00A6 A3                INC     DPTR
+00A7 E9                MOV     A,R1
+00A8 F0                MOVX    @DPTR,A
+00A9         ?C0026:
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 14  
+
+                                           ; SOURCE LINE # 95
+00A9 900000      R     MOV     DPTR,#q+01H
+00AC E4                CLR     A
+00AD 75F001            MOV     B,#01H
+00B0 120000      E     LCALL   ?C?IILDX
+00B3 900000      R     MOV     DPTR,#p+01H
+00B6 E4                CLR     A
+00B7 75F001            MOV     B,#01H
+00BA 120000      E     LCALL   ?C?IILDX
+                                           ; SOURCE LINE # 96
+00BD 80A0              SJMP    ?C0024
+00BF         ?C0025:
+                                           ; SOURCE LINE # 97
+00BF 900000      R     MOV     DPTR,#end
+00C2 E0                MOVX    A,@DPTR
+00C3 FB                MOV     R3,A
+00C4 A3                INC     DPTR
+00C5 E0                MOVX    A,@DPTR
+00C6 FA                MOV     R2,A
+00C7 A3                INC     DPTR
+00C8 E0                MOVX    A,@DPTR
+00C9 F9                MOV     R1,A
+00CA E4                CLR     A
+00CB 120000      E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 99
+00CE 900000      R     MOV     DPTR,#s
+00D1 E0                MOVX    A,@DPTR
+00D2 FB                MOV     R3,A
+00D3 A3                INC     DPTR
+00D4 E0                MOVX    A,@DPTR
+00D5 FA                MOV     R2,A
+00D6 A3                INC     DPTR
+00D7 E0                MOVX    A,@DPTR
+00D8 F9                MOV     R1,A
+                                           ; SOURCE LINE # 100
+00D9         ?C0027:
+00D9 22                RET     
+             ; FUNCTION _strtrim_fast (END)
+
+             ; FUNCTION _trim (BEGIN)
+                                           ; SOURCE LINE # 102
+0000 900000      R     MOV     DPTR,#strIn
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 106
+000B E4                CLR     A
+000C 900000      R     MOV     DPTR,#i
+000F F0                MOVX    @DPTR,A
+0010 A3                INC     DPTR
+0011 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 108
+0012 120000      E     LCALL   _strlen
+0015 EF                MOV     A,R7
+0016 24FF              ADD     A,#0FFH
+0018 FF                MOV     R7,A
+0019 EE                MOV     A,R6
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 15  
+
+001A 34FF              ADDC    A,#0FFH
+001C 900000      R     MOV     DPTR,#j
+001F F0                MOVX    @DPTR,A
+0020 A3                INC     DPTR
+0021 EF                MOV     A,R7
+0022 F0                MOVX    @DPTR,A
+0023         ?C0028:
+                                           ; SOURCE LINE # 110
+0023 900000      R     MOV     DPTR,#strIn
+0026 E0                MOVX    A,@DPTR
+0027 FB                MOV     R3,A
+0028 A3                INC     DPTR
+0029 E0                MOVX    A,@DPTR
+002A FA                MOV     R2,A
+002B A3                INC     DPTR
+002C E0                MOVX    A,@DPTR
+002D F9                MOV     R1,A
+002E 900000      R     MOV     DPTR,#i
+0031 E0                MOVX    A,@DPTR
+0032 FE                MOV     R6,A
+0033 A3                INC     DPTR
+0034 E0                MOVX    A,@DPTR
+0035 F582              MOV     DPL,A
+0037 8E83              MOV     DPH,R6
+0039 120000      E     LCALL   ?C?CLDOPTR
+003C FF                MOV     R7,A
+003D 6420              XRL     A,#020H
+003F 6004              JZ      ?C0030
+0041 EF                MOV     A,R7
+0042 B40910            CJNE    A,#09H,?C0031
+0045         ?C0030:
+                                           ; SOURCE LINE # 111
+0045 900000      R     MOV     DPTR,#i+01H
+0048 E0                MOVX    A,@DPTR
+0049 04                INC     A
+004A F0                MOVX    @DPTR,A
+004B 70D6              JNZ     ?C0028
+004D 900000      R     MOV     DPTR,#i
+0050 E0                MOVX    A,@DPTR
+0051 04                INC     A
+0052 F0                MOVX    @DPTR,A
+0053         ?C0035:
+0053 80CE              SJMP    ?C0028
+0055         ?C0031:
+                                           ; SOURCE LINE # 113
+0055 900000      R     MOV     DPTR,#strIn
+0058 E0                MOVX    A,@DPTR
+0059 FB                MOV     R3,A
+005A A3                INC     DPTR
+005B E0                MOVX    A,@DPTR
+005C FA                MOV     R2,A
+005D A3                INC     DPTR
+005E E0                MOVX    A,@DPTR
+005F F9                MOV     R1,A
+0060 900000      R     MOV     DPTR,#j
+0063 E0                MOVX    A,@DPTR
+0064 FE                MOV     R6,A
+0065 A3                INC     DPTR
+0066 E0                MOVX    A,@DPTR
+0067 F582              MOV     DPL,A
+0069 8E83              MOV     DPH,R6
+006B 120000      E     LCALL   ?C?CLDOPTR
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 16  
+
+006E FF                MOV     R7,A
+006F 6420              XRL     A,#020H
+0071 6004              JZ      ?C0033
+0073 EF                MOV     A,R7
+0074 B40910            CJNE    A,#09H,?C0032
+0077         ?C0033:
+                                           ; SOURCE LINE # 114
+0077 900000      R     MOV     DPTR,#j+01H
+007A E0                MOVX    A,@DPTR
+007B 24FF              ADD     A,#0FFH
+007D F0                MOVX    @DPTR,A
+007E 900000      R     MOV     DPTR,#j
+0081 E0                MOVX    A,@DPTR
+0082 34FF              ADDC    A,#0FFH
+0084 F0                MOVX    @DPTR,A
+0085 80CE              SJMP    ?C0031
+0087         ?C0032:
+                                           ; SOURCE LINE # 115
+0087 900000      R     MOV     DPTR,#strIn
+008A E0                MOVX    A,@DPTR
+008B FB                MOV     R3,A
+008C A3                INC     DPTR
+008D E0                MOVX    A,@DPTR
+008E FA                MOV     R2,A
+008F A3                INC     DPTR
+0090 E0                MOVX    A,@DPTR
+0091 F9                MOV     R1,A
+0092 900000      R     MOV     DPTR,#i
+0095 E0                MOVX    A,@DPTR
+0096 FE                MOV     R6,A
+0097 A3                INC     DPTR
+0098 E0                MOVX    A,@DPTR
+0099 FF                MOV     R7,A
+009A E9                MOV     A,R1
+009B 2F                ADD     A,R7
+009C F9                MOV     R1,A
+009D EA                MOV     A,R2
+009E 3E                ADDC    A,R6
+009F FA                MOV     R2,A
+00A0 900000      E     MOV     DPTR,#?_strncpy?BYTE+03H
+00A3 EB                MOV     A,R3
+00A4 F0                MOVX    @DPTR,A
+00A5 A3                INC     DPTR
+00A6 EA                MOV     A,R2
+00A7 F0                MOVX    @DPTR,A
+00A8 A3                INC     DPTR
+00A9 E9                MOV     A,R1
+00AA F0                MOVX    @DPTR,A
+00AB C3                CLR     C
+00AC 900000      R     MOV     DPTR,#j+01H
+00AF E0                MOVX    A,@DPTR
+00B0 9F                SUBB    A,R7
+00B1 FF                MOV     R7,A
+00B2 900000      R     MOV     DPTR,#j
+00B5 E0                MOVX    A,@DPTR
+00B6 9E                SUBB    A,R6
+00B7 CF                XCH     A,R7
+00B8 2401              ADD     A,#01H
+00BA CF                XCH     A,R7
+00BB 3400              ADDC    A,#00H
+00BD 900000      E     MOV     DPTR,#?_strncpy?BYTE+06H
+00C0 F0                MOVX    @DPTR,A
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 17  
+
+00C1 A3                INC     DPTR
+00C2 EF                MOV     A,R7
+00C3 F0                MOVX    @DPTR,A
+00C4 900000      R     MOV     DPTR,#strOut
+00C7 E0                MOVX    A,@DPTR
+00C8 FB                MOV     R3,A
+00C9 A3                INC     DPTR
+00CA E0                MOVX    A,@DPTR
+00CB FA                MOV     R2,A
+00CC A3                INC     DPTR
+00CD E0                MOVX    A,@DPTR
+00CE F9                MOV     R1,A
+00CF 120000      E     LCALL   _strncpy
+                                           ; SOURCE LINE # 116
+00D2 900000      R     MOV     DPTR,#i
+00D5 E0                MOVX    A,@DPTR
+00D6 FE                MOV     R6,A
+00D7 A3                INC     DPTR
+00D8 E0                MOVX    A,@DPTR
+00D9 FF                MOV     R7,A
+00DA C3                CLR     C
+00DB 900000      R     MOV     DPTR,#j+01H
+00DE E0                MOVX    A,@DPTR
+00DF 9F                SUBB    A,R7
+00E0 FF                MOV     R7,A
+00E1 900000      R     MOV     DPTR,#j
+00E4 E0                MOVX    A,@DPTR
+00E5 9E                SUBB    A,R6
+00E6 CF                XCH     A,R7
+00E7 2401              ADD     A,#01H
+00E9 CF                XCH     A,R7
+00EA 3400              ADDC    A,#00H
+00EC FE                MOV     R6,A
+00ED 900000      R     MOV     DPTR,#strOut
+00F0 E0                MOVX    A,@DPTR
+00F1 FB                MOV     R3,A
+00F2 A3                INC     DPTR
+00F3 E0                MOVX    A,@DPTR
+00F4 FA                MOV     R2,A
+00F5 A3                INC     DPTR
+00F6 E0                MOVX    A,@DPTR
+00F7 F9                MOV     R1,A
+00F8 8F82              MOV     DPL,R7
+00FA 8E83              MOV     DPH,R6
+00FC E4                CLR     A
+00FD 020000      E     LJMP    ?C?CSTOPTR
+             ; FUNCTION _trim (END)
+
+C51 COMPILER V9.01   MYSTRING                                                              02/21/2019 15:08:21 PAGE 18  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+_strpbrk . . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  cs . . . . . . . . . . . . . . . . .  AUTO     DATA   PTR      0001H  3
+  ct . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0003H  3
+  sc1. . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0006H  3
+  sc2. . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0009H  3
+size_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+_strncpy . . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+_strtrim . . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  s. . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  p. . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0003H  3
+  q. . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0006H  3
+_strlen. . . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+_strsep. . . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  s. . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  ct . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0003H  3
+  sbegin . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0006H  3
+  end. . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0009H  3
+_strtrim_fast. . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  s. . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  p. . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0003H  3
+  q. . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0006H  3
+  end. . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0009H  3
+_trim. . . . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  strIn. . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  strOut . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0003H  3
+  i. . . . . . . . . . . . . . . . . .  AUTO     XDATA  INT      0006H  2
+  j. . . . . . . . . . . . . . . . . .  AUTO     XDATA  INT      0008H  2
+wchar_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    917    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----      55
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

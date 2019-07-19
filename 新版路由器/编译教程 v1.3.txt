@@ -1,0 +1,95 @@
+大雕编译教程：
+
+注意：
+1. 不要用 root 用户 git 和编译！！！
+2. 国内用户编译前最好准备好梯子
+3. 默认登陆IP 192.168.1.1, 密码 password
+
+编译命令如下:
+
+1. 首先装好 Ubuntu 64bit，推荐  Ubuntu  14 LTS x64
+http://releases.ubuntu.com/14.04.5/ubuntu-14.04.5-desktop-amd64.iso
+
+2. 命令行输入 sudo apt-get update ，然后输入
+sudo apt-get install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs git-core gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils 
+
+3. git clone https://github.com/coolsnowwolf/lede 命令下载好源代码，然后 cd lede 进入目录
+
+4. ./scripts/feeds update -a 
+   ./scripts/feeds install -a
+   make menuconfig 
+
+5. 最后选好你要的路由，输入 make -j1 V=s （-j1后面是线程数。第一次编译推荐用单线程，国内请尽量全局科学上网）即可开始编译你要的固件了。
+
+———————————————————————————————————————————————————————————————————————————————————————————————————————————
+虚拟机安装Vmtools和SSH：
+sudo apt-get update
+sudo apt-get install openssh-serve open-vm-tools-desktop -y
+sudo reboot
+
+以后二次编译：
+cd lede                                                          进入LEDE目录
+git pull                                                         同步更新大雕源码
+./scripts/feeds update -a && ./scripts/feeds install -a          更新FEEDS
+rm -rf ./tmp && rm -rf .config                                   清除编译配置和缓存
+make menuconfig                                                  进入编译配置菜单
+make -jn V=s                                                     n=线程数+1，例如4线程的I5填-j5，开始编译
+
+编译完成后固件输出在/lede/bin/targets
+
+2018.10.20前git clone的，请执行一次再编译
+ rm -rf ./feeds && ./scripts/feeds update -a && ./scripts/feeds install -a
+———————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+建议：
+编译机最好100G起步，全局梯子
+编译前下载好DL包，可大量缩减首次编译时间
+此DL包，不定期更新，可编译X64固件
+链接: https://pan.baidu.com/s/1dy4L8b775NRCApd8mXZ9Cg 密码: mjdl
+
+以下操作请把mj替换为自己的用户名
+
+DL：
+WINSCP上传dl.tgz放进/home/mj 目录下，右键-文件自定义命令-Untar/Gzip，直接回车，解压出DL文件夹后，执行以下命令
+ln -s /home/mj/dl /home/mj/lede                                 如果存在/home/mj/lede/dl目录，请删除
+
+涡轮增雕法：
+WINSCP上传lean.tgz放进/home/mj 目录下，右键-文件自定义命令-Untar/Gzip，直接回车，解压出lean文件夹后，执行以下命令
+ln -s /home/mj/lean /home/mj/lede/package/openwrt-packages
+这样编译就会加载/package/lean和/package/openwrt-packages，如果软件包同名openwrt-packages优先级低
+使用涡轮增雕法，可把大雕删除的软件打包回去编译，目前大部分源码已重新添加，不需要的忽略
+
+———————————————————————————————————————————————————————————————————————————————————————————————————————————
+
+编译切换内核：
+打开LEDE目录/target/linux/架构/Makefile
+KERNEL_PATCHVER:=4.9
+具体支持内核版本
+include/kernel-version.mk
+
+源码回退：
+git log                        查看源码更新日志
+git reset --hard HEAD^         回退到上个版本
+git reset --hard HEAD~3        回退到前3次提交之前，以此类推，回退到n次提交之前
+git reset --hard commit_id     退到/进到 指定commit的sha码（可到大雕源码地址直接查询）
+
+files大法：就是把你 改好的配置 直接编译进固件
+这样做的好处就是升级不需要保留配置，或者恢复出厂设置，缺省值就是你自己设置好的配置
+固化某配置教程例子：
+1.提取路由固件下的\etc\config\network
+2.在编译机LEDE根目录下创建files目录
+3.拷贝到\files\etc\config\network
+这样编译完，network就是你自己配置好的network，注意提取的文件路径和权限要一致
+
+一些常用的配置，路由器路径
+\etc\config                                      各个LUCI配置
+\etc\gfwlist                                     gfwlist目录
+\etc\shadow                                      登录密码
+\etc\firewall.user                               自定义防火墙规则
+\usr\share\adbyby                                adbyby里的相关规则和设置
+\usr\lib\lua\luci\view\admin_status\index.htm    主页样式文件，温度显示等等
+X86架构固件的index，默认被大雕files强奸了，自己到源码里替换/lede/package/lean/autocore/files/index.htm
+如果无效请make clean或者删除/lede/build_dir/target架构/autocore-1（编译其他失败同理）
+
+Github团队协作之Pull请求
+https://www.cnblogs.com/cposture/p/4903767.html

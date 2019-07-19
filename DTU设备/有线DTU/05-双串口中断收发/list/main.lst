@@ -1,0 +1,136 @@
+C51 COMPILER V9.01   MAIN                                                                  12/12/2018 16:22:27 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\list\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\list\main.lst
+                    -) TABS(2) OBJECT(.\list\main.obj)
+
+line level    source
+
+   1          
+   2          /*------------------------------------------------------------------*/
+   3          /* --- STC MCU International Limited -------------------------------*/
+   4          /* --- STC 1T Series MCU RC Demo -----------------------------------*/
+   5          /* --- Mobile: (86)13922805190 -------------------------------------*/
+   6          /* --- Fax: 86-0513-55012956,55012947,55012969 ---------------------*/
+   7          /* --- Tel: 86-0513-55012928,55012929,55012966 ---------------------*/
+   8          /* --- Web: www.GXWMCU.com -----------------------------------------*/
+   9          /* --- QQ:  800003751 ----------------------------------------------*/
+  10          /* If you want to use the program or the program referenced in the  */
+  11          /* article, please specify in which data and procedures from STC    */
+  12          /*------------------------------------------------------------------*/
+  13          
+  14          
+  15          #include  "config.h"
+  16          #include  "USART.h"
+  17          #include  "delay.h"
+  18          
+  19          
+  20          /*************  功能说明  **************
+  21          
+  22          双串口全双工中断方式收发通讯程序。
+  23          
+  24          通过PC向MCU发送数据, MCU收到后通过串口把收到的数据原样返回.
+  25          
+  26          ******************************************/
+  27          
+  28          /*************  本地常量声明  **************/
+  29          
+  30          
+  31          /*************  本地变量声明  **************/
+  32          
+  33          
+  34          /*************  本地函数声明  **************/
+  35          
+  36          
+  37          
+  38          /*************  外部函数和变量声明 *****************/
+  39          
+  40          void  UART_config(void)
+  41          {
+  42   1        COMx_InitDefine   COMx_InitStructure;         //结构定义
+  43   1        COMx_InitStructure.UART_Mode      = UART_8bit_BRTx;   //模式,       UART_ShiftRight,UART_8bit_BRTx,UART_9b
+             -it,UART_9bit_BRTx
+  44   1        COMx_InitStructure.UART_BRT_Use   = BRT_Timer1;     //使用波特率,   BRT_Timer1, BRT_Timer2 (注意: 串口2固定
+             -使用BRT_Timer2)
+  45   1        COMx_InitStructure.UART_BaudRate  = 9600ul;     //波特率, 一般 110 ~ 115200
+  46   1        COMx_InitStructure.UART_RxEnable  = ENABLE;       //接收允许,   ENABLE或DISABLE
+  47   1        COMx_InitStructure.BaudRateDouble = DISABLE;      //波特率加倍, ENABLE或DISABLE
+  48   1        COMx_InitStructure.UART_Interrupt = ENABLE;       //中断允许,   ENABLE或DISABLE
+  49   1        COMx_InitStructure.UART_Polity    = PolityLow;      //中断优先级, PolityLow,PolityHigh
+  50   1        COMx_InitStructure.UART_P_SW      = UART1_SW_P30_P31; //切换端口,   UART1_SW_P30_P31,UART1_SW_P36_P37,UAR
+             -T1_SW_P16_P17(必须使用内部时钟)
+  51   1        COMx_InitStructure.UART_RXD_TXD_Short = DISABLE;    //内部短路RXD与TXD, 做中继, ENABLE,DISABLE
+C51 COMPILER V9.01   MAIN                                                                  12/12/2018 16:22:27 PAGE 2   
+
+  52   1        USART_Configuration(USART1, &COMx_InitStructure);   //初始化串口1 USART1,USART2
+  53   1      
+  54   1        COMx_InitStructure.UART_Mode      = UART_8bit_BRTx;   //模式,       UART_ShiftRight,UART_8bit_BRTx,UART_9b
+             -it,UART_9bit_BRTx
+  55   1        COMx_InitStructure.UART_BaudRate  = 9600ul;     //波特率,     110 ~ 115200
+  56   1        COMx_InitStructure.UART_RxEnable  = ENABLE;       //接收允许,   ENABLE或DISABLE
+  57   1        COMx_InitStructure.UART_Interrupt = ENABLE;       //中断允许,   ENABLE或DISABLE
+  58   1        COMx_InitStructure.UART_Polity    = PolityLow;      //中断优先级, PolityLow,PolityHigh
+  59   1        COMx_InitStructure.UART_P_SW      = UART2_SW_P10_P11; //切换端口,   UART2_SW_P10_P11,UART2_SW_P46_P47
+  60   1        USART_Configuration(USART2, &COMx_InitStructure);   //初始化串口2 USART1,USART2
+  61   1      
+  62   1        PrintString1("STC15F2K60S2 UART1 Test Prgramme!\r\n");  //SUART1发送一个字符串
+  63   1        PrintString2("STC15F2K60S2 UART2 Test Prgramme!\r\n");  //SUART2发送一个字符串
+  64   1      }
+  65          
+  66          
+  67          /**********************************************/
+  68          void main(void)
+  69          {
+  70   1        u8  i;
+  71   1      
+  72   1        UART_config();
+  73   1        EA = 1;
+  74   1      
+  75   1        while (1)
+  76   1        {
+  77   2          delay_ms(1);
+  78   2          if(COM1.RX_TimeOut > 0)   //超时计数
+  79   2          {
+  80   3            if(--COM1.RX_TimeOut == 0)
+  81   3            {
+  82   4              if(COM1.RX_Cnt > 0)
+  83   4              {
+  84   5                for(i=0; i<COM1.RX_Cnt; i++)  TX1_write2buff(RX1_Buffer[i]);  //收到的数据原样返回
+  85   5              }
+  86   4              COM1.RX_Cnt = 0;
+  87   4            }
+  88   3          }
+  89   2          if(COM2.RX_TimeOut > 0)   //超时计数
+  90   2          {
+  91   3            if(--COM2.RX_TimeOut == 0)
+  92   3            {
+  93   4              if(COM2.RX_Cnt > 0)
+  94   4              {
+  95   5                for(i=0; i<COM2.RX_Cnt; i++)  TX2_write2buff(RX2_Buffer[i]);  //收到的数据原样返回
+  96   5              }
+  97   4              COM2.RX_Cnt = 0;
+  98   4            }
+  99   3          }
+ 100   2        }
+ 101   1      }
+ 102          
+ 103          
+ 104          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    205    ----
+   CONSTANT SIZE    =     72    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      14
+C51 COMPILER V9.01   MAIN                                                                  12/12/2018 16:22:27 PAGE 3   
+
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

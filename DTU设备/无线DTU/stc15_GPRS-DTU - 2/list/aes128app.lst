@@ -1,0 +1,2128 @@
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE AES128APP
+OBJECT MODULE PLACED IN .\list\aes128app.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE app\service\AES128\aes128app.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(.\s
+                    -tclib;..\stc_lib;.\app;.\app\service\app;.\app\service\AES128;.\app\service\CRC16;.\app\service\GPRS) DEBUG OBJECTEXTEND
+                    - CODE LISTINCLUDE SYMBOLS PRINT(.\list\aes128app.lst) TABS(2) PREPRINT(.\list\aes128app.i) OBJECT(.\list\aes128app.obj)
+
+line level    source
+
+   1                           
+   2          #include <stdio.h>
+   1      =1  /*--------------------------------------------------------------------------
+   2      =1  STDIO.H
+   3      =1  
+   4      =1  Prototypes for standard I/O functions.
+   5      =1  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =1  All rights reserved.
+   7      =1  --------------------------------------------------------------------------*/
+   8      =1  
+   9      =1  #ifndef __STDIO_H__
+  10      =1  #define __STDIO_H__
+  11      =1  
+  12      =1  #ifndef EOF
+  13      =1   #define EOF -1
+  14      =1  #endif
+  15      =1  
+  16      =1  #ifndef NULL
+  17      =1   #define NULL ((void *) 0)
+  18      =1  #endif
+  19      =1  
+  20      =1  #ifndef _SIZE_T
+  21      =1   #define _SIZE_T
+  22      =1   typedef unsigned int size_t;
+  23      =1  #endif
+  24      =1  
+  25      =1  #pragma SAVE
+  26      =1  #pragma REGPARMS
+  27      =1  extern char _getkey (void);
+  28      =1  extern char getchar (void);
+  29      =1  extern char ungetchar (char);
+  30      =1  extern char putchar (char);
+  31      =1  extern int printf   (const char *, ...);
+  32      =1  extern int sprintf  (char *, const char *, ...);
+  33      =1  extern int vprintf  (const char *, char *);
+  34      =1  extern int vsprintf (char *, const char *, char *);
+  35      =1  extern char *gets (char *, int n);
+  36      =1  extern int scanf (const char *, ...);
+  37      =1  extern int sscanf (char *, const char *, ...);
+  38      =1  extern int puts (const char *);
+  39      =1  
+  40      =1  #pragma RESTORE
+  41      =1  
+  42      =1  #endif
+  43      =1  
+   3          #include <string.h>
+   1      =1  /*--------------------------------------------------------------------------
+   2      =1  STRING.H
+   3      =1  
+   4      =1  String functions.
+   5      =1  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =1  All rights reserved.
+   7      =1  --------------------------------------------------------------------------*/
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 2   
+
+   8      =1  
+   9      =1  #ifndef __STRING_H__
+  10      =1  #define __STRING_H__
+  11      =1  
+  12      =1  #ifndef _SIZE_T
+           =1  #define _SIZE_T
+           =1  typedef unsigned int size_t;
+           =1 #endif
+  16      =1  
+  17      =1  #ifndef NULL
+           =1  #define NULL ((void *) 0L)
+           =1 #endif
+  20      =1  
+  21      =1  #pragma SAVE
+  22      =1  #pragma REGPARMS
+  23      =1  extern char *strcat (char *s1, char *s2);
+  24      =1  extern char *strncat (char *s1, char *s2, int n);
+  25      =1  
+  26      =1  extern char strcmp (char *s1, char *s2);
+  27      =1  extern char strncmp (char *s1, char *s2, int n);
+  28      =1  
+  29      =1  extern char *strcpy (char *s1, char *s2);
+  30      =1  extern char *strncpy (char *s1, char *s2, int n);
+  31      =1  
+  32      =1  extern int strlen (char *);
+  33      =1  
+  34      =1  extern char *strchr (const char *s, char c);
+  35      =1  extern int strpos (const char *s, char c);
+  36      =1  extern char *strrchr (const char *s, char c);
+  37      =1  extern int strrpos (const char *s, char c);
+  38      =1  
+  39      =1  extern int strspn (char *s, char *set);
+  40      =1  extern int strcspn (char *s, char *set);
+  41      =1  extern char *strpbrk (char *s, char *set);
+  42      =1  extern char *strrpbrk (char *s, char *set);
+  43      =1  extern char *strstr  (char *s, char *sub);
+  44      =1  extern char *strtok  (char *str, const char *set);
+  45      =1  
+  46      =1  extern char memcmp (void *s1, void *s2, int n);
+  47      =1  extern void *memcpy (void *s1, void *s2, int n);
+  48      =1  extern void *memchr (void *s, char val, int n);
+  49      =1  extern void *memccpy (void *s1, void *s2, char val, int n);
+  50      =1  extern void *memmove (void *s1, void *s2, int n);
+  51      =1  extern void *memset  (void *s, char val, int n);
+  52      =1  #pragma RESTORE
+  53      =1  
+  54      =1  #endif
+   4          #include <stdint.h>
+   1      =1  #ifndef __STDINT_H__
+   2      =1  #define __STDINT_H__
+   3      =1  
+   4      =1  typedef unsigned char uint8_t;  //1Î»³¤¶È
+   5      =1  typedef signed char int8_t;     //
+   6      =1  typedef unsigned short uint16_t;  //2Î»³¤¶È
+   7      =1  typedef signed short int16_t;
+   8      =1  typedef unsigned long uint32_t;   //4Î»³¤¶È
+   9      =1  typedef signed long int32_t;
+  10      =1  
+  11      =1  #endif
+   5          #include "aes.h"
+   1      =1  #ifndef _AES_H_
+   2      =1  #define _AES_H_
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 3   
+
+   3      =1  
+   4      =1  #include <stdint.h>
+   1      =2  #ifndef __STDINT_H__
+           =2 #define __STDINT_H__
+           =2 
+           =2 typedef unsigned char uint8_t;  //1Î»³¤¶È
+           =2 typedef signed char int8_t;     //
+           =2 typedef unsigned short uint16_t;  //2Î»³¤¶È
+           =2 typedef signed short int16_t;
+           =2 typedef unsigned long uint32_t;   //4Î»³¤¶È
+           =2 typedef signed long int32_t;
+           =2 
+           =2 #endif
+   5      =1  
+   6      =1  
+   7      =1  // #define the macros below to 1/0 to enable/disable the mode of operation.
+   8      =1  //
+   9      =1  // CBC enables AES128 encryption in CBC-mode of operation and handles 0-padding.
+  10      =1  // ECB enables the basic ECB 16-byte block algorithm. Both can be enabled simultaneously.
+  11      =1  
+  12      =1  // The #ifndef-guard allows it to be configured before #include'ing or at compile time.
+  13      =1  #ifndef CBC
+  14      =1    #define CBC 1
+  15      =1  #endif
+  16      =1  
+  17      =1  #ifndef ECB
+  18      =1    #define ECB 1
+  19      =1  #endif
+  20      =1  
+  21      =1  
+  22      =1  
+  23      =1  #if defined(ECB) && ECB
+  24      =1  
+  25      =1  void AES128_ECB_encrypt(const uint8_t* input, const uint8_t* key, uint8_t *output);
+  26      =1  void AES128_ECB_decrypt(const uint8_t* input, const uint8_t* key, uint8_t *output);
+  27      =1  
+  28      =1  #endif // #if defined(ECB) && ECB
+  29      =1  
+  30      =1  
+  31      =1  #if defined(CBC) && CBC
+  32      =1  
+  33      =1  void AES128_CBC_encrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, const uint8_t* key, const
+             - uint8_t* iv);
+  34      =1  void AES128_CBC_decrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, const uint8_t* key, const
+             - uint8_t* iv);
+  35      =1  
+  36      =1  #endif // #if defined(CBC) && CBC
+  37      =1  
+  38      =1  
+  39      =1  
+  40      =1  #endif //_AES_H_
+   6          #include "aes128app.h"
+   1      =1  #ifndef __AES128APP_H
+   2      =1  #define __AES128APP_H
+   3      =1  
+   4      =1  typedef struct{
+   5      =1    uint8_t id[8];
+   6      =1    uint8_t key[16];
+   7      =1    uint8_t iv[16];
+   8      =1    uint8_t state;
+   9      =1  }AES128;
+  10      =1  
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 4   
+
+  11      =1  extern AES128 aes128;                                     
+  12      =1  
+  13      =1  int app_encrypt_cbc(uint8_t *key, uint8_t *iv, uint8_t *in, uint8_t len, uint8_t *out); //EBC¼ÓÃÜ
+  14      =1  int app_decrypt_cbc(uint8_t *key, uint8_t *iv, uint8_t *in, uint8_t *out); //EBC½âÃÜ
+  15      =1  
+  16      =1  
+  17      =1  #endif
+   7          #include "usart1.h"
+   1      =1  
+   2      =1  /*------------------------------------------------------------------*/
+   3      =1  /* --- STC MCU International Limited -------------------------------*/
+   4      =1  /* --- STC 1T Series MCU RC Demo -----------------------------------*/
+   5      =1  /* --- Mobile: (86)13922805190 -------------------------------------*/
+   6      =1  /* --- Fax: 86-0513-55012956,55012947,55012969 ---------------------*/
+   7      =1  /* --- Tel: 86-0513-55012928,55012929,55012966 ---------------------*/
+   8      =1  /* --- Web: www.GXWMCU.com -----------------------------------------*/
+   9      =1  /* --- QQ:  800003751 ----------------------------------------------*/
+  10      =1  /* If you want to use the program or the program referenced in the  */
+  11      =1  /* article, please specify in which data and procedures from STC    */
+  12      =1  /*------------------------------------------------------------------*/
+  13      =1  
+  14      =1  
+  15      =1  #ifndef __USART_H
+  16      =1  #define __USART_H  
+  17      =1  
+  18      =1  #include  "config.h"
+   1      =2  
+   2      =2  #ifndef   __CONFIG_H
+   3      =2  #define   __CONFIG_H
+   4      =2  
+   5      =2  //#include  "rtx51tny.h"
+   6      =2  
+   7      =2  /*********************************************************/
+   8      =2  
+   9      =2  //#define MAIN_Fosc   22118400L //¶¨ÒåÖ÷Ê±ÖÓ
+  10      =2  //#define MAIN_Fosc   12000000L //¶¨ÒåÖ÷Ê±ÖÓ
+  11      =2  #define MAIN_Fosc   11059200L //¶¨ÒåÖ÷Ê±ÖÓ
+  12      =2  //#define MAIN_Fosc    5529600L //¶¨ÒåÖ÷Ê±ÖÓ
+  13      =2  //#define MAIN_Fosc   24000000L //¶¨ÒåÖ÷Ê±ÖÓ
+  14      =2  typedef  unsigned int uint;
+  15      =2  typedef  unsigned char uchar;
+  16      =2  
+  17      =2  
+  18      =2  /*********************************************************/
+  19      =2  #include  "STC15Fxxxx.H"
+   1      =3  
+   2      =3  /*------------------------------------------------------------------*/
+   3      =3  /* --- STC MCU International Limited -------------------------------*/
+   4      =3  /* --- STC 1T Series MCU RC Demo -----------------------------------*/
+   5      =3  /* --- Mobile: (86)13922805190 -------------------------------------*/
+   6      =3  /* --- Fax: 86-0513-55012956,55012947,55012969 ---------------------*/
+   7      =3  /* --- Tel: 86-0513-55012928,55012929,55012966 ---------------------*/
+   8      =3  /* --- Web: www.GXWMCU.com -----------------------------------------*/
+   9      =3  /* --- QQ:  800003751 ----------------------------------------------*/
+  10      =3  /* If you want to use the program or the program referenced in the  */
+  11      =3  /* article, please specify in which data and procedures from STC    */
+  12      =3  /*------------------------------------------------------------------*/
+  13      =3  
+  14      =3  
+  15      =3  
+  16      =3  #ifndef _STC15Fxxxx_H
+  17      =3  #define _STC15Fxxxx_H
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 5   
+
+  18      =3  
+  19      =3  #include "config.h"
+           =2 
+           =2 
+           =2 #include "stdlib.h"
+           =2 #include <stdio.h>
+           =2 #include <stdint.h>
+           =2 #include "mystring.h"
+           =2 #endif
+  19      =3  
+  19      =3  /*------------------------------------------------------------------*/
+  19      =3  /* --- STC MCU International Limited -------------------------------*/
+  19      =3  /* --- STC 1T Series MCU RC Demo -----------------------------------*/
+  19      =3  /* --- Mobile: (86)13922805190 -------------------------------------*/
+  19      =3  /* --- Fax: 86-0513-55012956,55012947,55012969 ---------------------*/
+  19      =3  /* --- Tel: 86-0513-55012928,55012929,55012966 ---------------------*/
+  19      =3  /* --- Web: www.GXWMCU.com -----------------------------------------*/
+  19      =3  /* --- QQ:  800003751 ----------------------------------------------*/
+  19      =3  /* If you want to use the program or the program referenced in the  */
+  19      =3  /* article, please specify in which data and procedures from STC    */
+  19      =3  /*------------------------------------------------------------------*/
+  19      =3  
+  19      =3  
+  19      =3  
+  19      =3  #ifndef _STC15Fxxxx_H
+  19      =3  #define _STC15Fxxxx_H
+  19      =3  
+  19      =3  #include "config.h"
+  20      =3  
+  21      =3  #include <intrins.h>
+   1      =4  /*--------------------------------------------------------------------------
+   2      =4  INTRINS.H
+   3      =4  
+   4      =4  Intrinsic functions for C51.
+   5      =4  Copyright (c) 1988-2004 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =4  All rights reserved.
+   7      =4  --------------------------------------------------------------------------*/
+   8      =4  
+   9      =4  #ifndef __INTRINS_H__
+  10      =4  #define __INTRINS_H__
+  11      =4  
+  12      =4  extern void          _nop_     (void);
+  13      =4  extern bit           _testbit_ (bit);
+  14      =4  extern unsigned char _cror_    (unsigned char, unsigned char);
+  15      =4  extern unsigned int  _iror_    (unsigned int,  unsigned char);
+  16      =4  extern unsigned long _lror_    (unsigned long, unsigned char);
+  17      =4  extern unsigned char _crol_    (unsigned char, unsigned char);
+  18      =4  extern unsigned int  _irol_    (unsigned int,  unsigned char);
+  19      =4  extern unsigned long _lrol_    (unsigned long, unsigned char);
+  20      =4  extern unsigned char _chkfloat_(float);
+  21      =4  extern void          _push_    (unsigned char _sfr);
+  22      =4  extern void          _pop_     (unsigned char _sfr);
+  23      =4  
+  24      =4  #endif
+  25      =4  
+  22      =3  
+  23      =3  /*  BYTE Registers  */
+  24      =3  sfr P0   = 0x80;
+  25      =3  sfr SP   = 0x81;
+  26      =3  sfr DPL  = 0x82;
+  27      =3  sfr DPH  = 0x83;
+  28      =3  sfr S4CON = 0x84;
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 6   
+
+  29      =3  sfr S4BUF = 0x85;
+  30      =3  sfr PCON = 0x87;
+  31      =3  
+  32      =3  sfr TCON = 0x88;
+  33      =3  sfr TMOD = 0x89;
+  34      =3  sfr TL0  = 0x8A;
+  35      =3  sfr TL1  = 0x8B;
+  36      =3  sfr TH0  = 0x8C;
+  37      =3  sfr TH1  = 0x8D;
+  38      =3  sfr AUXR = 0x8E;
+  39      =3  sfr WAKE_CLKO = 0x8F;
+  40      =3  sfr INT_CLKO = 0x8F;
+  41      =3  sfr AUXR2    = 0x8F;
+  42      =3  
+  43      =3  sfr RL_TL0  = 0x8A;
+  44      =3  sfr RL_TL1  = 0x8B;
+  45      =3  sfr RL_TH0  = 0x8C;
+  46      =3  sfr RL_TH1  = 0x8D;
+  47      =3  
+  48      =3  
+  49      =3  sfr P1   = 0x90;
+  50      =3  sfr P1M1 = 0x91;  //P1M1.n,P1M0.n   =00--->Standard,  01--->push-pull   Êµ¼ÊÉÏ1TµÄ¶¼Ò»Ñù
+  51      =3  sfr P1M0 = 0x92;  //          =10--->pure input,  11--->open drain
+  52      =3  sfr P0M1 = 0x93;  //P0M1.n,P0M0.n   =00--->Standard,  01--->push-pull
+  53      =3  sfr P0M0 = 0x94;  //          =10--->pure input,  11--->open drain
+  54      =3  sfr P2M1 = 0x95;  //P2M1.n,P2M0.n   =00--->Standard,  01--->push-pull
+  55      =3  sfr P2M0 = 0x96;  //          =10--->pure input,  11--->open drain
+  56      =3  sfr CLK_DIV = 0x97;
+  57      =3  sfr PCON2   = 0x97;
+  58      =3  
+  59      =3  sfr SCON  = 0x98;
+  60      =3  sfr SBUF  = 0x99;
+  61      =3  sfr S2CON = 0x9A; //
+  62      =3  sfr S2BUF = 0x9B; //
+  63      =3  sfr P1ASF = 0x9D; //Ö»Ð´£¬Ä£ÄâÊäÈë(AD»òLVD)Ñ¡Ôñ
+  64      =3  
+  65      =3  sfr P2    = 0xA0;
+  66      =3  sfr BUS_SPEED = 0xA1;
+  67      =3  sfr AUXR1 = 0xA2;
+  68      =3  sfr P_SW1 = 0xA2;
+  69      =3  
+  70      =3  sfr IE    = 0xA8;
+  71      =3  sfr SADDR = 0xA9;
+  72      =3  sfr WKTCL = 0xAA; //»½ÐÑ¶¨Ê±Æ÷µÍ×Ö½Ú
+  73      =3  sfr WKTCH = 0xAB; //»½ÐÑ¶¨Ê±Æ÷¸ß×Ö½Ú
+  74      =3  sfr S3CON = 0xAC;
+  75      =3  sfr S3BUF = 0xAD;
+  76      =3  sfr IE2   = 0xAF; //STC12C5A60S2ÏµÁÐ
+  77      =3  
+  78      =3  sfr P3    = 0xB0;
+  79      =3  sfr P3M1  = 0xB1; //P3M1.n,P3M0.n   =00--->Standard,  01--->push-pull
+  80      =3  sfr P3M0  = 0xB2; //          =10--->pure input,  11--->open drain
+  81      =3  sfr P4M1  = 0xB3; //P4M1.n,P4M0.n   =00--->Standard,  01--->push-pull
+  82      =3  sfr P4M0  = 0xB4; //          =10--->pure input,  11--->open drain
+  83      =3  sfr IP2   = 0xB5; //STC12C5A60S2ÏµÁÐ
+  84      =3  sfr IPH2  = 0xB6; //STC12C5A60S2ÏµÁÐ
+  85      =3  sfr IPH   = 0xB7;
+  86      =3  
+  87      =3  sfr IP        = 0xB8;
+  88      =3  sfr SADEN     = 0xB9;
+  89      =3  sfr P_SW2     = 0xBA;
+  90      =3  sfr ADC_CONTR = 0xBC; //´øADÏµÁÐ
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 7   
+
+  91      =3  sfr ADC_RES   = 0xBD; //´øADÏµÁÐ
+  92      =3  sfr ADC_RESL  = 0xBE; //´øADÏµÁÐ
+  93      =3  
+  94      =3  sfr P4        = 0xC0;
+  95      =3  sfr WDT_CONTR = 0xC1;
+  96      =3  sfr IAP_DATA  = 0xC2;
+  97      =3  sfr IAP_ADDRH = 0xC3;
+  98      =3  sfr IAP_ADDRL = 0xC4;
+  99      =3  sfr IAP_CMD   = 0xC5;
+ 100      =3  sfr IAP_TRIG  = 0xC6;
+ 101      =3  sfr IAP_CONTR = 0xC7;
+ 102      =3  
+ 103      =3  sfr ISP_DATA  = 0xC2;
+ 104      =3  sfr ISP_ADDRH = 0xC3;
+ 105      =3  sfr ISP_ADDRL = 0xC4;
+ 106      =3  sfr ISP_CMD   = 0xC5;
+ 107      =3  sfr ISP_TRIG  = 0xC6;
+ 108      =3  sfr ISP_CONTR = 0xC7;
+ 109      =3  
+ 110      =3  sfr P5     = 0xC8;  //
+ 111      =3  sfr P5M1   = 0xC9;  //  P5M1.n,P5M0.n   =00--->Standard,  01--->push-pull
+ 112      =3  sfr P5M0   = 0xCA;  //          =10--->pure input,  11--->open drain
+ 113      =3  sfr P6M1   = 0xCB;  //  P5M1.n,P5M0.n   =00--->Standard,  01--->push-pull
+ 114      =3  sfr P6M0   = 0xCC;  //          =10--->pure input,  11--->open drain
+ 115      =3  sfr SPSTAT = 0xCD;  //
+ 116      =3  sfr SPCTL  = 0xCE;  //
+ 117      =3  sfr SPDAT  = 0xCF;  //
+ 118      =3  
+ 119      =3  sfr PSW  = 0xD0;
+ 120      =3  sfr T4T3M = 0xD1;
+ 121      =3  sfr T4H  = 0xD2;
+ 122      =3  sfr T4L  = 0xD3;
+ 123      =3  sfr T3H  = 0xD4;
+ 124      =3  sfr T3L  = 0xD5;
+ 125      =3  sfr T2H  = 0xD6;
+ 126      =3  sfr T2L  = 0xD7;
+ 127      =3  
+ 128      =3  sfr TH4  = 0xD2;
+ 129      =3  sfr TL4  = 0xD3;
+ 130      =3  sfr TH3  = 0xD4;
+ 131      =3  sfr TL3  = 0xD5;
+ 132      =3  sfr TH2  = 0xD6;
+ 133      =3  sfr TL2  = 0xD7;
+ 134      =3  
+ 135      =3  sfr RL_T4H  = 0xD2;
+ 136      =3  sfr RL_T4L  = 0xD3;
+ 137      =3  sfr RL_T3H  = 0xD4;
+ 138      =3  sfr RL_T3L  = 0xD5;
+ 139      =3  sfr RL_T2H  = 0xD6;
+ 140      =3  sfr RL_T2L  = 0xD7;
+ 141      =3  
+ 142      =3  sfr CCON = 0xD8;  //
+ 143      =3  sfr CMOD = 0xD9;  //
+ 144      =3  sfr CCAPM0 = 0xDA;  //PCAÄ£¿é0µÄ¹¤×÷Ä£Ê½¼Ä´æÆ÷¡£
+ 145      =3  sfr CCAPM1 = 0xDB;  //PCAÄ£¿é1µÄ¹¤×÷Ä£Ê½¼Ä´æÆ÷¡£
+ 146      =3  sfr CCAPM2 = 0xDC;  //PCAÄ£¿é2µÄ¹¤×÷Ä£Ê½¼Ä´æÆ÷¡£
+ 147      =3  
+ 148      =3  sfr ACC    = 0xE0;
+ 149      =3  sfr P7M1   = 0xE1;
+ 150      =3  sfr P7M0   = 0xE2;
+ 151      =3  sfr CMPCR1 = 0xE6;
+ 152      =3  sfr CMPCR2 = 0xE7;
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 8   
+
+ 153      =3  
+ 154      =3  
+ 155      =3  sfr P6     = 0xE8;
+ 156      =3  sfr CL     = 0xE9;  //
+ 157      =3  sfr CCAP0L = 0xEA;  //PCAÄ£¿é0µÄ²¶×½/±È½Ï¼Ä´æÆ÷µÍ8Î»¡£
+ 158      =3  sfr CCAP1L = 0xEB;  //PCAÄ£¿é1µÄ²¶×½/±È½Ï¼Ä´æÆ÷µÍ8Î»¡£
+ 159      =3  sfr CCAP2L = 0xEC;  //PCAÄ£¿é2µÄ²¶×½/±È½Ï¼Ä´æÆ÷µÍ8Î»¡£
+ 160      =3  
+ 161      =3  sfr B      = 0xF0;
+ 162      =3  sfr PCA_PWM0 = 0xF2;  //PCAÄ£¿é0 PWM¼Ä´æÆ÷¡£
+ 163      =3  sfr PCA_PWM1 = 0xF3;  //PCAÄ£¿é1 PWM¼Ä´æÆ÷¡£
+ 164      =3  sfr PCA_PWM2 = 0xF4;  //PCAÄ£¿é2 PWM¼Ä´æÆ÷¡£
+ 165      =3  
+ 166      =3  sfr P7     = 0xF8;
+ 167      =3  sfr CH     = 0xF9;
+ 168      =3  sfr CCAP0H = 0xFA;    //PCAÄ£¿é0µÄ²¶×½/±È½Ï¼Ä´æÆ÷¸ß8Î»¡£
+ 169      =3  sfr CCAP1H = 0xFB;    //PCAÄ£¿é1µÄ²¶×½/±È½Ï¼Ä´æÆ÷¸ß8Î»¡£
+ 170      =3  sfr CCAP2H = 0xFC;    //PCAÄ£¿é2µÄ²¶×½/±È½Ï¼Ä´æÆ÷¸ß8Î»¡£
+ 171      =3  
+ 172      =3  
+ 173      =3  /*  BIT Registers  */
+ 174      =3  /*  PSW   */
+ 175      =3  sbit CY   = PSW^7;
+ 176      =3  sbit AC   = PSW^6;
+ 177      =3  sbit F0   = PSW^5;
+ 178      =3  sbit RS1  = PSW^4;
+ 179      =3  sbit RS0  = PSW^3;
+ 180      =3  sbit OV   = PSW^2;
+ 181      =3  sbit F1   = PSW^1;
+ 182      =3  sbit P    = PSW^0;
+ 183      =3  
+ 184      =3  /*  TCON  */
+ 185      =3  sbit TF1  = TCON^7; //¶¨Ê±Æ÷1Òç³öÖÐ¶Ï±êÖ¾Î»
+ 186      =3  sbit TR1  = TCON^6; //¶¨Ê±Æ÷1ÔËÐÐ¿ØÖÆÎ»
+ 187      =3  sbit TF0  = TCON^5; //¶¨Ê±Æ÷0Òç³öÖÐ¶Ï±êÖ¾Î»
+ 188      =3  sbit TR0  = TCON^4; //¶¨Ê±Æ÷0ÔËÐÐ¿ØÖÆÎ»
+ 189      =3  sbit IE1  = TCON^3; //ÍâÖÐ¶Ï1±êÖ¾Î»
+ 190      =3  sbit IT1  = TCON^2; //ÍâÖÐ¶Ï1ÐÅºÅ·½Ê½¿ØÖÆÎ»£¬1£ºÏÂ½µÑØÖÐ¶Ï£¬0£ºÉÏÉýÏÂ½µ¾ùÖÐ¶Ï¡£
+ 191      =3  sbit IE0  = TCON^1; //ÍâÖÐ¶Ï0±êÖ¾Î»
+ 192      =3  sbit IT0  = TCON^0; //ÍâÖÐ¶Ï0ÐÅºÅ·½Ê½¿ØÖÆÎ»£¬1£ºÏÂ½µÑØÖÐ¶Ï£¬0£ºÉÏÉýÏÂ½µ¾ùÖÐ¶Ï¡£
+ 193      =3  
+ 194      =3  /*  P0  */
+ 195      =3  sbit  P00 = P0^0;
+ 196      =3  sbit  P01 = P0^1;
+ 197      =3  sbit  P02 = P0^2;
+ 198      =3  sbit  P03 = P0^3;
+ 199      =3  sbit  P04 = P0^4;
+ 200      =3  sbit  P05 = P0^5;
+ 201      =3  sbit  P06 = P0^6;
+ 202      =3  sbit  P07 = P0^7;
+ 203      =3  
+ 204      =3  /*  P1  */
+ 205      =3  sbit  P10 = P1^0;
+ 206      =3  sbit  P11 = P1^1;
+ 207      =3  sbit  P12 = P1^2;
+ 208      =3  sbit  P13 = P1^3;
+ 209      =3  sbit  P14 = P1^4;
+ 210      =3  sbit  P15 = P1^5;
+ 211      =3  sbit  P16 = P1^6;
+ 212      =3  sbit  P17 = P1^7;
+ 213      =3  
+ 214      =3  sbit  RXD2      = P1^0;
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 9   
+
+ 215      =3  sbit  TXD2      = P1^1;
+ 216      =3  sbit  CCP1      = P1^0;
+ 217      =3  sbit  CCP0      = P1^1;
+ 218      =3  sbit  SPI_SS    = P1^2;
+ 219      =3  sbit  SPI_MOSI  = P1^3;
+ 220      =3  sbit  SPI_MISO  = P1^4;
+ 221      =3  sbit  SPI_SCLK  = P1^5;
+ 222      =3  
+ 223      =3  /*  P2  */
+ 224      =3  sbit  P20 = P2^0;
+ 225      =3  sbit  P21 = P2^1;
+ 226      =3  sbit  P22 = P2^2;
+ 227      =3  sbit  P23 = P2^3;
+ 228      =3  sbit  P24 = P2^4;
+ 229      =3  sbit  P25 = P2^5;
+ 230      =3  sbit  P26 = P2^6;
+ 231      =3  sbit  P27 = P2^7;
+ 232      =3  
+ 233      =3  /*  P3  */
+ 234      =3  sbit  P30 = P3^0;
+ 235      =3  sbit  P31 = P3^1;
+ 236      =3  sbit  P32 = P3^2;
+ 237      =3  sbit  P33 = P3^3;
+ 238      =3  sbit  P34 = P3^4;
+ 239      =3  sbit  P35 = P3^5;
+ 240      =3  sbit  P36 = P3^6;
+ 241      =3  sbit  P37 = P3^7;
+ 242      =3  
+ 243      =3  sbit RXD  = P3^0;
+ 244      =3  sbit TXD  = P3^1;
+ 245      =3  sbit INT0 = P3^2;
+ 246      =3  sbit INT1 = P3^3;
+ 247      =3  sbit T0   = P3^4;
+ 248      =3  sbit T1   = P3^5;
+ 249      =3  sbit WR   = P3^6;
+ 250      =3  sbit RD   = P3^7;
+ 251      =3  sbit CCP2  = P3^7;
+ 252      =3  
+ 253      =3  sbit CLKOUT0   = P3^5;
+ 254      =3  sbit CLKOUT1   = P3^4;
+ 255      =3  
+ 256      =3  /*  P4  */
+ 257      =3  sbit  P40 = P4^0;
+ 258      =3  sbit  P41 = P4^1;
+ 259      =3  sbit  P42 = P4^2;
+ 260      =3  sbit  P43 = P4^3;
+ 261      =3  sbit  P44 = P4^4;
+ 262      =3  sbit  P45 = P4^5;
+ 263      =3  sbit  P46 = P4^6;
+ 264      =3  sbit  P47 = P4^7;
+ 265      =3  
+ 266      =3  /*  P5  */
+ 267      =3  sbit  P50 = P5^0;
+ 268      =3  sbit  P51 = P5^1;
+ 269      =3  sbit  P52 = P5^2;
+ 270      =3  sbit  P53 = P5^3;
+ 271      =3  sbit  P54 = P5^4;
+ 272      =3  sbit  P55 = P5^5;
+ 273      =3  sbit  P56 = P5^6;
+ 274      =3  sbit  P57 = P5^7;
+ 275      =3  
+ 276      =3  /*  SCON  */
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 10  
+
+ 277      =3  sbit SM0  = SCON^7; //SM0/FE    SM0 SM1 = 00 ~ 11: ·½Ê½0~3
+ 278      =3  sbit SM1  = SCON^6; //
+ 279      =3  sbit SM2  = SCON^5; //¶à»úÍ¨Ñ¶
+ 280      =3  sbit REN  = SCON^4; //½ÓÊÕÔÊÐí
+ 281      =3  sbit TB8  = SCON^3; //·¢ËÍÊý¾ÝµÚ8Î»
+ 282      =3  sbit RB8  = SCON^2; //½ÓÊÕÊý¾ÝµÚ8Î»
+ 283      =3  sbit TI   = SCON^1; //·¢ËÍÖÐ¶Ï±êÖ¾Î»
+ 284      =3  sbit RI   = SCON^0; //½ÓÊÕÖÐ¶Ï±êÖ¾Î»
+ 285      =3  
+ 286      =3  /*  IE   */
+ 287      =3  sbit EA   = IE^7; //ÖÐ¶ÏÔÊÐí×Ü¿ØÖÆÎ»
+ 288      =3  sbit ELVD = IE^6; //µÍÑ¹¼à²âÖÐ¶ÏÔÊÐíÎ»
+ 289      =3  sbit EADC = IE^5; //ADC ÖÐ¶Ï ÔÊÐíÎ»
+ 290      =3  sbit ES   = IE^4; //´®ÐÐÖÐ¶Ï ÔÊÐí¿ØÖÆÎ»
+ 291      =3  sbit ET1  = IE^3; //¶¨Ê±ÖÐ¶Ï1ÔÊÐí¿ØÖÆÎ»
+ 292      =3  sbit EX1  = IE^2; //Íâ²¿ÖÐ¶Ï1ÔÊÐí¿ØÖÆÎ»
+ 293      =3  sbit ET0  = IE^1; //¶¨Ê±ÖÐ¶Ï0ÔÊÐí¿ØÖÆÎ»
+ 294      =3  sbit EX0  = IE^0; //Íâ²¿ÖÐ¶Ï0ÔÊÐí¿ØÖÆÎ»
+ 295      =3  
+ 296      =3  
+ 297      =3  /*  IP   */ 
+ 298      =3  /*
+ 299      =3  sbit PPCA = IP^7; //PCA ÖÐ¶Ï ÓÅÏÈ¼¶Éè¶¨Î»
+ 300      =3  sbit PLVD = IP^6;   //µÍÑ¹ÖÐ¶Ï ÓÅÏÈ¼¶Éè¶¨Î»
+ 301      =3  sbit PADC = IP^5;   //ADC ÖÐ¶Ï ÓÅÏÈ¼¶Éè¶¨Î»
+ 302      =3  sbit PS   = IP^4; //´®ÐÐÖÐ¶Ï0ÓÅÏÈ¼¶Éè¶¨Î»
+ 303      =3  sbit PT1  = IP^3; //¶¨Ê±ÖÐ¶Ï1ÓÅÏÈ¼¶Éè¶¨Î»
+ 304      =3  sbit PX1  = IP^2; //Íâ²¿ÖÐ¶Ï1ÓÅÏÈ¼¶Éè¶¨Î»
+ 305      =3  sbit PT0  = IP^1; //¶¨Ê±ÖÐ¶Ï0ÓÅÏÈ¼¶Éè¶¨Î»
+ 306      =3  sbit PX0  = IP^0; //Íâ²¿ÖÐ¶Ï0ÓÅÏÈ¼¶Éè¶¨Î»
+ 307      =3  */
+ 308      =3  
+ 309      =3  sbit ACC0 = ACC^0;
+ 310      =3  sbit ACC1 = ACC^1;
+ 311      =3  sbit ACC2 = ACC^2;
+ 312      =3  sbit ACC3 = ACC^3;
+ 313      =3  sbit ACC4 = ACC^4;
+ 314      =3  sbit ACC5 = ACC^5;
+ 315      =3  sbit ACC6 = ACC^6;
+ 316      =3  sbit ACC7 = ACC^7;
+ 317      =3  
+ 318      =3  sbit B0 = B^0;
+ 319      =3  sbit B1 = B^1;
+ 320      =3  sbit B2 = B^2;
+ 321      =3  sbit B3 = B^3;
+ 322      =3  sbit B4 = B^4;
+ 323      =3  sbit B5 = B^5;
+ 324      =3  sbit B6 = B^6;
+ 325      =3  sbit B7 = B^7;
+ 326      =3  
+ 327      =3  
+ 328      =3  //              7     6     5    4    3    2    1     0    Reset Value
+ 329      =3  //sfr IE2       = 0xAF;   -     -     -    -    -    -   ESPI  ES2   0000,0000B //Auxiliary Interrupt   
+ 330      =3  #define   SPI_INT_ENABLE()    IE2 |=  2 //ÔÊÐíSPIÖÐ¶Ï
+ 331      =3  #define   SPI_INT_DISABLE()   IE2 &= ~2 //ÔÊÐíSPIÖÐ¶Ï
+ 332      =3  #define   UART2_INT_ENABLE()    IE2 |=  1 //ÔÊÐí´®¿Ú2ÖÐ¶Ï
+ 333      =3  #define   UART2_INT_DISABLE()   IE2 &= ~1 //ÔÊÐí´®¿Ú2ÖÐ¶Ï
+ 334      =3  
+ 335      =3  //                                          7     6     5    4    3    2    1    0    Reset Value
+ 336      =3  //sfr IP      = 0xB8; //ÖÐ¶ÏÓÅÏÈ¼¶µÍÎ»      PPCA  PLVD  PADC  PS   PT1  PX1  PT0  PX0   0000,0000
+ 337      =3  //--------
+ 338      =3  sbit PPCA = IP^7; //PCA Ä£¿éÖÐ¶ÏÓÅÏÈ¼¶
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 11  
+
+ 339      =3  sbit PLVD = IP^6; //µÍÑ¹¼à²âÖÐ¶ÏÓÅÏÈ¼¶
+ 340      =3  sbit PADC = IP^5; //ADC ÖÐ¶ÏÓÅÏÈ¼¶
+ 341      =3  sbit PS     = IP^4; //´®ÐÐÖÐ¶Ï0ÓÅÏÈ¼¶Éè¶¨Î»
+ 342      =3  sbit PT1  = IP^3; //¶¨Ê±ÖÐ¶Ï1ÓÅÏÈ¼¶Éè¶¨Î»
+ 343      =3  sbit PX1  = IP^2; //Íâ²¿ÖÐ¶Ï1ÓÅÏÈ¼¶Éè¶¨Î»
+ 344      =3  sbit PT0  = IP^1; //¶¨Ê±ÖÐ¶Ï0ÓÅÏÈ¼¶Éè¶¨Î»
+ 345      =3  sbit PX0  = IP^0; //Íâ²¿ÖÐ¶Ï0ÓÅÏÈ¼¶Éè¶¨Î»
+ 346      =3  
+ 347      =3  //                                           7      6      5     4     3     2    1     0        Reset Val
+             -ue
+ 348      =3  //sfr IPH   = 0xB7; //ÖÐ¶ÏÓÅÏÈ¼¶¸ßÎ»       PPCAH  PLVDH  PADCH  PSH  PT1H  PX1H  PT0H  PX0H   0000,0000
+ 349      =3  //sfr IP2   = 0xB5; //                       -      -      -     -     -     -   PSPI   PS2   xxxx,xx00
+ 350      =3  //sfr IPH2  = 0xB6; //                       -      -      -     -     -     -   PSPIH  PS2H  xxxx,xx00
+ 351      =3  #define   PPCAH 0x80
+ 352      =3  #define   PLVDH 0x40
+ 353      =3  #define   PADCH 0x20
+ 354      =3  #define   PSH   0x10
+ 355      =3  #define   PT1H  0x08
+ 356      =3  #define   PX1H  0x04
+ 357      =3  #define   PT0H  0x02
+ 358      =3  #define   PX0H  0x01
+ 359      =3  
+ 360      =3  #define   PCA_InterruptFirst()  PPCA = 1
+ 361      =3  #define   LVD_InterruptFirst()  PLVD = 1
+ 362      =3  #define   ADC_InterruptFirst()  PADC = 1
+ 363      =3  #define   UART1_InterruptFirst()  PS   = 1
+ 364      =3  #define   Timer1_InterruptFirst() PT1  = 1
+ 365      =3  #define   INT1_InterruptFirst() PX1  = 1
+ 366      =3  #define   Timer0_InterruptFirst() PT0  = 1
+ 367      =3  #define   INT0_InterruptFirst() PX0  = 1
+ 368      =3  
+ 369      =3  
+ 370      =3  /*************************************************************************************************/
+ 371      =3  
+ 372      =3  
+ 373      =3  
+ 374      =3  /*************************************************************************************************/
+ 375      =3  #define   S1_DoubleRate()   PCON |= 0x80
+ 376      =3  #define   S1_SHIFT()      SCON &= 0x3f
+ 377      =3  #define   S1_8bit()     SCON  = (SCON & 0x3f) | 0x40
+ 378      =3  #define   S1_9bit()     SCON  = (SCON & 0x3f) | 0xc0
+ 379      =3  #define   S1_RX_Enable()    SCON |= 0x10
+ 380      =3  #define   S1_USE_P30P31()   P_SW1 &= ~0xc0          //UART1 Ê¹ÓÃP30 P31¿Ú Ä¬ÈÏ
+ 381      =3  #define   S1_USE_P36P37()   P_SW1 = (P_SW1 & ~0xc0) | 0x40  //UART1 Ê¹ÓÃP36 P37¿Ú
+ 382      =3  #define   S1_USE_P16P17()   P_SW1 = (P_SW1 & ~0xc0) | 0x80  //UART1 Ê¹ÓÃP16 P17¿Ú
+ 383      =3  #define   S1_TXD_RXD_SHORT()  PCON2 |=  (1<<4)  //½«TXDÓëRXDÁ¬½ÓÖÐ¼ÌÊä³ö
+ 384      =3  #define   S1_TXD_RXD_OPEN() PCON2 &= ~(1<<4)  //½«TXDÓëRXDÁ¬½ÓÖÐ¼Ì¶Ï¿ª  Ä¬ÈÏ
+ 385      =3  #define   S1_BRT_UseTimer2()  AUXR |=  1
+ 386      =3  #define   S1_BRT_UseTimer1()  AUXR &= ~1
+ 387      =3  
+ 388      =3  //              7      6      5      4      3      2     1     0        Reset Value
+ 389      =3  //sfr S2CON = 0x9A;   S2SM0    -    S2SM2  S2REN  S2TB8  S2RB8  S2TI  S2RI      00000000B    //S2 Control
+ 390      =3  
+ 391      =3  #define   S2_8bit()     S2CON &= ~(1<<7)    //´®¿Ú2Ä£Ê½0£¬8Î»UART£¬²¨ÌØÂÊ = ¶¨Ê±Æ÷2µÄÒç³öÂÊ / 4
+ 392      =3  #define   S2_9bit()     S2CON |=  (1<<7)    //´®¿Ú2Ä£Ê½1£¬9Î»UART£¬²¨ÌØÂÊ = ¶¨Ê±Æ÷2µÄÒç³öÂÊ / 4
+ 393      =3  #define   S2_RX_Enable()    S2CON |=  (1<<4)    //ÔÊÐí´®2½ÓÊÕ
+ 394      =3  
+ 395      =3  #define   S2_MODE0()      S2CON &= ~(1<<7)    //´®¿Ú2Ä£Ê½0£¬8Î»UART£¬²¨ÌØÂÊ = ¶¨Ê±Æ÷2µÄÒç³öÂÊ / 4
+ 396      =3  #define   S2_MODE1()      S2CON |=  (1<<7)    //´®¿Ú2Ä£Ê½1£¬9Î»UART£¬²¨ÌØÂÊ = ¶¨Ê±Æ÷2µÄÒç³öÂÊ / 4
+ 397      =3  #define   S2_RX_EN()      S2CON |=  (1<<4)              //ÔÊÐí´®2½ÓÊÕ
+ 398      =3  #define   S2_RX_Disable()   S2CON &= ~(1<<4)              //½ûÖ¹´®2½ÓÊÕ
+ 399      =3  #define   TI2         (S2CON & 2) != 0
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 12  
+
+ 400      =3  #define   RI2         (S2CON & 1) != 0
+ 401      =3  #define   SET_TI2()     S2CON |=  2
+ 402      =3  #define   CLR_TI2()     S2CON &= ~2
+ 403      =3  #define   CLR_RI2()     S2CON &= ~1
+ 404      =3  #define   S2TB8_SET()     S2CON |=  8
+ 405      =3  #define   S2TB8_CLR()     S2CON &= ~8
+ 406      =3  #define   S2_Int_en()     IE2   |=  1   //´®¿Ú2ÔÊÐíÖÐ¶Ï
+ 407      =3  #define   S2_USE_P10P11()   P_SW2 &= ~1   //UART2 Ê¹ÓÃP1¿Ú  Ä¬ÈÏ
+ 408      =3  #define   S2_USE_P46P47()   P_SW2 |=  1   //UART2 Ê¹ÓÃP4¿Ú
+ 409      =3  
+ 410      =3  #define   S3_USE_P00P01()   P_SW2 &= ~2   //UART3 Ê¹ÓÃP0¿Ú  Ä¬ÈÏ
+ 411      =3  #define   S3_USE_P50P51()   P_SW2 |=  2   //UART3 Ê¹ÓÃP5¿Ú
+ 412      =3  #define   S4_USE_P02P03()   P_SW2 &= ~4   //UART4 Ê¹ÓÃP0¿Ú  Ä¬ÈÏ
+ 413      =3  #define   S4_USE_P52P53()   P_SW2 |=  4   //UART4 Ê¹ÓÃP5¿Ú
+ 414      =3  
+ 415      =3  
+ 416      =3  /**********************************************************/
+ 417      =3  
+ 418      =3  #define   Timer0_16bitAutoReload()  TMOD &= ~0x03         //16Î»×Ô¶¯ÖØ×°
+ 419      =3  #define   Timer0_16bit()        TMOD  = (TMOD & ~0x03) | 0x01 //16Î»
+ 420      =3  #define   Timer0_8bitAutoReload()   TMOD  = (TMOD & ~0x03) | 0x02 //8Î»×Ô¶¯ÖØ×°
+ 421      =3  #define   Timer0_16bitAutoRL_NoMask() TMOD |=  0x03   //16Î»×Ô¶¯ÖØ×°²»¿ÉÆÁ±ÎÖÐ¶Ï
+ 422      =3  #define   Timer0_AsCounterP32()   TMOD |=  4    //Ê±Æ÷0ÓÃ×ö¼ÆÊýÆ÷
+ 423      =3  #define   Timer0_AsTimer()      TMOD &= ~4    //Ê±Æ÷0ÓÃ×ö¶¨Ê±Æ÷
+ 424      =3  #define   Timer0_ExtControlP34()    TMOD |=  4    //Ê±Æ÷0ÓÉÍâ²¿INT0¸ßµçÆ½ÔÊÐí¶¨Ê±¼ÆÊý
+ 425      =3  #define   Timer0_Run()        TR0 = 1       //ÔÊÐí¶¨Ê±Æ÷0¼ÆÊý
+ 426      =3  #define   Timer0_Stop()       TR0 = 0       //½ûÖ¹¶¨Ê±Æ÷0¼ÆÊý
+ 427      =3  #define   Timer0_InterruptEnable()  ET0 = 1       //ÔÊÐíTimer1ÖÐ¶Ï.
+ 428      =3  #define   Timer0_InterruptDisable() ET0 = 0       //½ûÖ¹Timer1ÖÐ¶Ï.
+ 429      =3  
+ 430      =3  #define   Timer1_16bitAutoReload()  TMOD &= ~0x30         //16Î»×Ô¶¯ÖØ×°
+ 431      =3  #define   Timer1_16bit()        TMOD  = (TMOD & ~0x30) | 0x10 //16Î»
+ 432      =3  #define   Timer1_8bitAutoReload()   TMOD  = (TMOD & ~0x30) | 0x20 //8Î»×Ô¶¯ÖØ×°
+ 433      =3  #define   Timer1_16bitAutoRL_NoMask() TMOD |=  0x30   //16Î»×Ô¶¯ÖØ×°²»¿ÉÆÁ±ÎÖÐ¶Ï
+ 434      =3  #define   Timer1_AsCounterP33()   TMOD |=  (1<<6)   //Ê±Æ÷1ÓÃ×ö¼ÆÊýÆ÷
+ 435      =3  #define   Timer1_AsTimer()      TMOD &= ~(1<<6)   //Ê±Æ÷1ÓÃ×ö¶¨Ê±Æ÷
+ 436      =3  #define   Timer1_ExtControlP35()    TMOD |=  (1<<7)   //Ê±Æ÷1ÓÉÍâ²¿INT1¸ßµçÆ½ÔÊÐí¶¨Ê±¼ÆÊý
+ 437      =3  #define   Timer1_Run()        TR1 = 1       //ÔÊÐí¶¨Ê±Æ÷1¼ÆÊý
+ 438      =3  #define   Timer1_Stop()       TR1 = 0       //½ûÖ¹¶¨Ê±Æ÷1¼ÆÊý
+ 439      =3  #define   Timer1_InterruptEnable()  ET1 = 1       //ÔÊÐíTimer1ÖÐ¶Ï.
+ 440      =3  #define   Timer1_InterruptDisable() ET1 = 0       //½ûÖ¹Timer1ÖÐ¶Ï.
+ 441      =3  
+ 442      =3  
+ 443      =3  //               7     6       5      4     3      2      1      0    Reset Value
+ 444      =3  //sfr AUXR  = 0x8E;   T0x12 T1x12 UART_M0x6  T2R  T2_C/T T2x12 EXTRAM  S1ST2  0000,0000 //Auxiliary Registe
+             -r 
+ 445      =3  
+ 446      =3  #define   Timer0_1T()         AUXR |=  (1<<7) //Timer0 clodk = fo
+ 447      =3  #define   Timer0_12T()        AUXR &= ~(1<<7) //Timer0 clodk = fo/12  12·ÖÆµ, default
+ 448      =3  #define   Timer1_1T()         AUXR |=  (1<<6) //Timer1 clodk = fo
+ 449      =3  #define   Timer1_12T()        AUXR &= ~(1<<6) //Timer1 clodk = fo/12  12·ÖÆµ, default
+ 450      =3  #define   S1_M0x6()         AUXR |=  (1<<5) //UART Mode0 Speed is 6x Standard
+ 451      =3  #define   S1_M0x1()         AUXR &= ~(1<<5) //default,  UART Mode0 Speed is Standard
+ 452      =3  #define   Timer2_Run()        AUXR |=  (1<<4) //ÔÊÐí¶¨Ê±Æ÷2¼ÆÊý
+ 453      =3  #define   Timer2_Stop()       AUXR &= ~(1<<4) //½ûÖ¹¶¨Ê±Æ÷2¼ÆÊý
+ 454      =3  #define   Timer2_AsCounterP31()   AUXR |=  (1<<3) //Ê±Æ÷2ÓÃ×ö¼ÆÊýÆ÷
+ 455      =3  #define   Timer2_AsTimer()      AUXR &= ~(1<<3) //Ê±Æ÷2ÓÃ×ö¶¨Ê±Æ÷
+ 456      =3  #define   Timer2_1T()         AUXR |=  (1<<2) //Timer0 clodk = fo
+ 457      =3  #define   Timer2_12T()        AUXR &= ~(1<<2) //Timer0 clodk = fo/12  12·ÖÆµ, default
+ 458      =3  #define   Timer2_InterruptEnable()  IE2  |=  (1<<2) //ÔÊÐíTimer2ÖÐ¶Ï.
+ 459      =3  #define   Timer2_InterruptDisable() IE2  &= ~(1<<2) //½ûÖ¹Timer2ÖÐ¶Ï.
+ 460      =3  
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 13  
+
+ 461      =3  #define   ExternalRAM_enable()    AUXR |=  2    //ÔÊÐíÍâ²¿XRAM£¬½ûÖ¹Ê¹ÓÃÄÚ²¿1024RAM
+ 462      =3  #define   InternalRAM_enable()    AUXR &= ~2    //½ûÖ¹Íâ²¿XRAM£¬ÔÊÐíÊ¹ÓÃÄÚ²¿1024RAM
+ 463      =3  
+ 464      =3  #define   T0_pulseP34_enable()    AUXR2 |=  1   //ÔÊÐí T0 Òç³öÂö³åÔÚT0(P3.5)½ÅÊä³ö£¬Fck0 = 1/2 T0 Òç³öÂÊ£¬T0¿É
+             -ÒÔ1T»ò12T¡£
+ 465      =3  #define   T0_pulseP34_disable()   AUXR2 &= ~1
+ 466      =3  #define   T1_pulseP35_enable()    AUXR2 |=  2   //ÔÊÐí T1 Òç³öÂö³åÔÚT1(P3.4)½ÅÊä³ö£¬Fck1 = 1/2 T1 Òç³öÂÊ£¬T1¿É
+             -ÒÔ1T»ò12T¡£
+ 467      =3  #define   T1_pulseP35_disable()   AUXR2 &= ~2
+ 468      =3  #define   T2_pulseP30_enable()    AUXR2 |=  4   //ÔÊÐí T2 Òç³öÂö³åÔÚT1(P3.0)½ÅÊä³ö£¬Fck2 = 1/2 T2 Òç³öÂÊ£¬T2¿É
+             -ÒÔ1T»ò12T¡£
+ 469      =3  #define   T2_pulseP30_disable()   AUXR2 &= ~4
+ 470      =3  
+ 471      =3  #define   T0_pulseP35(n)    ET0=0,Timer0_AsTimer(),Timer0_1T(),Timer0_16bitAutoReload(),TH0=(65536-(n/2+MAIN_
+             -Fosc/2)/(n))/256,TL0=(65536-(n/2+MAIN_Fosc/2)/(n))%256,AUXR2 |= bit0,TR0=1    //fx=fosc/(2*M)/n,  M=1 or M=12
+ 472      =3  #define   T1_pulseP34(n)    ET1=0,Timer1_AsTimer(),Timer1_1T(),Timer1_16bitAutoReload(),TH1=(65536-(n/2+MAIN_
+             -Fosc/2)/(n))/256,TL1=(65536-(n/2+MAIN_Fosc/2)/(n))%256,AUXR2 |= bit1,TR1=1    //fx=fosc/(2*M)/n,  M=1 or M=12
+ 473      =3  #define   T2_pulseP30(n)    Timer2_InterruptDisable(),Timer2_AsTimer(),Timer2_1T(),TH2=(65536-(n/2+MAIN_Fosc/
+             -2)/(n))/256,TL2=(65536-(n/2+MAIN_Fosc/2)/(n))%256,AUXR2 |= bit2,Timer2_Run()  //fx=fosc/(2*M)/n,  M=1 or M=12
+ 474      =3  
+ 475      =3  #define   Timer0_Load(n)    TH0 = (n) / 256,  TL0 = (n) % 256
+ 476      =3  #define   Timer1_Load(n)    TH1 = (n) / 256,  TL1 = (n) % 256
+ 477      =3  #define   Timer2_Load(n)    TH2 = (n) / 256,  TL2 = (n) % 256
+ 478      =3  
+ 479      =3  #define   Timer0_Load_us(n) TH0=(65536-MainFosc_KHZ*(n)/1000)/256,TL0=(65536-MainFosc_KHZ*(n)/1000)%256
+ 480      =3  #define   Timer1_Load_us(n) TH1=(65536-MainFosc_KHZ*(n)/1000)/256,TL1=(65536-MainFosc_KHZ*(n)/1000)%256
+ 481      =3  #define   Timer2_Load_us(n) TH2=(65536-MainFosc_KHZ*(n)/1000)/256,TL2=(65536-MainFosc_KHZ*(n)/1000)%256
+ 482      =3  
+ 483      =3  
+ 484      =3  //sfr WDT_CONTR = 0xC1; //Watch-Dog-Timer Control register
+ 485      =3  //                                      7     6     5      4       3      2   1   0     Reset Value
+ 486      =3  //                                  WDT_FLAG  -  EN_WDT CLR_WDT IDLE_WDT PS2 PS1 PS0    xx00,0000
+ 487      =3  #define D_WDT_FLAG      (1<<7)
+ 488      =3  #define D_EN_WDT      (1<<5)
+ 489      =3  #define D_CLR_WDT     (1<<4)  //auto clear
+ 490      =3  #define D_IDLE_WDT      (1<<3)  //WDT counter when Idle
+ 491      =3  #define D_WDT_SCALE_2   0
+ 492      =3  #define D_WDT_SCALE_4   1
+ 493      =3  #define D_WDT_SCALE_8   2   //T=393216*N/fo
+ 494      =3  #define D_WDT_SCALE_16    3
+ 495      =3  #define D_WDT_SCALE_32    4
+ 496      =3  #define D_WDT_SCALE_64    5
+ 497      =3  #define D_WDT_SCALE_128   6
+ 498      =3  #define D_WDT_SCALE_256   7
+ 499      =3  
+ 500      =3  #define WDT_reset(n)  WDT_CONTR = D_EN_WDT + D_CLR_WDT + D_IDLE_WDT + (n)   //³õÊ¼»¯WDT£¬Î¹¹·
+ 501      =3  
+ 502      =3  
+ 503      =3  //              7     6      5    4     3      2    1     0     Reset Value
+ 504      =3  //sfr PCON   = 0x87;  SMOD  SMOD0  LVDF  POF   GF1    GF0   PD   IDL    0001,0000  //Power Control 
+ 505      =3  //SMOD    //´®¿ÚË«±¶ËÙ
+ 506      =3  //SMOD0
+ 507      =3  #define   LVDF    (1<<5)  //P4.6µÍÑ¹¼ì²â±êÖ¾
+ 508      =3  //POF
+ 509      =3  //GF1
+ 510      =3  //GF0
+ 511      =3  //#define   D_PD    2   //set 1, power down mode
+ 512      =3  //#define   D_IDLE    1   //set 1, idle mode
+ 513      =3  #define   MCU_IDLE()      PCON |= 1 //MCU ½øÈë IDLE Ä£Ê½
+ 514      =3  #define   MCU_POWER_DOWN()  PCON |= 2 //MCU ½øÈë Ë¯Ãß Ä£Ê½
+ 515      =3  
+ 516      =3  
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 14  
+
+ 517      =3  //sfr ISP_CMD   = 0xC5;
+ 518      =3  #define   ISP_STANDBY() ISP_CMD = 0   //ISP¿ÕÏÐÃüÁî£¨½ûÖ¹£©
+ 519      =3  #define   ISP_READ()    ISP_CMD = 1   //ISP¶Á³öÃüÁî
+ 520      =3  #define   ISP_WRITE()   ISP_CMD = 2   //ISPÐ´ÈëÃüÁî
+ 521      =3  #define   ISP_ERASE()   ISP_CMD = 3   //ISP²Á³ýÃüÁî
+ 522      =3  
+ 523      =3  //sfr ISP_TRIG  = 0xC6;
+ 524      =3  #define   ISP_TRIG()  ISP_TRIG = 0x5A,  ISP_TRIG = 0xA5   //ISP´¥·¢ÃüÁî
+ 525      =3  
+ 526      =3  //                7    6    5      4    3    2    1     0    Reset Value
+ 527      =3  //sfr IAP_CONTR = 0xC7;   IAPEN SWBS SWRST CFAIL  -   WT2  WT1   WT0   0000,x000  //IAP Control Register
+ 528      =3  #define ISP_EN      (1<<7)
+ 529      =3  #define ISP_SWBS    (1<<6)
+ 530      =3  #define ISP_SWRST   (1<<5)
+ 531      =3  #define ISP_CMD_FAIL  (1<<4)
+ 532      =3  #define ISP_WAIT_1MHZ 7
+ 533      =3  #define ISP_WAIT_2MHZ 6
+ 534      =3  #define ISP_WAIT_3MHZ 5
+ 535      =3  #define ISP_WAIT_6MHZ 4
+ 536      =3  #define ISP_WAIT_12MHZ  3
+ 537      =3  #define ISP_WAIT_20MHZ  2
+ 538      =3  #define ISP_WAIT_24MHZ  1
+ 539      =3  #define ISP_WAIT_30MHZ  0
+ 540      =3  
+ 541      =3  #if (MAIN_Fosc >= 24000000L)
+           =3   #define   ISP_WAIT_FREQUENCY  ISP_WAIT_30MHZ
+           =3 #elif (MAIN_Fosc >= 20000000L)
+           =3   #define   ISP_WAIT_FREQUENCY  ISP_WAIT_24MHZ
+           =3 #elif (MAIN_Fosc >= 12000000L)
+           =3   #define   ISP_WAIT_FREQUENCY  ISP_WAIT_20MHZ
+           =3 #elif (MAIN_Fosc >= 6000000L)
+ 548      =3    #define   ISP_WAIT_FREQUENCY  ISP_WAIT_12MHZ
+ 549      =3  #elif (MAIN_Fosc >= 3000000L)
+           =3   #define   ISP_WAIT_FREQUENCY  ISP_WAIT_6MHZ
+           =3 #elif (MAIN_Fosc >= 2000000L)
+           =3   #define   ISP_WAIT_FREQUENCY  ISP_WAIT_3MHZ
+           =3 #elif (MAIN_Fosc >= 1000000L)
+           =3   #define   ISP_WAIT_FREQUENCY  ISP_WAIT_2MHZ
+           =3 #else
+           =3   #define   ISP_WAIT_FREQUENCY  ISP_WAIT_1MHZ
+           =3 #endif
+ 558      =3  
+ 559      =3  
+ 560      =3  
+ 561      =3  /* ADC Register */
+ 562      =3  //                7       6      5       4         3      2    1    0   Reset Value
+ 563      =3  //sfr ADC_CONTR = 0xBC;   ADC_POWER SPEED1 SPEED0 ADC_FLAG ADC_START CHS2 CHS1 CHS0 0000,0000 //AD ×ª»»¿ØÖÆ
+             -¼Ä´æÆ÷ 
+ 564      =3  //sfr ADC_RES  = 0xBD;    ADCV.9 ADCV.8 ADCV.7 ADCV.6 ADCV.5 ADCV.4 ADCV.3 ADCV.2   0000,0000 //A/D ×ª»»½á¹û
+             -¸ß8Î» 
+ 565      =3  //sfr ADC_RESL = 0xBE;                          ADCV.1 ADCV.0   0000,0000 //A/D ×ª»»½á¹ûµÍ2Î»
+ 566      =3  //sfr ADC_CONTR  = 0xBC;  //Ö±½ÓÓÃMOV²Ù×÷£¬²»ÒªÓÃÓë»ò
+ 567      =3  
+ 568      =3  
+ 569      =3  //sfr SPCTL  = 0xCE;  SPI¿ØÖÆ¼Ä´æÆ÷
+ 570      =3  //   7       6       5       4       3       2       1       0      Reset Value
+ 571      =3  //  SSIG  SPEN  DORD  MSTR  CPOL  CPHA  SPR1  SPR0    0x00
+ 572      =3  
+ 573      =3  #define SPI_SSIG_None()   SPCTL |=  (1<<7)    //1: ºöÂÔSS½Å
+ 574      =3  #define SPI_SSIG_Enable() SPCTL &= ~(1<<7)    //0: SS½ÅÓÃÓÚ¾ö¶¨Ö÷´Ó»ú
+ 575      =3  #define SPI_Enable()    SPCTL |=  (1<<6)    //1: ÔÊÐíSPI
+ 576      =3  #define SPI_Disable()   SPCTL &= ~(1<<6)    //0: ½ûÖ¹SPI
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 15  
+
+ 577      =3  #define SPI_LSB_First()   SPCTL |=  (1<<5)    //1: LSBÏÈ·¢
+ 578      =3  #define SPI_MSB_First()   SPCTL &= ~(1<<5)    //0: MSBÏÈ·¢
+ 579      =3  #define SPI_Master()    SPCTL |=  (1<<4)    //1: ÉèÎªÖ÷»ú
+ 580      =3  #define SPI_Slave()     SPCTL &= ~(1<<4)    //0: ÉèÎª´Ó»ú
+ 581      =3  #define SPI_SCLK_NormalH()  SPCTL |=  (1<<3)    //1: ¿ÕÏÐÊ±SCLKÎª¸ßµçÆ½
+ 582      =3  #define SPI_SCLK_NormalL()  SPCTL &= ~(1<<3)    //0: ¿ÕÏÐÊ±SCLKÎªµÍµçÆ½
+ 583      =3  #define SPI_PhaseH()    SPCTL |=  (1<<2)    //1: 
+ 584      =3  #define SPI_PhaseL()    SPCTL &= ~(1<<2)    //0: 
+ 585      =3  #define SPI_Speed(n)    SPCTL = (SPCTL & ~3) | (n)  //ÉèÖÃËÙ¶È, 0 -- fosc/4, 1 -- fosc/16, 2 -- fosc/64, 3 --
+             - fosc/128
+ 586      =3  
+ 587      =3  //sfr SPDAT  = 0xCF; //SPI Data Register                                                     0000,0000
+ 588      =3  //sfr SPSTAT  = 0xCD; //SPI×´Ì¬¼Ä´æÆ÷
+ 589      =3  //   7       6      5   4   3   2   1   0     Reset Value
+ 590      =3  //  SPIF  WCOL  - - - - - -
+ 591      =3  #define SPIF  0x80    //SPI´«ÊäÍê³É±êÖ¾¡£Ð´Èë1Çå0¡£
+ 592      =3  #define WCOL  0x40    //SPIÐ´³åÍ»±êÖ¾¡£Ð´Èë1Çå0¡£
+ 593      =3  
+ 594      =3  #define   SPI_USE_P12P13P14P15()  AUXR1 &= ~0x0c  //½«SPIÇÐ»»µ½P12(SS) P13(MOSI) P14(MISO) P15(SCLK)(ÉÏµçÄ¬ÈÏ
+             -)¡£
+ 595      =3  #define   SPI_USE_P24P23P22P21()  AUXR1 = (AUXR1 & ~0x0c) | 0x04  //½«SPIÇÐ»»µ½P24(SS) P23(MOSI) P22(MISO) P2
+             -1(SCLK)¡£
+ 596      =3  #define   SPI_USE_P54P40P41P43()  AUXR1 = (AUXR1 & ~0x0c) | 0x08  //½«SPIÇÐ»»µ½P54(SS) P40(MOSI) P41(MISO) P4
+             -3(SCLK)¡£
+ 597      =3  
+ 598      =3  
+ 599      =3  /*
+ 600      =3  ;PCA_PWMn:    7       6     5   4   3   2     1       0
+ 601      =3  ;     EBSn_1  EBSn_0  - - - - EPCnH EPCnL
+ 602      =3  ;B5-B2:   ±£Áô
+ 603      =3  ;B1(EPCnH): ÔÚPWMÄ£Ê½ÏÂ£¬ÓëCCAPnH×é³É9Î»Êý¡£
+ 604      =3  ;B0(EPCnL): ÔÚPWMÄ£Ê½ÏÂ£¬ÓëCCAPnL×é³É9Î»Êý¡£
+ 605      =3  */
+ 606      =3  #define   PWM0_NORMAL() PCA_PWM0 &= ~3        //PWM0Õý³£Êä³ö(Ä¬ÈÏ)
+ 607      =3  #define   PWM0_OUT_0()  PCA_PWM0 |=  3        //PWM0Ò»Ö±Êä³ö0
+ 608      =3  #define   PWM0_OUT_1()  PCA_PWM0 &= ~3, CCAP0H = 0  //PWM0Ò»Ö±Êä³ö1
+ 609      =3  
+ 610      =3  #define   PWM1_NORMAL() PCA_PWM1 &= ~3        //PWM0Õý³£Êä³ö(Ä¬ÈÏ)
+ 611      =3  #define   PWM1_OUT_0()  PCA_PWM1 |=  3        //PWM0Ò»Ö±Êä³ö0
+ 612      =3  #define   PWM1_OUT_1()  PCA_PWM1 &= ~3, CCAP1H = 0  //PWM1Ò»Ö±Êä³ö1
+ 613      =3  
+ 614      =3  #define   PWM2_NORMAL() PCA_PWM2 &= ~3        //PWM1Õý³£Êä³ö(Ä¬ÈÏ)
+ 615      =3  #define   PWM2_OUT_0()  PCA_PWM2 |=  3        //PWM2Ò»Ö±Êä³ö0
+ 616      =3  #define   PWM2_OUT_1()  PCA_PWM2 &= ~3, CCAP2H = 0  //PWM2Ò»Ö±Êä³ö1
+ 617      =3  
+ 618      =3  
+ 619      =3  //            7     6     5     4     3     2     1     0     Reset Value
+ 620      =3  //sfr CCON   = 0xD8;  CF    CR    -     -     -    CCF2  CCF1  CCF0   00xx,xx00 //PCA ¿ØÖÆ¼Ä´æÆ÷¡£
+ 621      =3  sbit CCF0  = CCON^0;  //PCA Ä£¿é0ÖÐ¶Ï±êÖ¾£¬ÓÉÓ²¼þÖÃÎ»£¬±ØÐëÓÉÈí¼þÇå0¡£
+ 622      =3  sbit CCF1  = CCON^1;  //PCA Ä£¿é1ÖÐ¶Ï±êÖ¾£¬ÓÉÓ²¼þÖÃÎ»£¬±ØÐëÓÉÈí¼þÇå0¡£
+ 623      =3  sbit CCF2  = CCON^2;  //PCA Ä£¿é2ÖÐ¶Ï±êÖ¾£¬ÓÉÓ²¼þÖÃÎ»£¬±ØÐëÓÉÈí¼þÇå0¡£
+ 624      =3  sbit CR    = CCON^6;  //1: ÔÊÐíPCA¼ÆÊýÆ÷¼ÆÊý£¬±ØÐëÓÉÈí¼þÇå0¡£
+ 625      =3  sbit CF    = CCON^7;  //PCA¼ÆÊýÆ÷Òç³ö£¨CH£¬CLÓÉFFFFH±äÎª0000H£©±êÖ¾¡£PCA¼ÆÊýÆ÷Òç³öºóÓÉÓ²¼þÖÃÎ»£¬±ØÐëÓÉÈí¼þÇ
+             -å0¡£
+ 626      =3  
+ 627      =3  //           7     6     5     4     3     2     1     0    Reset Value
+ 628      =3  //sfr CMOD  = 0xD9; CIDL   -     -     -   CPS2   CPS1  CPS0  ECF   0xxx,0000 //PCA ¹¤×÷Ä£Ê½¼Ä´æÆ÷¡£
+ 629      =3  #define PCA_IDLE_OFF()    CMOD |=  (1<<7)       //IDLE×´Ì¬PCAÍ£Ö¹¼ÆÊý¡£
+ 630      =3  #define PCA_IDLE_ON()   CMOD &= ~(1<<7)       //IDLE×´Ì¬PCA¼ÌÐø¼ÆÊý¡£
+ 631      =3  #define PCA_CLK_12T()   CMOD &= ~0x0E       //PCA¼ÆÊýÂö³åÑ¡ÔñÍâ²¿¾§Õñ/12¡£  fosc/12
+ 632      =3  #define PCA_CLK_2T()    CMOD = (CMOD & ~0x0E) + 2 //PCA¼ÆÊýÂö³åÑ¡ÔñÍâ²¿¾§Õñ/2¡£ fosc/2
+ 633      =3  #define PCA_CLK_T0()    CMOD = (CMOD & ~0x0E) + 4 //PCA¼ÆÊýÂö³åÑ¡ÔñTimer0ÖÐ¶Ï£¬Timer0¿ÉÍ¨¹ýAUXR¼Ä´æÆ÷ÉèÖÃ³É¹
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 16  
+
+             -¤×÷ÔÚ12T»ò1TÄ£Ê½¡£
+ 634      =3  #define PCA_CLK_ECI()   CMOD = (CMOD & ~0x0E) + 6 //PCA¼ÆÊýÂö³åÑ¡Ôñ´ÓECI/P3.4½ÅÊäÈëµÄÍâ²¿Ê±ÖÓ£¬×î´ó fosc/2¡
+             -£
+ 635      =3  #define PCA_CLK_1T()    CMOD = (CMOD & ~0x0E) + 8 //PCA¼ÆÊýÂö³åÑ¡ÔñÍâ²¿¾§Õñ¡£   Fosc/1
+ 636      =3  #define PCA_CLK_4T()    CMOD = (CMOD & ~0x0E) + 10  //PCA¼ÆÊýÂö³åÑ¡ÔñÍâ²¿¾§Õñ/4¡£ Fosc/4
+ 637      =3  #define PCA_CLK_6T()    CMOD = (CMOD & ~0x0E) + 12  //PCA¼ÆÊýÂö³åÑ¡ÔñÍâ²¿¾§Õñ/6¡£ Fosc/6
+ 638      =3  #define PCA_CLK_8T()    CMOD = (CMOD & ~0x0E) + 14  //PCA¼ÆÊýÂö³åÑ¡ÔñÍâ²¿¾§Õñ/8¡£ Fosc/8
+ 639      =3  #define PCA_INT_ENABLE()  CMOD |=  1          //PCA¼ÆÊýÆ÷Òç³öÖÐ¶ÏÔÊÐíÎ»£¬1---ÔÊÐíCF£¨CCON.7£©²úÉúÖÐ¶Ï¡£
+ 640      =3  #define PCA_INT_DISABLE() CMOD &= ~1          //PCA¼ÆÊýÆ÷Òç³öÖÐ¶Ï½ûÖ¹¡£
+ 641      =3  
+ 642      =3  //              7      6       5        4       3       2       1      0    Reset Value
+ 643      =3  //sfr AUXR1 = 0xA2;   S1_S1  S1_S0  CCP_S1   CCP_S0  SPI_S1   SPI_S0    -     DPS   0100,0000 //Auxiliary 
+             -Register 1
+ 644      =3  
+ 645      =3  #define   PCA_USE_P12P11P10P37()  AUXR1 &= ~0x30    //½«PCA/PWMÇÐ»»µ½P12(ECI) P11(CCP0) P10(CCP1) P37(CCP2)(ÉÏ
+             -µçÄ¬ÈÏ)¡£
+ 646      =3  #define   PCA_USE_P34P35P36P37()  AUXR1 = (AUXR1 & ~0x30) | 0x10  //½«PCA/PWMÇÐ»»µ½P34(ECI) P35(CCP0) P36(CCP
+             -1) P37(CCP2)¡£
+ 647      =3  #define   PCA_USE_P24P25P26P27()  AUXR1 = (AUXR1 & ~0x30) | 0x20  //½«PCA/PWMÇÐ»»µ½P24(ECI) P25(CCP0) P26(CCP
+             -1) P27(CCP2)¡£
+ 648      =3  
+ 649      =3  #define   DPS_SEL1()    AUXR1 |=  1   //1£ºÑ¡ÔñDPTR1¡£
+ 650      =3  #define   DPS_SEL0()    AUXR1 &= ~1   //0£ºÑ¡ÔñDPTR0(ÉÏµçÄ¬ÈÏ)¡£
+ 651      =3  
+ 652      =3  
+ 653      =3  /*                  7     6      5      4     3     2     1     0     Reset Value
+ 654      =3  //sfr CCAPM0 = 0xDA;  PWM ¼Ä´æÆ÷  -   ECOM0  CAPP0  CAPN0  MAT0  TOG0  PWM0  ECCF0   x000,0000  //PCA Ä£¿é0 
+ 655      =3  //sfr CCAPM1 = 0xDB;  PWM ¼Ä´æÆ÷  -   ECOM1  CAPP1  CAPN1  MAT1  TOG1  PWM1  ECCF1   x000,0000  //PCA Ä£¿é1
+ 656      =3  //sfr CCAPM2 = 0xDC;  PWM ¼Ä´æÆ÷  -   ECOM2  CAPP2  CAPN2  MAT2  TOG2  PWM2  ECCF2   x000,0000  //PCA Ä£¿é2
+ 657      =3  ;ECOMn = 1: ÔÊÐí±È½Ï¹¦ÄÜ¡£
+ 658      =3  ;CAPPn = 1: ÔÊÐíÉÏÉýÑØ´¥·¢²¶×½¹¦ÄÜ¡£
+ 659      =3  ;CAPNn = 1: ÔÊÐíÏÂ½µÑØ´¥·¢²¶×½¹¦ÄÜ¡£
+ 660      =3  ;MATn  = 1: µ±Æ¥ÅäÇé¿ö·¢ÉúÊ±£¬ÔÊÐíCCONÖÐµÄCCFnÖÃÎ»¡£
+ 661      =3  ;TOGn  = 1: µ±Æ¥ÅäÇé¿ö·¢ÉúÊ±£¬CEXn½«·­×ª¡£(CEX0/PCA0/PWM0/P3.7,CEX1/PCA1/PWM1/P3.5)
+ 662      =3  ;PWMn  = 1: ½«CEXnÉèÖÃÎªPWMÊä³ö¡£
+ 663      =3  ;ECCFn = 1: ÔÊÐíCCONÖÐµÄCCFn´¥·¢ÖÐ¶Ï¡£
+ 664      =3  ;ECOMn CAPPn CAPNn MATn TOGn PWMn ECCFn
+ 665      =3  ;  0     0     0    0    0    0     0   00H Î´ÆôÓÃÈÎºÎ¹¦ÄÜ¡£
+ 666      =3  ;  x     1     0    0    0    0     x   20H 16Î»CEXnÉÏÉýÑØ´¥·¢²¶×½¹¦ÄÜ¡£
+ 667      =3  ;  x     0     1    0    0    0     x   10H 16Î»CEXnÏÂ½µÑØ´¥·¢²¶×½¹¦ÄÜ¡£
+ 668      =3  ;  x     1     1    0    0    0     x   30H 16Î»CEXn/PCAn±ßÑØ£¨ÉÏ¡¢ÏÂÑØ£©´¥·¢²¶×½¹¦ÄÜ¡£
+ 669      =3  ;  1     0     0    1    0    0     x   48H 16Î»Èí¼þ¶¨Ê±Æ÷¡£
+ 670      =3  ;  1     0     0    1    1    0     x   4CH 16Î»¸ßËÙÂö³åÊä³ö¡£
+ 671      =3  ;  1     0     0    0    0    1     0   42H 8Î»PWM¡£ÎÞÖÐ¶Ï
+ 672      =3  ;  1     1     0    0    0    1     1   63H 8Î»PWM¡£µÍ±ä¸ß¿É²úÉúÖÐ¶Ï
+ 673      =3  ;  1     0     1    0    0    1     1   53H 8Î»PWM¡£¸ß±äµÍ¿É²úÉúÖÐ¶Ï
+ 674      =3  ;  1     1     1    0    0    1     1   73H 8Î»PWM¡£µÍ±ä¸ß»ò¸ß±äµÍ¾ù¿É²úÉúÖÐ¶Ï
+ 675      =3  ;*******************************************************************
+ 676      =3  ;*******************************************************************/
+ 677      =3  #define   PCA0_none()       CCAPM0 = 0
+ 678      =3  #define   PCA0_PWM(nbit)      CCAPM0 = 0x42,PCA_PWM0 = (PCA_PWM0 & 0x0c) | ((8-nbit)<<6)
+ 679      =3  #define   PCA0_PWM_rise_int(nbit) CCAPM0 = 0x63,PCA_PWM0 = (PCA_PWM0 & 0x0c) | ((8-nbit)<<6)
+ 680      =3  #define   PCA0_PWM_fall_int(nbit) CCAPM0 = 0x53,PCA_PWM0 = (PCA_PWM0 & 0x0c) | ((8-nbit)<<6)
+ 681      =3  #define   PCA0_PWM_edge_int(nbit) CCAPM0 = 0x73,PCA_PWM0 = (PCA_PWM0 & 0x0c) | ((8-nbit)<<6)
+ 682      =3  #define   PCA0_capture_rise()   CCAPM0 = (0x20 + 1)
+ 683      =3  #define   PCA0_capture_fall()   CCAPM0 = (0x10 + 1)
+ 684      =3  #define   PCA0_capture_edge()   CCAPM0 = (0x30 + 1)
+ 685      =3  #define   PCA0_16bit_Timer()    CCAPM0 = (0x48 + 1)
+ 686      =3  #define   PCA0_High_Pulse()   CCAPM0 = (0x4C + 1)
+ 687      =3  
+ 688      =3  #define   PCA1_none()       CCAPM1 = 0
+ 689      =3  #define   PCA1_PWM(nbit)      CCAPM1 = 0x42,PCA_PWM1 = (PCA_PWM1 & 0x0c) | ((8-nbit)<<6)
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 17  
+
+ 690      =3  #define   PCA1_PWM_rise_int(nbit) CCAPM1 = 0x63,PCA_PWM1 = (PCA_PWM1 & 0x0c) | ((8-nbit)<<6)
+ 691      =3  #define   PCA1_PWM_fall_int(nbit) CCAPM1 = 0x53,PCA_PWM1 = (PCA_PWM1 & 0x0c) | ((8-nbit)<<6)
+ 692      =3  #define   PCA1_PWM_edge_int(nbit) CCAPM1 = 0x73,PCA_PWM1 = (PCA_PWM1 & 0x0c) | ((8-nbit)<<6)
+ 693      =3  #define   PCA1_capture_rise()   CCAPM1 = (0x20 + 1)
+ 694      =3  #define   PCA1_capture_fall()   CCAPM1 = (0x10 + 1)
+ 695      =3  #define   PCA1_capture_edge()   CCAPM1 = (0x30 + 1)
+ 696      =3  #define   PCA1_16bit_Timer()    CCAPM1 = (0x48 + 1)
+ 697      =3  #define   PCA1_High_Pulse()   CCAPM1 = (0x4C + 1)
+ 698      =3  
+ 699      =3  #define   PCA2_none()       CCAPM2 = 0
+ 700      =3  #define   PCA2_PWM(nbit)      CCAPM2 = 0x42,PCA_PWM2 = (PCA_PWM2 & 0x0c) | ((8-nbit)<<6)
+ 701      =3  #define   PCA2_PWM_rise_int(nbit) CCAPM2 = 0x63,PCA_PWM2 = (PCA_PWM2 & 0x0c) | ((8-nbit)<<6)
+ 702      =3  #define   PCA2_PWM_fall_int(nbit) CCAPM2 = 0x53,PCA_PWM2 = (PCA_PWM2 & 0x0c) | ((8-nbit)<<6)
+ 703      =3  #define   PCA2_PWM_edge_int(nbit) CCAPM2 = 0x73,PCA_PWM2 = (PCA_PWM2 & 0x0c) | ((8-nbit)<<6)
+ 704      =3  #define   PCA2_capture_rise()   CCAPM2 = (0x20 + 1)
+ 705      =3  #define   PCA2_capture_fall()   CCAPM2 = (0x10 + 1)
+ 706      =3  #define   PCA2_capture_edge()   CCAPM2 = (0x30 + 1)
+ 707      =3  #define   PCA2_16bit_Timer()    CCAPM2 = (0x48 + 1)
+ 708      =3  #define   PCA2_High_Pulse()   CCAPM2 = (0x4C + 1)
+ 709      =3  
+ 710      =3  /* Above is STC additional SFR or change */
+ 711      =3  
+ 712      =3  
+ 713      =3  
+ 714      =3  
+ 715      =3  /**********************************************************/
+ 716      =3  typedef   unsigned char u8;
+ 717      =3  typedef   unsigned int  u16;
+ 718      =3  typedef   unsigned long u32;
+ 719      =3  
+ 720      =3  /**********************************************************/
+ 721      =3  #define NOP1()  _nop_()
+ 722      =3  #define NOP2()  NOP1(),NOP1()
+ 723      =3  #define NOP3()  NOP2(),NOP1()
+ 724      =3  #define NOP4()  NOP3(),NOP1()
+ 725      =3  #define NOP5()  NOP4(),NOP1()
+ 726      =3  #define NOP6()  NOP5(),NOP1()
+ 727      =3  #define NOP7()  NOP6(),NOP1()
+ 728      =3  #define NOP8()  NOP7(),NOP1()
+ 729      =3  #define NOP9()  NOP8(),NOP1()
+ 730      =3  #define NOP10() NOP9(),NOP1()
+ 731      =3  #define NOP11() NOP10(),NOP1()
+ 732      =3  #define NOP12() NOP11(),NOP1()
+ 733      =3  #define NOP13() NOP12(),NOP1()
+ 734      =3  #define NOP14() NOP13(),NOP1()
+ 735      =3  #define NOP15() NOP14(),NOP1()
+ 736      =3  #define NOP16() NOP15(),NOP1()
+ 737      =3  #define NOP17() NOP16(),NOP1()
+ 738      =3  #define NOP18() NOP17(),NOP1()
+ 739      =3  #define NOP19() NOP18(),NOP1()
+ 740      =3  #define NOP20() NOP19(),NOP1()
+ 741      =3  #define NOP21() NOP20(),NOP1()
+ 742      =3  #define NOP22() NOP21(),NOP1()
+ 743      =3  #define NOP23() NOP22(),NOP1()
+ 744      =3  #define NOP24() NOP23(),NOP1()
+ 745      =3  #define NOP25() NOP24(),NOP1()
+ 746      =3  #define NOP26() NOP25(),NOP1()
+ 747      =3  #define NOP27() NOP26(),NOP1()
+ 748      =3  #define NOP28() NOP27(),NOP1()
+ 749      =3  #define NOP29() NOP28(),NOP1()
+ 750      =3  #define NOP30() NOP29(),NOP1()
+ 751      =3  #define NOP31() NOP30(),NOP1()
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 18  
+
+ 752      =3  #define NOP32() NOP31(),NOP1()
+ 753      =3  #define NOP33() NOP32(),NOP1()
+ 754      =3  #define NOP34() NOP33(),NOP1()
+ 755      =3  #define NOP35() NOP34(),NOP1()
+ 756      =3  #define NOP36() NOP35(),NOP1()
+ 757      =3  #define NOP37() NOP36(),NOP1()
+ 758      =3  #define NOP38() NOP37(),NOP1()
+ 759      =3  #define NOP39() NOP38(),NOP1()
+ 760      =3  #define NOP40() NOP39(),NOP1()
+ 761      =3  #define NOP(N)  NOP##N()
+ 762      =3  
+ 763      =3  
+ 764      =3  /**********************************************/
+ 765      =3  
+ 766      =3  
+ 767      =3  /****************************************************************/
+ 768      =3  
+ 769      =3  
+ 770      =3  //sfr INT_CLKO = 0x8F;  //¸½¼ÓµÄ SFR WAKE_CLKO (µØÖ·£º0x8F)
+ 771      =3  /*
+ 772      =3      7   6    5    4   3     2        1       0         Reset Value
+ 773      =3      -  EX4  EX3  EX2  -   T2CLKO   T1CLKO  T0CLKO      0000,0000B
+ 774      =3  b6 -  EX4      : ÍâÖÐ¶ÏINT4ÔÊÐí
+ 775      =3  b5 -  EX3      : ÍâÖÐ¶ÏINT3ÔÊÐí
+ 776      =3  b4 -  EX2      : ÍâÖÐ¶ÏINT2ÔÊÐí
+ 777      =3  b2 - T1CLKO    : ÔÊÐí T2 Òç³öÂö³åÔÚP3.0½ÅÊä³ö£¬Fck1 = 1/2 T1 Òç³öÂÊ
+ 778      =3  b1 - T1CLKO    : ÔÊÐí T1 Òç³öÂö³åÔÚP3.4½ÅÊä³ö£¬Fck1 = 1/2 T1 Òç³öÂÊ
+ 779      =3  b0 - T0CLKO    : ÔÊÐí T0 Òç³öÂö³åÔÚP3.5½ÅÊä³ö£¬Fck0 = 1/2 T0 Òç³öÂÊ
+ 780      =3  */
+ 781      =3  
+ 782      =3  #define   LVD_InterruptEnable()   ELVD = 1
+ 783      =3  #define   LVD_InterruptDisable()    ELVD = 0
+ 784      =3  
+ 785      =3  
+ 786      =3  //sfr WKTCL = 0xAA; //STC11F\10ºÍSTC15ÏµÁÐ »½ÐÑ¶¨Ê±Æ÷µÍ×Ö½Ú
+ 787      =3  //sfr WKTCH = 0xAB; //STC11F\10ºÍSTC15ÏµÁÐ »½ÐÑ¶¨Ê±Æ÷¸ß×Ö½Ú
+ 788      =3  //  B7    B6  B5  B4  B3  B2  B1  B0    B7  B6  B5  B4  B3  B2  B1  B0
+ 789      =3  //  WKTEN       S11 S10 S9  S8    S7  S6  S5  S4  S3  S2  S1  S0  n * 560us
+ 790      =3  #define   WakeTimerDisable()    WKTCH &= 0x7f //WKTEN = 0   ½ûÖ¹Ë¯Ãß»½ÐÑ¶¨Ê±Æ÷
+ 791      =3  #define   WakeTimerSet(scale)   WKTCL = (scale) % 256,WKTCH = (scale) / 256 | 0x80  //WKTEN = 1 ÔÊÐíË¯Ãß»½ÐÑ¶
+             -¨Ê±Æ÷
+ 792      =3  
+ 793      =3  
+ 794      =3  //sfr CLK_DIV = 0x97; //Clock Divder ÏµÍ³Ê±ÖÓ·ÖÆµ  -     -      -       -     -  CLKS2 CLKS1 CLKS0 xxxx,x0
+             -00
+ 795      =3  #define   SYSTEM_CLK_1T()   CLK_DIV &= ~0x07  //default
+ 796      =3  #define   SYSTEM_CLK_2T()   CLK_DIV = (CLK_DIV & ~0x07) | 1
+ 797      =3  #define   SYSTEM_CLK_4T()   CLK_DIV = (CLK_DIV & ~0x07) | 2
+ 798      =3  #define   SYSTEM_CLK_8T()   CLK_DIV = (CLK_DIV & ~0x07) | 3
+ 799      =3  #define   SYSTEM_CLK_16T()  CLK_DIV = (CLK_DIV & ~0x07) | 4
+ 800      =3  #define   SYSTEM_CLK_32T()  CLK_DIV = (CLK_DIV & ~0x07) | 5
+ 801      =3  #define   SYSTEM_CLK_64T()  CLK_DIV = (CLK_DIV & ~0x07) | 6
+ 802      =3  #define   SYSTEM_CLK_128T() CLK_DIV =  CLK_DIV          | 7
+ 803      =3  
+ 804      =3  #define   MCLKO_P54_None()  CLK_DIV &= ~0xc0          //Ö÷Ê±ÖÓ²»Êä³ö
+ 805      =3  #define   MCLKO_P54_DIV1()  CLK_DIV  = (CLK_DIV & ~0xc0) | 0x40 //Ö÷Ê±ÖÓ²»·ÖÆµÊä³ö
+ 806      =3  #define   MCLKO_P54_DIV2()  CLK_DIV  = (CLK_DIV & ~0xc0) | 0x80 //Ö÷Ê±ÖÓ2·ÖÆµÊä³ö
+ 807      =3  #define   MCLKO_P54_DIV4()  CLK_DIV  =  CLK_DIV | 0xc0      //Ö÷Ê±ÖÓ4·ÖÆµÊä³ö
+ 808      =3  
+ 809      =3  #define   MCLKO_P34_None()  CLK_DIV &= ~0xc0          //Ö÷Ê±ÖÓ²»Êä³ö
+ 810      =3  #define   MCLKO_P34_DIV1()  CLK_DIV  = (CLK_DIV & ~0xc0) | 0x40 //Ö÷Ê±ÖÓ²»·ÖÆµÊä³ö
+ 811      =3  #define   MCLKO_P34_DIV2()  CLK_DIV  = (CLK_DIV & ~0xc0) | 0x80 //Ö÷Ê±ÖÓ2·ÖÆµÊä³ö
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 19  
+
+ 812      =3  #define   MCLKO_P34_DIV4()  CLK_DIV  =  CLK_DIV | 0xc0      //Ö÷Ê±ÖÓ4·ÖÆµÊä³ö
+ 813      =3  
+ 814      =3  //sfr BUS_SPEED = 0xA1; //Stretch register      -   -  -  -   -   -  EXRTS1  EXRTSS0 xxxx,xx10
+ 815      =3  #define   BUS_SPEED_1T()  BUS_SPEED = 0
+ 816      =3  #define   BUS_SPEED_2T()  BUS_SPEED = 1
+ 817      =3  #define   BUS_SPEED_4T()  BUS_SPEED = 2
+ 818      =3  #define   BUS_SPEED_8T()  BUS_SPEED = 3
+ 819      =3  
+ 820      =3  /*   interrupt vector */
+ 821      =3  #define   INT0_VECTOR   0
+ 822      =3  #define   TIMER0_VECTOR 1
+ 823      =3  #define   INT1_VECTOR   2
+ 824      =3  #define   TIMER1_VECTOR 3
+ 825      =3  #define   UART1_VECTOR  4
+ 826      =3  #define   ADC_VECTOR    5
+ 827      =3  #define   LVD_VECTOR    6
+ 828      =3  #define   PCA_VECTOR    7
+ 829      =3  #define   UART2_VECTOR  8
+ 830      =3  #define   SPI_VECTOR    9
+ 831      =3  #define   INT2_VECTOR   10
+ 832      =3  #define   INT3_VECTOR   11
+ 833      =3  #define   TIMER2_VECTOR 12
+ 834      =3  #define   INT4_VECTOR   16
+ 835      =3  #define   UART3_VECTOR  17
+ 836      =3  #define   UART4_VECTOR  18
+ 837      =3  #define   TIMER3_VECTOR 19
+ 838      =3  #define   TIMER4_VECTOR 20
+ 839      =3  #define   CMP_VECTOR    21
+ 840      =3  
+ 841      =3  
+ 842      =3  #define TRUE  1
+ 843      =3  #define FALSE 0
+ 844      =3  
+ 845      =3  //=============================================================
+ 846      =3  
+ 847      =3  //========================================
+ 848      =3  
+ 849      =3  #define PolityLow     0 //µÍÓÅÏÈ¼¶ÖÐ¶Ï
+ 850      =3  #define PolityHigh      1 //¸ßÓÅÏÈ¼¶ÖÐ¶Ï
+ 851      =3  
+ 852      =3  //========================================
+ 853      =3  
+ 854      =3  #define   MCLKO_None  0
+ 855      =3  #define   MCLKO_DIV1  1
+ 856      =3  #define   MCLKO_DIV2  2
+ 857      =3  #define   MCLKO_DIV4  3
+ 858      =3  
+ 859      =3  #define   ENABLE    1
+ 860      =3  #define   DISABLE   0
+ 861      =3  
+ 862      =3  #define   STC15F_L2K08S2  8
+ 863      =3  #define   STC15F_L2K16S2  16
+ 864      =3  #define   STC15F_L2K24S2  24
+ 865      =3  #define   STC15F_L2K32S2  32
+ 866      =3  #define   STC15F_L2K40S2  40
+ 867      =3  #define   STC15F_L2K48S2  48
+ 868      =3  #define   STC15F_L2K56S2  56
+ 869      =3  #define   STC15F_L2K60S2  60
+ 870      =3  #define   IAP15F_L2K61S2  61
+ 871      =3  
+ 872      =3  #endif
+   1      =3  /*--------------------------------------------------------------------------
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 20  
+
+   2      =3  STDLIB.H
+   3      =3  
+   4      =3  Standard functions.
+   5      =3  Copyright (c) 1988-2005 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __STDLIB_H__
+  10      =3  #define __STDLIB_H__
+  11      =3  
+  12      =3  #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+  16      =3  
+  17      =3  #ifndef NULL
+           =3  #define NULL ((void *) 0L)
+           =3 #endif
+  20      =3  
+  21      =3  #ifndef _WCHAR_T_DEFINED_
+  22      =3  #define _WCHAR_T_DEFINED_
+  23      =3  typedef char wchar_t;
+  24      =3  #endif
+  25      =3  
+  26      =3  #ifndef RAND_MAX
+  27      =3   #define RAND_MAX  32767u
+  28      =3  #endif
+  29      =3  
+  30      =3  #pragma SAVE
+  31      =3  #pragma REGPARMS
+  32      =3  
+  33      =3  extern int    abs  (int   val);
+  34      =3  extern long  labs  (long  val);
+  35      =3  
+  36      =3  extern float atof (char *s1);
+  37      =3  extern long  atol (char *s1);
+  38      =3  extern int   atoi (char *s1);
+  39      =3  extern int   rand ();
+  40      =3  extern void  srand (int);
+  41      =3  
+  42      =3  extern float         strtod  (char *, char **);
+  43      =3  extern long          strtol  (char *, char **, unsigned char);
+  44      =3  extern unsigned long strtoul (char *, char **, unsigned char);
+  45      =3  
+  46      =3  #define _MALLOC_MEM_  xdata
+  47      =3  
+  48      =3  extern void init_mempool          (void _MALLOC_MEM_ *p, unsigned int size);
+  49      =3  extern void _MALLOC_MEM_ *malloc  (unsigned int size);
+  50      =3  extern void free                  (void _MALLOC_MEM_ *p);
+  51      =3  extern void _MALLOC_MEM_ *realloc (void _MALLOC_MEM_ *p, unsigned int size);
+  52      =3  extern void _MALLOC_MEM_ *calloc  (unsigned int size, unsigned int len);
+  53      =3  
+  54      =3  #pragma RESTORE
+  55      =3  
+  56      =3  #endif
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDIO.H
+   3      =3  
+   4      =3  Prototypes for standard I/O functions.
+   5      =3  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 21  
+
+   8      =3  
+   9      =3  #ifndef __STDIO_H__
+           =3 #define __STDIO_H__
+           =3 
+           =3 #ifndef EOF
+           =3  #define EOF -1
+           =3 #endif
+           =3 
+           =3 #ifndef NULL
+           =3  #define NULL ((void *) 0)
+           =3 #endif
+           =3 
+           =3 #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+           =3 
+           =3 #pragma SAVE
+           =3 #pragma REGPARMS
+           =3 extern char _getkey (void);
+           =3 extern char getchar (void);
+           =3 extern char ungetchar (char);
+           =3 extern char putchar (char);
+           =3 extern int printf   (const char *, ...);
+           =3 extern int sprintf  (char *, const char *, ...);
+           =3 extern int vprintf  (const char *, char *);
+           =3 extern int vsprintf (char *, const char *, char *);
+           =3 extern char *gets (char *, int n);
+           =3 extern int scanf (const char *, ...);
+           =3 extern int sscanf (char *, const char *, ...);
+           =3 extern int puts (const char *);
+           =3 
+           =3 #pragma RESTORE
+           =3 
+           =3 #endif
+  43      =3  
+   1      =3  #ifndef __STDINT_H__
+           =3 #define __STDINT_H__
+           =3 
+           =3 typedef unsigned char uint8_t;  //1Î»³¤¶È
+           =3 typedef signed char int8_t;     //
+           =3 typedef unsigned short uint16_t;  //2Î»³¤¶È
+           =3 typedef signed short int16_t;
+           =3 typedef unsigned long uint32_t;   //4Î»³¤¶È
+           =3 typedef signed long int32_t;
+           =3 
+           =3 #endif
+   1      =3  #ifndef __MYSTRING__h
+   2      =3  #define __MYSTRING__H
+   3      =3  
+   4      =3  
+   5      =3  char *strpbrk(const char *cs, const char *ct);
+   6      =3  char *strsep(char **s, const char *ct);
+   7      =3  char * strtrim(char *s);
+   8      =3  void trim(char *strIn, char *strOut);
+   9      =3  char * strtrim_fast(char *s) ;
+  10      =3  #endif
+  19      =1  
+  20      =1  #define COM_TX1_Lenth 128
+  21      =1  #define COM_RX1_Lenth 128
+  22      =1  #define COM_TX2_Lenth 128
+  23      =1  #define COM_RX2_Lenth 128
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 22  
+
+  24      =1  
+  25      =1  #define USART1  1
+  26      =1  #define USART2  2
+  27      =1  
+  28      =1  #define UART_ShiftRight 0   //Í¬²½ÒÆÎ»Êä³ö
+  29      =1  #define UART_8bit_BRTx  (1<<6)  //8Î»Êý¾Ý,¿É±ä²¨ÌØÂÊ
+  30      =1  #define UART_9bit   (2<<6)  //9Î»Êý¾Ý,¹Ì¶¨²¨ÌØÂÊ
+  31      =1  #define UART_9bit_BRTx  (3<<6)  //9Î»Êý¾Ý,¿É±ä²¨ÌØÂÊ
+  32      =1  
+  33      =1  #define UART1_SW_P30_P31  0
+  34      =1  #define UART1_SW_P36_P37  (1<<6)
+  35      =1  #define UART1_SW_P16_P17  (2<<6)  //±ØÐëÊ¹ÓÃÄÚ²¿Ê±ÖÓ
+  36      =1  #define UART2_SW_P10_P11  0
+  37      =1  #define UART2_SW_P46_P47  1
+  38      =1  
+  39      =1  
+  40      =1  #define TimeOutSet1   5
+  41      =1  #define TimeOutSet2   5
+  42      =1  
+  43      =1  #define BRT_Timer1  1
+  44      =1  #define BRT_Timer2  2
+  45      =1  
+  46      =1  typedef struct
+  47      =1  { 
+  48      =1    u8  id;       //´®¿ÚºÅ
+  49      =1  
+  50      =1    u8  TX_read;    //·¢ËÍ¶ÁÖ¸Õë
+  51      =1    u8  TX_write;   //·¢ËÍÐ´Ö¸Õë
+  52      =1    u8  B_TX_busy;    //Ã¦±êÖ¾
+  53      =1  
+  54      =1    u8  RX_Cnt;     //½ÓÊÕ×Ö½Ú¼ÆÊý
+  55      =1    u8  RX_TimeOut;   //½ÓÊÕ³¬Ê±
+  56      =1    u8  B_RX_OK;    //½ÓÊÕ¿éÍê³É
+  57      =1  } COMx_Define; 
+  58      =1  
+  59      =1  typedef struct
+  60      =1  { 
+  61      =1    u8  UART_Mode;      //Ä£Ê½,         UART_ShiftRight,UART_8bit_BRTx,UART_9bit,UART_9bit_BRTx
+  62      =1    u8  UART_BRT_Use;   //Ê¹ÓÃ²¨ÌØÂÊ,   BRT_Timer1,BRT_Timer2
+  63      =1    u32 UART_BaudRate;    //²¨ÌØÂÊ,       ENABLE,DISABLE
+  64      =1    u8  Morecommunicate;  //¶à»úÍ¨Ñ¶ÔÊÐí, ENABLE,DISABLE
+  65      =1    u8  UART_RxEnable;    //ÔÊÐí½ÓÊÕ,   ENABLE,DISABLE
+  66      =1    u8  BaudRateDouble;   //²¨ÌØÂÊ¼Ó±¶, ENABLE,DISABLE
+  67      =1    u8  UART_Interrupt;   //ÖÐ¶Ï¿ØÖÆ,   ENABLE,DISABLE
+  68      =1    u8  UART_Polity;    //ÓÅÏÈ¼¶,     PolityLow,PolityHigh
+  69      =1    u8  UART_P_SW;      //ÇÐ»»¶Ë¿Ú,   UART1_SW_P30_P31,UART1_SW_P36_P37,UART1_SW_P16_P17(±ØÐëÊ¹ÓÃÄÚ²¿Ê±ÖÓ)
+  70      =1    u8  UART_RXD_TXD_Short; //ÄÚ²¿¶ÌÂ·RXDÓëTXD, ×öÖÐ¼Ì, ENABLE,DISABLE
+  71      =1  
+  72      =1  } COMx_InitDefine; 
+  73      =1  
+  74      =1  extern volatile COMx_Define COM1,COM2;
+  75      =1  extern  u8 xdata  TX1_Buffer[COM_TX1_Lenth];  //·¢ËÍ»º³å
+  76      =1  extern  u8 xdata  RX1_Buffer[COM_RX1_Lenth];  //½ÓÊÕ»º³å
+  77      =1  extern  u8 xdata  TX2_Buffer[COM_TX2_Lenth];  //·¢ËÍ»º³å
+  78      =1  extern  u8 xdata  RX2_Buffer[COM_RX2_Lenth];  //½ÓÊÕ»º³å
+  79      =1  extern volatile uint8_t uart1_cmd;
+  80      =1  extern volatile uint16_t uart1_cnt;
+  81      =1  extern volatile uint8_t config_mode;
+  82      =1  
+  83      =1  u8  USART_Configuration(u8 UARTx, COMx_InitDefine *COMx);
+  84      =1  void TX1_write2buff(u8 dat);  //Ð´Èë·¢ËÍ»º³å£¬Ö¸Õë+1
+  85      =1  void TX2_write2buff(u8 dat);  //Ð´Èë·¢ËÍ»º³å£¬Ö¸Õë+1
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 23  
+
+  86      =1  void PrintString1(u8 *puts);
+  87      =1  void PrintString2(u8 *puts);
+  88      =1  void Printf1(u8 *puts, u8 len);
+  89      =1  
+  90      =1  //void COMx_write2buff(COMx_Define *COMx, u8 dat);  //Ð´Èë·¢ËÍ»º³å£¬Ö¸Õë+1
+  91      =1  void Printf1(u8 *puts, u8 len);
+  92      =1  void Printf2(u8 *puts, u8 len);
+  93      =1  #endif
+  94      =1  
+   8          
+   9          // Enable both ECB and CBC mode. Note this can be done before including aes.h or at compile-time.
+  10          // E.g. with GCC by using the -D flag: gcc -c aes.c -DCBC=0 -DECB=1
+  11          #define CBC 1
+  12          //#define ECB 1
+  13          
+  14          #include "aes.h"
+   1      =1  #ifndef _AES_H_
+           =1 #define _AES_H_
+           =1 
+           =1 #include <stdint.h>
+           =1 
+           =1 
+           =1 // #define the macros below to 1/0 to enable/disable the mode of operation.
+           =1 //
+           =1 // CBC enables AES128 encryption in CBC-mode of operation and handles 0-padding.
+           =1 // ECB enables the basic ECB 16-byte block algorithm. Both can be enabled simultaneously.
+           =1 
+           =1 // The #ifndef-guard allows it to be configured before #include'ing or at compile time.
+           =1 #ifndef CBC
+           =1   #define CBC 1
+           =1 #endif
+           =1 
+           =1 #ifndef ECB
+           =1   #define ECB 1
+           =1 #endif
+           =1 
+           =1 
+           =1 
+           =1 #if defined(ECB) && ECB
+           =1 
+           =1 void AES128_ECB_encrypt(const uint8_t* input, const uint8_t* key, uint8_t *output);
+           =1 void AES128_ECB_decrypt(const uint8_t* input, const uint8_t* key, uint8_t *output);
+           =1 
+           =1 #endif // #if defined(ECB) && ECB
+           =1 
+           =1 
+           =1 #if defined(CBC) && CBC
+           =1 
+           =1 void AES128_CBC_encrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, const uint8_t* key, const
+             - uint8_t* iv);
+           =1 void AES128_CBC_decrypt_buffer(uint8_t* output, uint8_t* input, uint32_t length, const uint8_t* key, const
+             - uint8_t* iv);
+           =1 
+           =1 #endif // #if defined(CBC) && CBC
+           =1 
+           =1 
+           =1 
+           =1 #endif //_AES_H_
+  15          
+  16           void phex(uint8_t* str);
+  17          
+  18          
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 24  
+
+  19          
+  20          // prints string as hex
+  21          void phex(uint8_t* str)
+  22          {
+  23   1          unsigned char i;
+  24   1          for(i = 0; i < 16; ++i)
+  25   1              printf("%.2x", str[i]);
+  26   1          printf("\n");
+  27   1      }
+  28          
+  29          
+  30          /*
+  31          CBC½âÃÜ
+  32          */
+  33          int app_decrypt_cbc(uint8_t *key, uint8_t *iv, uint8_t *in, uint8_t *out)
+  34          {
+  35   1        uint16_t len;
+  36   1        uint16_t cnt, Sa, Re;
+  37   1        //È·±£Êý×é´óÐ¡Îª16µÄ±¶Êý
+  38   1        len = sizeof(in)/sizeof(char);
+  39   1        Sa = len/16;
+  40   1        Re = len%16;
+  41   1        for(cnt=len; cnt<(Sa+1)*16; cnt++)
+  42   1        {in[cnt]=Re;}
+  43   1        AES128_CBC_decrypt_buffer(out+0, in+0,  64, key, iv);
+  44   1        return len;
+  45   1      }
+  46          
+  47          /*
+  48          CBC¼ÓÃÜ
+  49          */
+  50          //uint8_t buff[255];
+  51          int app_encrypt_cbc(uint8_t *key, uint8_t *iv, uint8_t *in, uint8_t len, uint8_t *out)
+  52          {
+  53   1        uint16_t cnt, Sa, Re;
+  54   1        
+  55   1        //È·±£Êý×é´óÐ¡Îª16µÄ±¶Êý
+  56   1        Sa = len/16;
+  57   1        Re = len%16;
+  58   1        if(Re)
+  59   1        {
+  60   2        for(cnt=len;cnt<(len+16-Re);cnt++)
+  61   2          in[cnt] = (16-Re);
+  62   2        }
+  63   1      //  Printf1(in,(Sa+1)*16);
+  64   1        AES128_CBC_encrypt_buffer(out, in, (Sa+1)*16, key, iv);
+  65   1      //    printf("AES128_CBC_encrypt SUCCESS!\n");
+  66   1        Printf1(out,(Sa+1)*16);
+  67   1        return (Sa+1)*16;
+  68   1      }
+  69          
+  70          
+  71          
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 25  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _phex (BEGIN)
+                                           ; SOURCE LINE # 21
+0000 900000      R     MOV     DPTR,#str
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 22
+                                           ; SOURCE LINE # 24
+000B E4                CLR     A
+000C A3                INC     DPTR
+000D F0                MOVX    @DPTR,A
+000E         ?C0001:
+000E 900000      R     MOV     DPTR,#i
+0011 E0                MOVX    A,@DPTR
+0012 FF                MOV     R7,A
+0013 C3                CLR     C
+0014 9410              SUBB    A,#010H
+0016 5028              JNC     ?C0002
+                                           ; SOURCE LINE # 25
+0018 900000      R     MOV     DPTR,#str
+001B E0                MOVX    A,@DPTR
+001C FB                MOV     R3,A
+001D A3                INC     DPTR
+001E E0                MOVX    A,@DPTR
+001F FA                MOV     R2,A
+0020 A3                INC     DPTR
+0021 E0                MOVX    A,@DPTR
+0022 F9                MOV     R1,A
+0023 8F82              MOV     DPL,R7
+0025 758300            MOV     DPH,#00H
+0028 120000      E     LCALL   ?C?CLDOPTR
+002B 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+002E F0                MOVX    @DPTR,A
+002F 7BFF              MOV     R3,#0FFH
+0031 7A00        R     MOV     R2,#HIGH ?SC_0
+0033 7900        R     MOV     R1,#LOW ?SC_0
+0035 120000      E     LCALL   _printf
+0038 900000      R     MOV     DPTR,#i
+003B E0                MOVX    A,@DPTR
+003C 04                INC     A
+003D F0                MOVX    @DPTR,A
+003E 80CE              SJMP    ?C0001
+0040         ?C0002:
+                                           ; SOURCE LINE # 26
+0040 7BFF              MOV     R3,#0FFH
+0042 7A00        R     MOV     R2,#HIGH ?SC_5
+0044 7900        R     MOV     R1,#LOW ?SC_5
+0046 020000      E     LJMP    _printf
+             ; FUNCTION _phex (END)
+
+             ; FUNCTION _app_decrypt_cbc (BEGIN)
+                                           ; SOURCE LINE # 33
+0000 900000      R     MOV     DPTR,#key
+0003 EB                MOV     A,R3
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 26  
+
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 34
+                                           ; SOURCE LINE # 38
+000B 900000      R     MOV     DPTR,#len
+000E E4                CLR     A
+000F F0                MOVX    @DPTR,A
+0010 A3                INC     DPTR
+0011 7403              MOV     A,#03H
+0013 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 39
+0014 900000      R     MOV     DPTR,#len
+0017 E0                MOVX    A,@DPTR
+0018 C4                SWAP    A
+0019 F8                MOV     R0,A
+001A 54F0              ANL     A,#0F0H
+001C C8                XCH     A,R0
+001D 68                XRL     A,R0
+001E FF                MOV     R7,A
+001F A3                INC     DPTR
+0020 E0                MOVX    A,@DPTR
+0021 C4                SWAP    A
+0022 540F              ANL     A,#0FH
+0024 48                ORL     A,R0
+0025 A3                INC     DPTR
+0026 CF                XCH     A,R7
+0027 F0                MOVX    @DPTR,A
+0028 A3                INC     DPTR
+0029 EF                MOV     A,R7
+002A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 40
+002B E4                CLR     A
+002C A3                INC     DPTR
+002D F0                MOVX    @DPTR,A
+002E 7403              MOV     A,#03H
+0030 540F              ANL     A,#0FH
+0032 A3                INC     DPTR
+0033 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 41
+;---- Variable 'cnt' assigned to Register 'R4/R5' ----
+0034 7D03              MOV     R5,#03H
+0036 7C00              MOV     R4,#00H
+0038         ?C0005:
+0038 900000      R     MOV     DPTR,#Sa+01H
+003B E0                MOVX    A,@DPTR
+003C 2401              ADD     A,#01H
+003E FF                MOV     R7,A
+003F 900000      R     MOV     DPTR,#Sa
+0042 E0                MOVX    A,@DPTR
+0043 3400              ADDC    A,#00H
+0045 FE                MOV     R6,A
+0046 EF                MOV     A,R7
+0047 C4                SWAP    A
+0048 F8                MOV     R0,A
+0049 540F              ANL     A,#0FH
+004B C8                XCH     A,R0
+004C 68                XRL     A,R0
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 27  
+
+004D FF                MOV     R7,A
+004E EE                MOV     A,R6
+004F C4                SWAP    A
+0050 54F0              ANL     A,#0F0H
+0052 48                ORL     A,R0
+0053 FE                MOV     R6,A
+0054 C3                CLR     C
+0055 ED                MOV     A,R5
+0056 9F                SUBB    A,R7
+0057 EC                MOV     A,R4
+0058 9E                SUBB    A,R6
+0059 5020              JNC     ?C0006
+                                           ; SOURCE LINE # 42
+005B 900000      R     MOV     DPTR,#Re
+005E A3                INC     DPTR
+005F E0                MOVX    A,@DPTR
+0060 FF                MOV     R7,A
+0061 900000      R     MOV     DPTR,#in
+0064 E0                MOVX    A,@DPTR
+0065 FB                MOV     R3,A
+0066 A3                INC     DPTR
+0067 E0                MOVX    A,@DPTR
+0068 FA                MOV     R2,A
+0069 A3                INC     DPTR
+006A E0                MOVX    A,@DPTR
+006B F9                MOV     R1,A
+006C 8D82              MOV     DPL,R5
+006E 8C83              MOV     DPH,R4
+0070 EF                MOV     A,R7
+0071 120000      E     LCALL   ?C?CSTOPTR
+0074 0D                INC     R5
+0075 BD0001            CJNE    R5,#00H,?C0014
+0078 0C                INC     R4
+0079         ?C0014:
+0079 80BD              SJMP    ?C0005
+007B         ?C0006:
+                                           ; SOURCE LINE # 43
+007B 900000      R     MOV     DPTR,#in
+007E E0                MOVX    A,@DPTR
+007F F9                MOV     R1,A
+0080 A3                INC     DPTR
+0081 E0                MOVX    A,@DPTR
+0082 FA                MOV     R2,A
+0083 A3                INC     DPTR
+0084 E0                MOVX    A,@DPTR
+0085 900000      E     MOV     DPTR,#?_AES128_CBC_decrypt_buffer?BYTE+03H
+0088 C9                XCH     A,R1
+0089 F0                MOVX    @DPTR,A
+008A A3                INC     DPTR
+008B EA                MOV     A,R2
+008C F0                MOVX    @DPTR,A
+008D A3                INC     DPTR
+008E E9                MOV     A,R1
+008F F0                MOVX    @DPTR,A
+0090 A3                INC     DPTR
+0091 120000      E     LCALL   ?C?LSTKXDATA
+0094 00                DB      00H
+0095 00                DB      00H
+0096 00                DB      00H
+0097 40                DB      040H
+0098 900000      R     MOV     DPTR,#key
+009B E0                MOVX    A,@DPTR
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 28  
+
+009C F9                MOV     R1,A
+009D A3                INC     DPTR
+009E E0                MOVX    A,@DPTR
+009F FA                MOV     R2,A
+00A0 A3                INC     DPTR
+00A1 E0                MOVX    A,@DPTR
+00A2 900000      E     MOV     DPTR,#?_AES128_CBC_decrypt_buffer?BYTE+0AH
+00A5 C9                XCH     A,R1
+00A6 F0                MOVX    @DPTR,A
+00A7 A3                INC     DPTR
+00A8 EA                MOV     A,R2
+00A9 F0                MOVX    @DPTR,A
+00AA A3                INC     DPTR
+00AB E9                MOV     A,R1
+00AC F0                MOVX    @DPTR,A
+00AD 900000      R     MOV     DPTR,#iv
+00B0 E0                MOVX    A,@DPTR
+00B1 F9                MOV     R1,A
+00B2 A3                INC     DPTR
+00B3 E0                MOVX    A,@DPTR
+00B4 FA                MOV     R2,A
+00B5 A3                INC     DPTR
+00B6 E0                MOVX    A,@DPTR
+00B7 900000      E     MOV     DPTR,#?_AES128_CBC_decrypt_buffer?BYTE+0DH
+00BA C9                XCH     A,R1
+00BB F0                MOVX    @DPTR,A
+00BC A3                INC     DPTR
+00BD EA                MOV     A,R2
+00BE F0                MOVX    @DPTR,A
+00BF A3                INC     DPTR
+00C0 E9                MOV     A,R1
+00C1 F0                MOVX    @DPTR,A
+00C2 900000      R     MOV     DPTR,#out
+00C5 E0                MOVX    A,@DPTR
+00C6 FB                MOV     R3,A
+00C7 A3                INC     DPTR
+00C8 E0                MOVX    A,@DPTR
+00C9 FA                MOV     R2,A
+00CA A3                INC     DPTR
+00CB E0                MOVX    A,@DPTR
+00CC F9                MOV     R1,A
+00CD 120000      E     LCALL   _AES128_CBC_decrypt_buffer
+                                           ; SOURCE LINE # 44
+00D0 900000      R     MOV     DPTR,#len
+00D3 E0                MOVX    A,@DPTR
+00D4 FE                MOV     R6,A
+00D5 A3                INC     DPTR
+00D6 E0                MOVX    A,@DPTR
+00D7 FF                MOV     R7,A
+                                           ; SOURCE LINE # 45
+00D8         ?C0008:
+00D8 22                RET     
+             ; FUNCTION _app_decrypt_cbc (END)
+
+             ; FUNCTION _app_encrypt_cbc (BEGIN)
+                                           ; SOURCE LINE # 51
+0000 900000      R     MOV     DPTR,#key
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 29  
+
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 52
+                                           ; SOURCE LINE # 56
+000B 900000      R     MOV     DPTR,#len
+000E E0                MOVX    A,@DPTR
+000F FF                MOV     R7,A
+0010 C4                SWAP    A
+0011 540F              ANL     A,#0FH
+0013 FD                MOV     R5,A
+0014 900000      R     MOV     DPTR,#Sa
+0017 E4                CLR     A
+0018 F0                MOVX    @DPTR,A
+0019 A3                INC     DPTR
+001A ED                MOV     A,R5
+001B F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 57
+001C EF                MOV     A,R7
+001D 540F              ANL     A,#0FH
+001F FF                MOV     R7,A
+0020 7E00              MOV     R6,#00H
+0022 A3                INC     DPTR
+0023 EE                MOV     A,R6
+0024 F0                MOVX    @DPTR,A
+0025 A3                INC     DPTR
+0026 EF                MOV     A,R7
+0027 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 58
+0028 605C              JZ      ?C0009
+                                           ; SOURCE LINE # 59
+                                           ; SOURCE LINE # 60
+002A 900000      R     MOV     DPTR,#len
+002D E0                MOVX    A,@DPTR
+002E FF                MOV     R7,A
+002F 900000      R     MOV     DPTR,#cnt
+0032 EE                MOV     A,R6
+0033 F0                MOVX    @DPTR,A
+0034 A3                INC     DPTR
+0035 EF                MOV     A,R7
+0036 F0                MOVX    @DPTR,A
+0037         ?C0010:
+0037 900000      R     MOV     DPTR,#len
+003A E0                MOVX    A,@DPTR
+003B 2410              ADD     A,#010H
+003D FF                MOV     R7,A
+003E E4                CLR     A
+003F 33                RLC     A
+0040 FE                MOV     R6,A
+0041 900000      R     MOV     DPTR,#Re
+0044 E0                MOVX    A,@DPTR
+0045 FA                MOV     R2,A
+0046 A3                INC     DPTR
+0047 E0                MOVX    A,@DPTR
+0048 FB                MOV     R3,A
+0049 C3                CLR     C
+004A EF                MOV     A,R7
+004B 9B                SUBB    A,R3
+004C FF                MOV     R7,A
+004D EE                MOV     A,R6
+004E 9A                SUBB    A,R2
+004F FE                MOV     R6,A
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 30  
+
+0050 900000      R     MOV     DPTR,#cnt
+0053 E0                MOVX    A,@DPTR
+0054 FC                MOV     R4,A
+0055 A3                INC     DPTR
+0056 E0                MOVX    A,@DPTR
+0057 FD                MOV     R5,A
+0058 C3                CLR     C
+0059 9F                SUBB    A,R7
+005A EC                MOV     A,R4
+005B 9E                SUBB    A,R6
+005C 5028              JNC     ?C0009
+                                           ; SOURCE LINE # 61
+005E C3                CLR     C
+005F 7410              MOV     A,#010H
+0061 9B                SUBB    A,R3
+0062 FF                MOV     R7,A
+0063 900000      R     MOV     DPTR,#in
+0066 E0                MOVX    A,@DPTR
+0067 FB                MOV     R3,A
+0068 A3                INC     DPTR
+0069 E0                MOVX    A,@DPTR
+006A FA                MOV     R2,A
+006B A3                INC     DPTR
+006C E0                MOVX    A,@DPTR
+006D F9                MOV     R1,A
+006E 8D82              MOV     DPL,R5
+0070 8C83              MOV     DPH,R4
+0072 EF                MOV     A,R7
+0073 120000      E     LCALL   ?C?CSTOPTR
+0076 900000      R     MOV     DPTR,#cnt+01H
+0079 E0                MOVX    A,@DPTR
+007A 04                INC     A
+007B F0                MOVX    @DPTR,A
+007C 70B9              JNZ     ?C0010
+007E 900000      R     MOV     DPTR,#cnt
+0081 E0                MOVX    A,@DPTR
+0082 04                INC     A
+0083 F0                MOVX    @DPTR,A
+0084         ?C0015:
+0084 80B1              SJMP    ?C0010
+                                           ; SOURCE LINE # 62
+0086         ?C0009:
+                                           ; SOURCE LINE # 64
+0086 900000      R     MOV     DPTR,#in
+0089 E0                MOVX    A,@DPTR
+008A F9                MOV     R1,A
+008B A3                INC     DPTR
+008C E0                MOVX    A,@DPTR
+008D FA                MOV     R2,A
+008E A3                INC     DPTR
+008F E0                MOVX    A,@DPTR
+0090 900000      E     MOV     DPTR,#?_AES128_CBC_encrypt_buffer?BYTE+03H
+0093 C9                XCH     A,R1
+0094 F0                MOVX    @DPTR,A
+0095 A3                INC     DPTR
+0096 EA                MOV     A,R2
+0097 F0                MOVX    @DPTR,A
+0098 A3                INC     DPTR
+0099 E9                MOV     A,R1
+009A F0                MOVX    @DPTR,A
+009B 900000      R     MOV     DPTR,#Sa+01H
+009E E0                MOVX    A,@DPTR
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 31  
+
+009F 2401              ADD     A,#01H
+00A1 FF                MOV     R7,A
+00A2 900000      R     MOV     DPTR,#Sa
+00A5 E0                MOVX    A,@DPTR
+00A6 3400              ADDC    A,#00H
+00A8 FE                MOV     R6,A
+00A9 EF                MOV     A,R7
+00AA C4                SWAP    A
+00AB F8                MOV     R0,A
+00AC 540F              ANL     A,#0FH
+00AE C8                XCH     A,R0
+00AF 68                XRL     A,R0
+00B0 FF                MOV     R7,A
+00B1 EE                MOV     A,R6
+00B2 C4                SWAP    A
+00B3 54F0              ANL     A,#0F0H
+00B5 48                ORL     A,R0
+00B6 FE                MOV     R6,A
+00B7 E4                CLR     A
+00B8 FC                MOV     R4,A
+00B9 FD                MOV     R5,A
+00BA 900000      E     MOV     DPTR,#?_AES128_CBC_encrypt_buffer?BYTE+06H
+00BD 120000      E     LCALL   ?C?LSTXDATA
+00C0 900000      R     MOV     DPTR,#key
+00C3 E0                MOVX    A,@DPTR
+00C4 F9                MOV     R1,A
+00C5 A3                INC     DPTR
+00C6 E0                MOVX    A,@DPTR
+00C7 FA                MOV     R2,A
+00C8 A3                INC     DPTR
+00C9 E0                MOVX    A,@DPTR
+00CA 900000      E     MOV     DPTR,#?_AES128_CBC_encrypt_buffer?BYTE+0AH
+00CD C9                XCH     A,R1
+00CE F0                MOVX    @DPTR,A
+00CF A3                INC     DPTR
+00D0 EA                MOV     A,R2
+00D1 F0                MOVX    @DPTR,A
+00D2 A3                INC     DPTR
+00D3 E9                MOV     A,R1
+00D4 F0                MOVX    @DPTR,A
+00D5 900000      R     MOV     DPTR,#iv
+00D8 E0                MOVX    A,@DPTR
+00D9 F9                MOV     R1,A
+00DA A3                INC     DPTR
+00DB E0                MOVX    A,@DPTR
+00DC FA                MOV     R2,A
+00DD A3                INC     DPTR
+00DE E0                MOVX    A,@DPTR
+00DF 900000      E     MOV     DPTR,#?_AES128_CBC_encrypt_buffer?BYTE+0DH
+00E2 C9                XCH     A,R1
+00E3 F0                MOVX    @DPTR,A
+00E4 A3                INC     DPTR
+00E5 EA                MOV     A,R2
+00E6 F0                MOVX    @DPTR,A
+00E7 A3                INC     DPTR
+00E8 E9                MOV     A,R1
+00E9 F0                MOVX    @DPTR,A
+00EA 900000      R     MOV     DPTR,#out
+00ED E0                MOVX    A,@DPTR
+00EE FB                MOV     R3,A
+00EF A3                INC     DPTR
+00F0 E0                MOVX    A,@DPTR
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 32  
+
+00F1 FA                MOV     R2,A
+00F2 A3                INC     DPTR
+00F3 E0                MOVX    A,@DPTR
+00F4 F9                MOV     R1,A
+00F5 120000      E     LCALL   _AES128_CBC_encrypt_buffer
+                                           ; SOURCE LINE # 66
+00F8 900000      R     MOV     DPTR,#out
+00FB E0                MOVX    A,@DPTR
+00FC FB                MOV     R3,A
+00FD A3                INC     DPTR
+00FE E0                MOVX    A,@DPTR
+00FF FA                MOV     R2,A
+0100 A3                INC     DPTR
+0101 E0                MOVX    A,@DPTR
+0102 F9                MOV     R1,A
+0103 900000      R     MOV     DPTR,#Sa
+0106 A3                INC     DPTR
+0107 E0                MOVX    A,@DPTR
+0108 04                INC     A
+0109 C4                SWAP    A
+010A 54F0              ANL     A,#0F0H
+010C FD                MOV     R5,A
+010D 120000      E     LCALL   _Printf1
+                                           ; SOURCE LINE # 67
+0110 900000      R     MOV     DPTR,#Sa+01H
+0113 E0                MOVX    A,@DPTR
+0114 2401              ADD     A,#01H
+0116 FF                MOV     R7,A
+0117 900000      R     MOV     DPTR,#Sa
+011A E0                MOVX    A,@DPTR
+011B 3400              ADDC    A,#00H
+011D FE                MOV     R6,A
+011E EF                MOV     A,R7
+011F C4                SWAP    A
+0120 F8                MOV     R0,A
+0121 540F              ANL     A,#0FH
+0123 C8                XCH     A,R0
+0124 68                XRL     A,R0
+0125 FF                MOV     R7,A
+0126 EE                MOV     A,R6
+0127 C4                SWAP    A
+0128 54F0              ANL     A,#0F0H
+012A 48                ORL     A,R0
+012B FE                MOV     R6,A
+                                           ; SOURCE LINE # 68
+012C         ?C0013:
+012C 22                RET     
+             ; FUNCTION _app_encrypt_cbc (END)
+
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 33  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+uint16_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+P0 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0080H  1
+P1 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0090H  1
+P2 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A0H  1
+P3 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B0H  1
+P4 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C0H  1
+P5 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C8H  1
+int32_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  LONG     -----  4
+COMx_Define. . . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  7
+  id . . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  TX_read. . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  TX_write . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0002H  1
+  B_TX_busy. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0003H  1
+  RX_Cnt . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0004H  1
+  RX_TimeOut . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0005H  1
+  B_RX_OK. . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0006H  1
+int16_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  INT      -----  2
+IE . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A8H  1
+size_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+uchar. . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+_printf. . . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+IP . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B8H  1
+COMx_InitDefine. . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  13
+  UART_Mode. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  UART_BRT_Use . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  UART_BaudRate. . . . . . . . . . . .  MEMBER   -----  U_LONG   0002H  4
+  Morecommunicate. . . . . . . . . . .  MEMBER   -----  U_CHAR   0006H  1
+  UART_RxEnable. . . . . . . . . . . .  MEMBER   -----  U_CHAR   0007H  1
+  BaudRateDouble . . . . . . . . . . .  MEMBER   -----  U_CHAR   0008H  1
+  UART_Interrupt . . . . . . . . . . .  MEMBER   -----  U_CHAR   0009H  1
+  UART_Polity. . . . . . . . . . . . .  MEMBER   -----  U_CHAR   000AH  1
+  UART_P_SW. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   000BH  1
+  UART_RXD_TXD_Short . . . . . . . . .  MEMBER   -----  U_CHAR   000CH  1
+CCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D8H  1
+_Printf1 . . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+u8 . . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+_app_decrypt_cbc . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  key. . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  iv . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0003H  3
+  in . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0006H  3
+  out. . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0009H  3
+  len. . . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    000CH  2
+  cnt. . . . . . . . . . . . . . . . .  * REG *  DATA   U_INT    0004H  2
+  Sa . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    000EH  2
+  Re . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0010H  2
+SCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0098H  1
+TCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0088H  1
+_phex. . . . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  str. . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  i. . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0003H  1
+_app_encrypt_cbc . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  key. . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  iv . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0003H  3
+  in . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0006H  3
+  len. . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0009H  1
+  out. . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      000AH  3
+  cnt. . . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    000DH  2
+C51 COMPILER V9.01   AES128APP                                                             02/21/2019 15:08:19 PAGE 34  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+  Sa . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    000FH  2
+  Re . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0011H  2
+B. . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F0H  1
+uint . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+ACC. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E0H  1
+uint8_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+int8_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+u32. . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_LONG   -----  4
+u16. . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+_AES128_CBC_decrypt_buffer . . . . . .  EXTERN   CODE   PROC     -----  -----
+_AES128_CBC_encrypt_buffer . . . . . .  EXTERN   CODE   PROC     -----  -----
+wchar_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+AES128 . . . . . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  41
+  id . . . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0000H  8
+  key. . . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0008H  16
+  iv . . . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0018H  16
+  state. . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0028H  1
+PSW. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D0H  1
+uint32_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_LONG   -----  4
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    591    ----
+   CONSTANT SIZE    =      7    ----
+   XDATA SIZE       =   ----      41
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

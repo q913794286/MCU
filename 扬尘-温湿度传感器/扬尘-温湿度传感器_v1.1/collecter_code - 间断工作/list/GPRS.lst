@@ -1,0 +1,3792 @@
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE GPRS
+OBJECT MODULE PLACED IN .\list\GPRS.obj
+COMPILER INVOKED BY: D:\Program Files (x86)\Keil\C51\BIN\C51.EXE app\service\GPRS\GPRS.c LARGE BROWSE INCDIR(.\stclib;..
+                    -\stc_lib;.\app;.\app\service\app;.\app\service\AES128;.\app\service\CRC16;.\app\service\GPRS) DEBUG OBJECTEXTEND CODE LI
+                    -STINCLUDE SYMBOLS PRINT(.\list\GPRS.lst) PREPRINT(.\list\GPRS.i) OBJECT(.\list\GPRS.obj)
+
+line level    source
+
+   1          
+   2          #include <stdio.h>
+   1      =1  /*--------------------------------------------------------------------------
+   2      =1  STDIO.H
+   3      =1  
+   4      =1  Prototypes for standard I/O functions.
+   5      =1  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =1  All rights reserved.
+   7      =1  --------------------------------------------------------------------------*/
+   8      =1  
+   9      =1  #ifndef __STDIO_H__
+  10      =1  #define __STDIO_H__
+  11      =1  
+  12      =1  #ifndef EOF
+  13      =1   #define EOF -1
+  14      =1  #endif
+  15      =1  
+  16      =1  #ifndef NULL
+  17      =1   #define NULL ((void *) 0)
+  18      =1  #endif
+  19      =1  
+  20      =1  #ifndef _SIZE_T
+  21      =1   #define _SIZE_T
+  22      =1   typedef unsigned int size_t;
+  23      =1  #endif
+  24      =1  
+  25      =1  #pragma SAVE
+  26      =1  #pragma REGPARMS
+  27      =1  extern char _getkey (void);
+  28      =1  extern char getchar (void);
+  29      =1  extern char ungetchar (char);
+  30      =1  extern char putchar (char);
+  31      =1  extern int printf   (const char *, ...);
+  32      =1  extern int sprintf  (char *, const char *, ...);
+  33      =1  extern int vprintf  (const char *, char *);
+  34      =1  extern int vsprintf (char *, const char *, char *);
+  35      =1  extern char *gets (char *, int n);
+  36      =1  extern int scanf (const char *, ...);
+  37      =1  extern int sscanf (char *, const char *, ...);
+  38      =1  extern int puts (const char *);
+  39      =1  
+  40      =1  #pragma RESTORE
+  41      =1  
+  42      =1  #endif
+  43      =1  
+   3          #include <string.h>
+   1      =1  /*--------------------------------------------------------------------------
+   2      =1  STRING.H
+   3      =1  
+   4      =1  String functions.
+   5      =1  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =1  All rights reserved.
+   7      =1  --------------------------------------------------------------------------*/
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 2   
+
+   8      =1  
+   9      =1  #ifndef __STRING_H__
+  10      =1  #define __STRING_H__
+  11      =1  
+  12      =1  #ifndef _SIZE_T
+           =1  #define _SIZE_T
+           =1  typedef unsigned int size_t;
+           =1 #endif
+  16      =1  
+  17      =1  #ifndef NULL
+           =1  #define NULL ((void *) 0L)
+           =1 #endif
+  20      =1  
+  21      =1  #pragma SAVE
+  22      =1  #pragma REGPARMS
+  23      =1  extern char *strcat (char *s1, char *s2);
+  24      =1  extern char *strncat (char *s1, char *s2, int n);
+  25      =1  
+  26      =1  extern char strcmp (char *s1, char *s2);
+  27      =1  extern char strncmp (char *s1, char *s2, int n);
+  28      =1  
+  29      =1  extern char *strcpy (char *s1, char *s2);
+  30      =1  extern char *strncpy (char *s1, char *s2, int n);
+  31      =1  
+  32      =1  extern int strlen (char *);
+  33      =1  
+  34      =1  extern char *strchr (const char *s, char c);
+  35      =1  extern int strpos (const char *s, char c);
+  36      =1  extern char *strrchr (const char *s, char c);
+  37      =1  extern int strrpos (const char *s, char c);
+  38      =1  
+  39      =1  extern int strspn (char *s, char *set);
+  40      =1  extern int strcspn (char *s, char *set);
+  41      =1  extern char *strpbrk (char *s, char *set);
+  42      =1  extern char *strrpbrk (char *s, char *set);
+  43      =1  extern char *strstr  (char *s, char *sub);
+  44      =1  extern char *strtok  (char *str, const char *set);
+  45      =1  
+  46      =1  extern char memcmp (void *s1, void *s2, int n);
+  47      =1  extern void *memcpy (void *s1, void *s2, int n);
+  48      =1  extern void *memchr (void *s, char val, int n);
+  49      =1  extern void *memccpy (void *s1, void *s2, char val, int n);
+  50      =1  extern void *memmove (void *s1, void *s2, int n);
+  51      =1  extern void *memset  (void *s, char val, int n);
+  52      =1  #pragma RESTORE
+  53      =1  
+  54      =1  #endif
+   4          #include <stdint.h>
+   1      =1  #ifndef __STDINT_H__
+   2      =1  #define __STDINT_H__
+   3      =1  
+   4      =1  typedef unsigned char uint8_t;  //1Î»³¤¶È
+   5      =1  typedef signed char int8_t;               //
+   6      =1  typedef unsigned short uint16_t;  //2Î»³¤¶È
+   7      =1  typedef signed short int16_t;
+   8      =1  typedef unsigned long uint32_t;   //4Î»³¤¶È
+   9      =1  typedef signed long int32_t;
+  10      =1  
+  11      =1  #endif
+   5          #include "usart1.h"
+   1      =1  
+   2      =1  /*------------------------------------------------------------------*/
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 3   
+
+   3      =1  /* --- STC MCU International Limited -------------------------------*/
+   4      =1  /* --- STC 1T Series MCU RC Demo -----------------------------------*/
+   5      =1  /* --- Mobile: (86)13922805190 -------------------------------------*/
+   6      =1  /* --- Fax: 86-0513-55012956,55012947,55012969 ---------------------*/
+   7      =1  /* --- Tel: 86-0513-55012928,55012929,55012966 ---------------------*/
+   8      =1  /* --- Web: www.GXWMCU.com -----------------------------------------*/
+   9      =1  /* --- QQ:  800003751 ----------------------------------------------*/
+  10      =1  /* If you want to use the program or the program referenced in the  */
+  11      =1  /* article, please specify in which data and procedures from STC    */
+  12      =1  /*------------------------------------------------------------------*/
+  13      =1  
+  14      =1  
+  15      =1  #ifndef __USART_H
+  16      =1  #define __USART_H        
+  17      =1  
+  18      =1  #include        "config.h"
+   1      =2  
+   2      =2  #ifndef         __CONFIG_H
+   3      =2  #define         __CONFIG_H
+   4      =2  
+   5      =2  //#include      "rtx51tny.h"
+   6      =2  
+   7      =2  /*********************************************************/
+   8      =2  
+   9      =2  //#define MAIN_Fosc             22118400L       //¶¨ÒåÖ÷Ê±ÖÓ
+  10      =2  //#define MAIN_Fosc             12000000L       //¶¨ÒåÖ÷Ê±ÖÓ
+  11      =2  #define MAIN_Fosc               11059200L       //¶¨ÒåÖ÷Ê±ÖÓ
+  12      =2  //#define MAIN_Fosc              5529600L       //¶¨ÒåÖ÷Ê±ÖÓ
+  13      =2  //#define MAIN_Fosc             24000000L       //¶¨ÒåÖ÷Ê±ÖÓ
+  14      =2  typedef  unsigned int uint;
+  15      =2  typedef  unsigned char uchar;
+  16      =2  
+  17      =2  
+  18      =2  /*********************************************************/
+  19      =2  #include        "STC15Fxxxx.H"
+   1      =3  
+   2      =3  /*------------------------------------------------------------------*/
+   3      =3  /* --- STC MCU International Limited -------------------------------*/
+   4      =3  /* --- STC 1T Series MCU RC Demo -----------------------------------*/
+   5      =3  /* --- Mobile: (86)13922805190 -------------------------------------*/
+   6      =3  /* --- Fax: 86-0513-55012956,55012947,55012969 ---------------------*/
+   7      =3  /* --- Tel: 86-0513-55012928,55012929,55012966 ---------------------*/
+   8      =3  /* --- Web: www.GXWMCU.com -----------------------------------------*/
+   9      =3  /* --- QQ:  800003751 ----------------------------------------------*/
+  10      =3  /* If you want to use the program or the program referenced in the  */
+  11      =3  /* article, please specify in which data and procedures from STC    */
+  12      =3  /*------------------------------------------------------------------*/
+  13      =3  
+  14      =3  
+  15      =3  
+  16      =3  #ifndef _STC15Fxxxx_H
+  17      =3  #define _STC15Fxxxx_H
+  18      =3  
+  19      =3  #include "config.h"
+           =2 
+           =2 
+           =2 #include "stdlib.h"
+           =2 #include <stdio.h>
+           =2 #include <stdint.h>
+           =2 #include "mystring.h"
+           =2 
+           =2 sbit LED1 = P0^0         ;
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 4   
+
+           =2 sbit LED2 = P0^1;
+           =2 #define LED_SYS_STATE_ON  LED1=0;
+           =2 #define LED_SYS_STATE_OFF  LED1=1;
+           =2 #define LED_ROUTER_STATE_ON  LED2=0;
+           =2 #define LED_ROUTER_STATE_OFF  LED2=1;
+           =2 
+           =2 #endif
+  19      =3  
+  19      =3  /*------------------------------------------------------------------*/
+  19      =3  /* --- STC MCU International Limited -------------------------------*/
+  19      =3  /* --- STC 1T Series MCU RC Demo -----------------------------------*/
+  19      =3  /* --- Mobile: (86)13922805190 -------------------------------------*/
+  19      =3  /* --- Fax: 86-0513-55012956,55012947,55012969 ---------------------*/
+  19      =3  /* --- Tel: 86-0513-55012928,55012929,55012966 ---------------------*/
+  19      =3  /* --- Web: www.GXWMCU.com -----------------------------------------*/
+  19      =3  /* --- QQ:  800003751 ----------------------------------------------*/
+  19      =3  /* If you want to use the program or the program referenced in the  */
+  19      =3  /* article, please specify in which data and procedures from STC    */
+  19      =3  /*------------------------------------------------------------------*/
+  19      =3  
+  19      =3  
+  19      =3  
+  19      =3  #ifndef _STC15Fxxxx_H
+  19      =3  #define _STC15Fxxxx_H
+  19      =3  
+  19      =3  #include "config.h"
+  20      =3  
+  21      =3  #include <intrins.h>
+   1      =4  /*--------------------------------------------------------------------------
+   2      =4  INTRINS.H
+   3      =4  
+   4      =4  Intrinsic functions for C51.
+   5      =4  Copyright (c) 1988-2004 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =4  All rights reserved.
+   7      =4  --------------------------------------------------------------------------*/
+   8      =4  
+   9      =4  #ifndef __INTRINS_H__
+  10      =4  #define __INTRINS_H__
+  11      =4  
+  12      =4  extern void          _nop_     (void);
+  13      =4  extern bit           _testbit_ (bit);
+  14      =4  extern unsigned char _cror_    (unsigned char, unsigned char);
+  15      =4  extern unsigned int  _iror_    (unsigned int,  unsigned char);
+  16      =4  extern unsigned long _lror_    (unsigned long, unsigned char);
+  17      =4  extern unsigned char _crol_    (unsigned char, unsigned char);
+  18      =4  extern unsigned int  _irol_    (unsigned int,  unsigned char);
+  19      =4  extern unsigned long _lrol_    (unsigned long, unsigned char);
+  20      =4  extern unsigned char _chkfloat_(float);
+  21      =4  extern void          _push_    (unsigned char _sfr);
+  22      =4  extern void          _pop_     (unsigned char _sfr);
+  23      =4  
+  24      =4  #endif
+  25      =4  
+  22      =3  
+  23      =3  /*  BYTE Registers  */
+  24      =3  sfr P0   = 0x80;
+  25      =3  sfr SP   = 0x81;
+  26      =3  sfr DPL  = 0x82;
+  27      =3  sfr DPH  = 0x83;
+  28      =3  sfr     S4CON = 0x84;
+  29      =3  sfr     S4BUF = 0x85;
+  30      =3  sfr PCON = 0x87;
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 5   
+
+  31      =3  
+  32      =3  sfr TCON = 0x88;
+  33      =3  sfr TMOD = 0x89;
+  34      =3  sfr TL0  = 0x8A;
+  35      =3  sfr TL1  = 0x8B;
+  36      =3  sfr TH0  = 0x8C;
+  37      =3  sfr TH1  = 0x8D;
+  38      =3  sfr     AUXR = 0x8E;
+  39      =3  sfr WAKE_CLKO = 0x8F;
+  40      =3  sfr INT_CLKO = 0x8F;
+  41      =3  sfr     AUXR2    = 0x8F;
+  42      =3  
+  43      =3  sfr RL_TL0  = 0x8A;
+  44      =3  sfr RL_TL1  = 0x8B;
+  45      =3  sfr RL_TH0  = 0x8C;
+  46      =3  sfr RL_TH1  = 0x8D;
+  47      =3  
+  48      =3  
+  49      =3  sfr P1   = 0x90;
+  50      =3  sfr P1M1 = 0x91;        //P1M1.n,P1M0.n         =00--->Standard,        01--->push-pull         Êµ¼ÊÉÏ1TµÄ¶¼Ò»Ñù
+  51      =3  sfr P1M0 = 0x92;        //                                      =10--->pure input,      11--->open drain
+  52      =3  sfr P0M1 = 0x93;        //P0M1.n,P0M0.n         =00--->Standard,        01--->push-pull
+  53      =3  sfr P0M0 = 0x94;        //                                      =10--->pure input,      11--->open drain
+  54      =3  sfr P2M1 = 0x95;        //P2M1.n,P2M0.n         =00--->Standard,        01--->push-pull
+  55      =3  sfr P2M0 = 0x96;        //                                      =10--->pure input,      11--->open drain
+  56      =3  sfr CLK_DIV = 0x97;
+  57      =3  sfr PCON2   = 0x97;
+  58      =3  
+  59      =3  sfr SCON  = 0x98;
+  60      =3  sfr SBUF  = 0x99;
+  61      =3  sfr S2CON = 0x9A;       //
+  62      =3  sfr S2BUF = 0x9B;       //
+  63      =3  sfr P1ASF = 0x9D;       //Ö»Ð´£¬Ä£ÄâÊäÈë(AD»òLVD)Ñ¡Ôñ
+  64      =3  
+  65      =3  sfr P2    = 0xA0;
+  66      =3  sfr BUS_SPEED = 0xA1;
+  67      =3  sfr AUXR1 = 0xA2;
+  68      =3  sfr P_SW1 = 0xA2;
+  69      =3  
+  70      =3  sfr IE    = 0xA8;
+  71      =3  sfr SADDR = 0xA9;
+  72      =3  sfr WKTCL = 0xAA;       //»½ÐÑ¶¨Ê±Æ÷µÍ×Ö½Ú
+  73      =3  sfr WKTCH = 0xAB;       //»½ÐÑ¶¨Ê±Æ÷¸ß×Ö½Ú
+  74      =3  sfr     S3CON = 0xAC;
+  75      =3  sfr S3BUF = 0xAD;
+  76      =3  sfr IE2   = 0xAF;       //STC12C5A60S2ÏµÁÐ
+  77      =3  
+  78      =3  sfr P3    = 0xB0;
+  79      =3  sfr P3M1  = 0xB1;       //P3M1.n,P3M0.n         =00--->Standard,        01--->push-pull
+  80      =3  sfr P3M0  = 0xB2;       //                                      =10--->pure input,      11--->open drain
+  81      =3  sfr P4M1  = 0xB3;       //P4M1.n,P4M0.n         =00--->Standard,        01--->push-pull
+  82      =3  sfr P4M0  = 0xB4;       //                                      =10--->pure input,      11--->open drain
+  83      =3  sfr IP2   = 0xB5;       //STC12C5A60S2ÏµÁÐ
+  84      =3  sfr IPH2  = 0xB6;       //STC12C5A60S2ÏµÁÐ
+  85      =3  sfr IPH   = 0xB7;
+  86      =3  
+  87      =3  sfr IP        = 0xB8;
+  88      =3  sfr SADEN     = 0xB9;
+  89      =3  sfr     P_SW2     = 0xBA;
+  90      =3  sfr ADC_CONTR = 0xBC;   //´øADÏµÁÐ
+  91      =3  sfr ADC_RES   = 0xBD;   //´øADÏµÁÐ
+  92      =3  sfr ADC_RESL  = 0xBE;   //´øADÏµÁÐ
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 6   
+
+  93      =3  
+  94      =3  sfr P4        = 0xC0;
+  95      =3  sfr WDT_CONTR = 0xC1;
+  96      =3  sfr IAP_DATA  = 0xC2;
+  97      =3  sfr IAP_ADDRH = 0xC3;
+  98      =3  sfr IAP_ADDRL = 0xC4;
+  99      =3  sfr IAP_CMD   = 0xC5;
+ 100      =3  sfr IAP_TRIG  = 0xC6;
+ 101      =3  sfr IAP_CONTR = 0xC7;
+ 102      =3  
+ 103      =3  sfr ISP_DATA  = 0xC2;
+ 104      =3  sfr ISP_ADDRH = 0xC3;
+ 105      =3  sfr ISP_ADDRL = 0xC4;
+ 106      =3  sfr ISP_CMD   = 0xC5;
+ 107      =3  sfr ISP_TRIG  = 0xC6;
+ 108      =3  sfr ISP_CONTR = 0xC7;
+ 109      =3  
+ 110      =3  sfr P5     = 0xC8;      //
+ 111      =3  sfr P5M1   = 0xC9;      //      P5M1.n,P5M0.n   =00--->Standard,        01--->push-pull
+ 112      =3  sfr P5M0   = 0xCA;      //                                      =10--->pure input,      11--->open drain
+ 113      =3  sfr P6M1   = 0xCB;      //      P5M1.n,P5M0.n   =00--->Standard,        01--->push-pull
+ 114      =3  sfr P6M0   = 0xCC;      //                                      =10--->pure input,      11--->open drain
+ 115      =3  sfr SPSTAT = 0xCD;      //
+ 116      =3  sfr SPCTL  = 0xCE;      //
+ 117      =3  sfr SPDAT  = 0xCF;      //
+ 118      =3  
+ 119      =3  sfr PSW  = 0xD0;
+ 120      =3  sfr     T4T3M = 0xD1;
+ 121      =3  sfr     T4H  = 0xD2;
+ 122      =3  sfr     T4L  = 0xD3;
+ 123      =3  sfr     T3H  = 0xD4;
+ 124      =3  sfr     T3L  = 0xD5;
+ 125      =3  sfr     T2H  = 0xD6;
+ 126      =3  sfr     T2L  = 0xD7;
+ 127      =3  
+ 128      =3  sfr     TH4  = 0xD2;
+ 129      =3  sfr     TL4  = 0xD3;
+ 130      =3  sfr     TH3  = 0xD4;
+ 131      =3  sfr     TL3  = 0xD5;
+ 132      =3  sfr     TH2  = 0xD6;
+ 133      =3  sfr     TL2  = 0xD7;
+ 134      =3  
+ 135      =3  sfr     RL_T4H  = 0xD2;
+ 136      =3  sfr     RL_T4L  = 0xD3;
+ 137      =3  sfr     RL_T3H  = 0xD4;
+ 138      =3  sfr     RL_T3L  = 0xD5;
+ 139      =3  sfr     RL_T2H  = 0xD6;
+ 140      =3  sfr     RL_T2L  = 0xD7;
+ 141      =3  
+ 142      =3  sfr CCON = 0xD8;        //
+ 143      =3  sfr CMOD = 0xD9;        //
+ 144      =3  sfr CCAPM0 = 0xDA;      //PCAÄ£¿é0µÄ¹¤×÷Ä£Ê½¼Ä´æÆ÷¡£
+ 145      =3  sfr CCAPM1 = 0xDB;      //PCAÄ£¿é1µÄ¹¤×÷Ä£Ê½¼Ä´æÆ÷¡£
+ 146      =3  sfr CCAPM2 = 0xDC;      //PCAÄ£¿é2µÄ¹¤×÷Ä£Ê½¼Ä´æÆ÷¡£
+ 147      =3  
+ 148      =3  sfr ACC    = 0xE0;
+ 149      =3  sfr     P7M1   = 0xE1;
+ 150      =3  sfr     P7M0   = 0xE2;
+ 151      =3  sfr     CMPCR1 = 0xE6;
+ 152      =3  sfr     CMPCR2 = 0xE7;
+ 153      =3  
+ 154      =3  
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 7   
+
+ 155      =3  sfr     P6     = 0xE8;
+ 156      =3  sfr CL     = 0xE9;      //
+ 157      =3  sfr CCAP0L = 0xEA;      //PCAÄ£¿é0µÄ²¶×½/±È½Ï¼Ä´æÆ÷µÍ8Î»¡£
+ 158      =3  sfr CCAP1L = 0xEB;      //PCAÄ£¿é1µÄ²¶×½/±È½Ï¼Ä´æÆ÷µÍ8Î»¡£
+ 159      =3  sfr CCAP2L = 0xEC;      //PCAÄ£¿é2µÄ²¶×½/±È½Ï¼Ä´æÆ÷µÍ8Î»¡£
+ 160      =3  
+ 161      =3  sfr B      = 0xF0;
+ 162      =3  sfr PCA_PWM0 = 0xF2;    //PCAÄ£¿é0 PWM¼Ä´æÆ÷¡£
+ 163      =3  sfr PCA_PWM1 = 0xF3;    //PCAÄ£¿é1 PWM¼Ä´æÆ÷¡£
+ 164      =3  sfr PCA_PWM2 = 0xF4;    //PCAÄ£¿é2 PWM¼Ä´æÆ÷¡£
+ 165      =3  
+ 166      =3  sfr     P7     = 0xF8;
+ 167      =3  sfr CH     = 0xF9;
+ 168      =3  sfr CCAP0H = 0xFA;              //PCAÄ£¿é0µÄ²¶×½/±È½Ï¼Ä´æÆ÷¸ß8Î»¡£
+ 169      =3  sfr CCAP1H = 0xFB;              //PCAÄ£¿é1µÄ²¶×½/±È½Ï¼Ä´æÆ÷¸ß8Î»¡£
+ 170      =3  sfr CCAP2H = 0xFC;              //PCAÄ£¿é2µÄ²¶×½/±È½Ï¼Ä´æÆ÷¸ß8Î»¡£
+ 171      =3  
+ 172      =3  
+ 173      =3  /*  BIT Registers  */
+ 174      =3  /*  PSW   */
+ 175      =3  sbit CY   = PSW^7;
+ 176      =3  sbit AC   = PSW^6;
+ 177      =3  sbit F0   = PSW^5;
+ 178      =3  sbit RS1  = PSW^4;
+ 179      =3  sbit RS0  = PSW^3;
+ 180      =3  sbit OV   = PSW^2;
+ 181      =3  sbit F1   = PSW^1;
+ 182      =3  sbit P    = PSW^0;
+ 183      =3  
+ 184      =3  /*  TCON  */
+ 185      =3  sbit TF1  = TCON^7;     //¶¨Ê±Æ÷1Òç³öÖÐ¶Ï±êÖ¾Î»
+ 186      =3  sbit TR1  = TCON^6;     //¶¨Ê±Æ÷1ÔËÐÐ¿ØÖÆÎ»
+ 187      =3  sbit TF0  = TCON^5;     //¶¨Ê±Æ÷0Òç³öÖÐ¶Ï±êÖ¾Î»
+ 188      =3  sbit TR0  = TCON^4;     //¶¨Ê±Æ÷0ÔËÐÐ¿ØÖÆÎ»
+ 189      =3  sbit IE1  = TCON^3;     //ÍâÖÐ¶Ï1±êÖ¾Î»
+ 190      =3  sbit IT1  = TCON^2;     //ÍâÖÐ¶Ï1ÐÅºÅ·½Ê½¿ØÖÆÎ»£¬1£ºÏÂ½µÑØÖÐ¶Ï£¬0£ºÉÏÉýÏÂ½µ¾ùÖÐ¶Ï¡£
+ 191      =3  sbit IE0  = TCON^1;     //ÍâÖÐ¶Ï0±êÖ¾Î»
+ 192      =3  sbit IT0  = TCON^0;     //ÍâÖÐ¶Ï0ÐÅºÅ·½Ê½¿ØÖÆÎ»£¬1£ºÏÂ½µÑØÖÐ¶Ï£¬0£ºÉÏÉýÏÂ½µ¾ùÖÐ¶Ï¡£
+ 193      =3  
+ 194      =3  /*  P0  */
+ 195      =3  sbit  P00 = P0^0;
+ 196      =3  sbit  P01 = P0^1;
+ 197      =3  sbit  P02 = P0^2;
+ 198      =3  sbit  P03 = P0^3;
+ 199      =3  sbit  P04 = P0^4;
+ 200      =3  sbit  P05 = P0^5;
+ 201      =3  sbit  P06 = P0^6;
+ 202      =3  sbit  P07 = P0^7;
+ 203      =3  
+ 204      =3  /*  P1  */
+ 205      =3  sbit  P10 = P1^0;
+ 206      =3  sbit  P11 = P1^1;
+ 207      =3  sbit  P12 = P1^2;
+ 208      =3  sbit  P13 = P1^3;
+ 209      =3  sbit  P14 = P1^4;
+ 210      =3  sbit  P15 = P1^5;
+ 211      =3  sbit  P16 = P1^6;
+ 212      =3  sbit  P17 = P1^7;
+ 213      =3  
+ 214      =3  sbit  RXD2      = P1^0;
+ 215      =3  sbit  TXD2      = P1^1;
+ 216      =3  sbit  CCP1      = P1^0;
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 8   
+
+ 217      =3  sbit  CCP0      = P1^1;
+ 218      =3  sbit  SPI_SS    = P1^2;
+ 219      =3  sbit  SPI_MOSI  = P1^3;
+ 220      =3  sbit  SPI_MISO  = P1^4;
+ 221      =3  sbit  SPI_SCLK  = P1^5;
+ 222      =3  
+ 223      =3  /*  P2  */
+ 224      =3  sbit  P20 = P2^0;
+ 225      =3  sbit  P21 = P2^1;
+ 226      =3  sbit  P22 = P2^2;
+ 227      =3  sbit  P23 = P2^3;
+ 228      =3  sbit  P24 = P2^4;
+ 229      =3  sbit  P25 = P2^5;
+ 230      =3  sbit  P26 = P2^6;
+ 231      =3  sbit  P27 = P2^7;
+ 232      =3  
+ 233      =3  /*  P3  */
+ 234      =3  sbit  P30 = P3^0;
+ 235      =3  sbit  P31 = P3^1;
+ 236      =3  sbit  P32 = P3^2;
+ 237      =3  sbit  P33 = P3^3;
+ 238      =3  sbit  P34 = P3^4;
+ 239      =3  sbit  P35 = P3^5;
+ 240      =3  sbit  P36 = P3^6;
+ 241      =3  sbit  P37 = P3^7;
+ 242      =3  
+ 243      =3  sbit RXD  = P3^0;
+ 244      =3  sbit TXD  = P3^1;
+ 245      =3  sbit INT0 = P3^2;
+ 246      =3  sbit INT1 = P3^3;
+ 247      =3  sbit T0   = P3^4;
+ 248      =3  sbit T1   = P3^5;
+ 249      =3  sbit WR   = P3^6;
+ 250      =3  sbit RD   = P3^7;
+ 251      =3  sbit CCP2  = P3^7;
+ 252      =3  
+ 253      =3  sbit CLKOUT0   = P3^5;
+ 254      =3  sbit CLKOUT1   = P3^4;
+ 255      =3  
+ 256      =3  /*  P4  */
+ 257      =3  sbit  P40 = P4^0;
+ 258      =3  sbit  P41 = P4^1;
+ 259      =3  sbit  P42 = P4^2;
+ 260      =3  sbit  P43 = P4^3;
+ 261      =3  sbit  P44 = P4^4;
+ 262      =3  sbit  P45 = P4^5;
+ 263      =3  sbit  P46 = P4^6;
+ 264      =3  sbit  P47 = P4^7;
+ 265      =3  
+ 266      =3  /*  P5  */
+ 267      =3  sbit  P50 = P5^0;
+ 268      =3  sbit  P51 = P5^1;
+ 269      =3  sbit  P52 = P5^2;
+ 270      =3  sbit  P53 = P5^3;
+ 271      =3  sbit  P54 = P5^4;
+ 272      =3  sbit  P55 = P5^5;
+ 273      =3  sbit  P56 = P5^6;
+ 274      =3  sbit  P57 = P5^7;
+ 275      =3  
+ 276      =3  /*  SCON  */
+ 277      =3  sbit SM0  = SCON^7;     //SM0/FE                SM0 SM1 = 00 ~ 11: ·½Ê½0~3
+ 278      =3  sbit SM1  = SCON^6;     //
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 9   
+
+ 279      =3  sbit SM2  = SCON^5;     //¶à»úÍ¨Ñ¶
+ 280      =3  sbit REN  = SCON^4;     //½ÓÊÕÔÊÐí
+ 281      =3  sbit TB8  = SCON^3;     //·¢ËÍÊý¾ÝµÚ8Î»
+ 282      =3  sbit RB8  = SCON^2;     //½ÓÊÕÊý¾ÝµÚ8Î»
+ 283      =3  sbit TI   = SCON^1;     //·¢ËÍÖÐ¶Ï±êÖ¾Î»
+ 284      =3  sbit RI   = SCON^0;     //½ÓÊÕÖÐ¶Ï±êÖ¾Î»
+ 285      =3  
+ 286      =3  /*  IE   */
+ 287      =3  sbit EA   = IE^7;       //ÖÐ¶ÏÔÊÐí×Ü¿ØÖÆÎ»
+ 288      =3  sbit ELVD = IE^6;       //µÍÑ¹¼à²âÖÐ¶ÏÔÊÐíÎ»
+ 289      =3  sbit EADC = IE^5;       //ADC ÖÐ¶Ï ÔÊÐíÎ»
+ 290      =3  sbit ES   = IE^4;       //´®ÐÐÖÐ¶Ï ÔÊÐí¿ØÖÆÎ»
+ 291      =3  sbit ET1  = IE^3;       //¶¨Ê±ÖÐ¶Ï1ÔÊÐí¿ØÖÆÎ»
+ 292      =3  sbit EX1  = IE^2;       //Íâ²¿ÖÐ¶Ï1ÔÊÐí¿ØÖÆÎ»
+ 293      =3  sbit ET0  = IE^1;       //¶¨Ê±ÖÐ¶Ï0ÔÊÐí¿ØÖÆÎ»
+ 294      =3  sbit EX0  = IE^0;       //Íâ²¿ÖÐ¶Ï0ÔÊÐí¿ØÖÆÎ»
+ 295      =3  
+ 296      =3  
+ 297      =3  /*  IP   */ 
+ 298      =3  /*
+ 299      =3  sbit PPCA = IP^7;       //PCA ÖÐ¶Ï ÓÅÏÈ¼¶Éè¶¨Î»
+ 300      =3  sbit PLVD = IP^6;       //µÍÑ¹ÖÐ¶Ï ÓÅÏÈ¼¶Éè¶¨Î»
+ 301      =3  sbit PADC = IP^5;       //ADC ÖÐ¶Ï ÓÅÏÈ¼¶Éè¶¨Î»
+ 302      =3  sbit PS   = IP^4;       //´®ÐÐÖÐ¶Ï0ÓÅÏÈ¼¶Éè¶¨Î»
+ 303      =3  sbit PT1  = IP^3;       //¶¨Ê±ÖÐ¶Ï1ÓÅÏÈ¼¶Éè¶¨Î»
+ 304      =3  sbit PX1  = IP^2;       //Íâ²¿ÖÐ¶Ï1ÓÅÏÈ¼¶Éè¶¨Î»
+ 305      =3  sbit PT0  = IP^1;       //¶¨Ê±ÖÐ¶Ï0ÓÅÏÈ¼¶Éè¶¨Î»
+ 306      =3  sbit PX0  = IP^0;       //Íâ²¿ÖÐ¶Ï0ÓÅÏÈ¼¶Éè¶¨Î»
+ 307      =3  */
+ 308      =3  
+ 309      =3  sbit ACC0 = ACC^0;
+ 310      =3  sbit ACC1 = ACC^1;
+ 311      =3  sbit ACC2 = ACC^2;
+ 312      =3  sbit ACC3 = ACC^3;
+ 313      =3  sbit ACC4 = ACC^4;
+ 314      =3  sbit ACC5 = ACC^5;
+ 315      =3  sbit ACC6 = ACC^6;
+ 316      =3  sbit ACC7 = ACC^7;
+ 317      =3  
+ 318      =3  sbit B0 = B^0;
+ 319      =3  sbit B1 = B^1;
+ 320      =3  sbit B2 = B^2;
+ 321      =3  sbit B3 = B^3;
+ 322      =3  sbit B4 = B^4;
+ 323      =3  sbit B5 = B^5;
+ 324      =3  sbit B6 = B^6;
+ 325      =3  sbit B7 = B^7;
+ 326      =3  
+ 327      =3  
+ 328      =3  //                                                      7     6     5    4    3    2    1     0    Reset Value
+ 329      =3  //sfr IE2       = 0xAF;         -     -     -    -    -    -   ESPI  ES2   0000,0000B   //Auxiliary Interrupt   
+ 330      =3  #define         SPI_INT_ENABLE()                IE2 |=  2       //ÔÊÐíSPIÖÐ¶Ï
+ 331      =3  #define         SPI_INT_DISABLE()               IE2 &= ~2       //ÔÊÐíSPIÖÐ¶Ï
+ 332      =3  #define         UART2_INT_ENABLE()              IE2 |=  1       //ÔÊÐí´®¿Ú2ÖÐ¶Ï
+ 333      =3  #define         UART2_INT_DISABLE()             IE2 &= ~1       //ÔÊÐí´®¿Ú2ÖÐ¶Ï
+ 334      =3  
+ 335      =3  //                                          7     6     5    4    3    2    1    0    Reset Value
+ 336      =3  //sfr IP      = 0xB8; //ÖÐ¶ÏÓÅÏÈ¼¶µÍÎ»      PPCA  PLVD  PADC  PS   PT1  PX1  PT0  PX0   0000,0000
+ 337      =3  //--------
+ 338      =3  sbit PPCA       = IP^7; //PCA Ä£¿éÖÐ¶ÏÓÅÏÈ¼¶
+ 339      =3  sbit PLVD       = IP^6; //µÍÑ¹¼à²âÖÐ¶ÏÓÅÏÈ¼¶
+ 340      =3  sbit PADC       = IP^5; //ADC ÖÐ¶ÏÓÅÏÈ¼¶
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 10  
+
+ 341      =3  sbit PS         = IP^4; //´®ÐÐÖÐ¶Ï0ÓÅÏÈ¼¶Éè¶¨Î»
+ 342      =3  sbit PT1        = IP^3; //¶¨Ê±ÖÐ¶Ï1ÓÅÏÈ¼¶Éè¶¨Î»
+ 343      =3  sbit PX1        = IP^2; //Íâ²¿ÖÐ¶Ï1ÓÅÏÈ¼¶Éè¶¨Î»
+ 344      =3  sbit PT0        = IP^1; //¶¨Ê±ÖÐ¶Ï0ÓÅÏÈ¼¶Éè¶¨Î»
+ 345      =3  sbit PX0        = IP^0; //Íâ²¿ÖÐ¶Ï0ÓÅÏÈ¼¶Éè¶¨Î»
+ 346      =3  
+ 347      =3  //                                           7      6      5     4     3     2    1     0        Reset Val
+             -ue
+ 348      =3  //sfr IPH   = 0xB7; //ÖÐ¶ÏÓÅÏÈ¼¶¸ßÎ»       PPCAH  PLVDH  PADCH  PSH  PT1H  PX1H  PT0H  PX0H   0000,0000
+ 349      =3  //sfr IP2   = 0xB5; //                       -      -      -     -     -     -   PSPI   PS2   xxxx,xx00
+ 350      =3  //sfr IPH2  = 0xB6; //                       -      -      -     -     -     -   PSPIH  PS2H  xxxx,xx00
+ 351      =3  #define         PPCAH   0x80
+ 352      =3  #define         PLVDH   0x40
+ 353      =3  #define         PADCH   0x20
+ 354      =3  #define         PSH             0x10
+ 355      =3  #define         PT1H    0x08
+ 356      =3  #define         PX1H    0x04
+ 357      =3  #define         PT0H    0x02
+ 358      =3  #define         PX0H    0x01
+ 359      =3  
+ 360      =3  #define         PCA_InterruptFirst()    PPCA = 1
+ 361      =3  #define         LVD_InterruptFirst()    PLVD = 1
+ 362      =3  #define         ADC_InterruptFirst()    PADC = 1
+ 363      =3  #define         UART1_InterruptFirst()  PS   = 1
+ 364      =3  #define         Timer1_InterruptFirst() PT1  = 1
+ 365      =3  #define         INT1_InterruptFirst()   PX1  = 1
+ 366      =3  #define         Timer0_InterruptFirst() PT0  = 1
+ 367      =3  #define         INT0_InterruptFirst()   PX0  = 1
+ 368      =3  
+ 369      =3  
+ 370      =3  /*************************************************************************************************/
+ 371      =3  
+ 372      =3  
+ 373      =3  
+ 374      =3  /*************************************************************************************************/
+ 375      =3  #define         S1_DoubleRate()         PCON |= 0x80
+ 376      =3  #define         S1_SHIFT()                      SCON &= 0x3f
+ 377      =3  #define         S1_8bit()                       SCON  = (SCON & 0x3f) | 0x40
+ 378      =3  #define         S1_9bit()                       SCON  = (SCON & 0x3f) | 0xc0
+ 379      =3  #define         S1_RX_Enable()          SCON |= 0x10
+ 380      =3  #define         S1_USE_P30P31()         P_SW1 &= ~0xc0                                  //UART1 Ê¹ÓÃP30 P31¿Ú   Ä¬ÈÏ
+ 381      =3  #define         S1_USE_P36P37()         P_SW1 = (P_SW1 & ~0xc0) | 0x40  //UART1 Ê¹ÓÃP36 P37¿Ú
+ 382      =3  #define         S1_USE_P16P17()         P_SW1 = (P_SW1 & ~0xc0) | 0x80  //UART1 Ê¹ÓÃP16 P17¿Ú
+ 383      =3  #define         S1_TXD_RXD_SHORT()      PCON2 |=  (1<<4)        //½«TXDÓëRXDÁ¬½ÓÖÐ¼ÌÊä³ö
+ 384      =3  #define         S1_TXD_RXD_OPEN()       PCON2 &= ~(1<<4)        //½«TXDÓëRXDÁ¬½ÓÖÐ¼Ì¶Ï¿ª        Ä¬ÈÏ
+ 385      =3  #define         S1_BRT_UseTimer2()      AUXR |=  1
+ 386      =3  #define         S1_BRT_UseTimer1()      AUXR &= ~1
+ 387      =3  
+ 388      =3  //                                                7      6      5      4      3      2     1     0        Reset Value
+ 389      =3  //sfr S2CON = 0x9A;             S2SM0    -    S2SM2  S2REN  S2TB8  S2RB8  S2TI  S2RI      00000000B              //S2 Control
+ 390      =3  
+ 391      =3  #define         S2_8bit()                       S2CON &= ~(1<<7)                //´®¿Ú2Ä£Ê½0£¬8Î»UART£¬²¨ÌØÂÊ = ¶¨Ê±Æ÷2µÄÒç³öÂÊ / 4
+ 392      =3  #define         S2_9bit()                       S2CON |=  (1<<7)                //´®¿Ú2Ä£Ê½1£¬9Î»UART£¬²¨ÌØÂÊ = ¶¨Ê±Æ÷2µÄÒç³öÂÊ / 4
+ 393      =3  #define         S2_RX_Enable()          S2CON |=  (1<<4)                //ÔÊÐí´®2½ÓÊÕ
+ 394      =3  
+ 395      =3  #define         S2_MODE0()                      S2CON &= ~(1<<7)                //´®¿Ú2Ä£Ê½0£¬8Î»UART£¬²¨ÌØÂÊ = ¶¨Ê±Æ÷2µÄÒç³öÂÊ / 4
+ 396      =3  #define         S2_MODE1()                      S2CON |=  (1<<7)                //´®¿Ú2Ä£Ê½1£¬9Î»UART£¬²¨ÌØÂÊ = ¶¨Ê±Æ÷2µÄÒç³öÂÊ / 4
+ 397      =3  #define         S2_RX_EN()                      S2CON |=  (1<<4)                                                        //ÔÊÐí´®2½ÓÊÕ
+ 398      =3  #define         S2_RX_Disable()         S2CON &= ~(1<<4)                                                        //½ûÖ¹´®2½ÓÊÕ
+ 399      =3  #define         TI2                                     (S2CON & 2) != 0
+ 400      =3  #define         RI2                                     (S2CON & 1) != 0
+ 401      =3  #define         SET_TI2()                       S2CON |=  2
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 11  
+
+ 402      =3  #define         CLR_TI2()                       S2CON &= ~2
+ 403      =3  #define         CLR_RI2()                       S2CON &= ~1
+ 404      =3  #define         S2TB8_SET()                     S2CON |=  8
+ 405      =3  #define         S2TB8_CLR()                     S2CON &= ~8
+ 406      =3  #define         S2_Int_en()                     IE2   |=  1             //´®¿Ú2ÔÊÐíÖÐ¶Ï
+ 407      =3  #define         S2_USE_P10P11()         P_SW2 &= ~1             //UART2 Ê¹ÓÃP1¿Ú        Ä¬ÈÏ
+ 408      =3  #define         S2_USE_P46P47()         P_SW2 |=  1             //UART2 Ê¹ÓÃP4¿Ú
+ 409      =3  
+ 410      =3  #define         S3_USE_P00P01()         P_SW2 &= ~2             //UART3 Ê¹ÓÃP0¿Ú        Ä¬ÈÏ
+ 411      =3  #define         S3_USE_P50P51()         P_SW2 |=  2             //UART3 Ê¹ÓÃP5¿Ú
+ 412      =3  #define         S4_USE_P02P03()         P_SW2 &= ~4             //UART4 Ê¹ÓÃP0¿Ú        Ä¬ÈÏ
+ 413      =3  #define         S4_USE_P52P53()         P_SW2 |=  4             //UART4 Ê¹ÓÃP5¿Ú
+ 414      =3  
+ 415      =3  
+ 416      =3  /**********************************************************/
+ 417      =3  
+ 418      =3  #define         Timer0_16bitAutoReload()        TMOD &= ~0x03                                   //16Î»×Ô¶¯ÖØ×°
+ 419      =3  #define         Timer0_16bit()                          TMOD  = (TMOD & ~0x03) | 0x01   //16Î»
+ 420      =3  #define         Timer0_8bitAutoReload()         TMOD  = (TMOD & ~0x03) | 0x02   //8Î»×Ô¶¯ÖØ×°
+ 421      =3  #define         Timer0_16bitAutoRL_NoMask()     TMOD |=  0x03           //16Î»×Ô¶¯ÖØ×°²»¿ÉÆÁ±ÎÖÐ¶Ï
+ 422      =3  #define         Timer0_AsCounterP32()           TMOD |=  4              //Ê±Æ÷0ÓÃ×ö¼ÆÊýÆ÷
+ 423      =3  #define         Timer0_AsTimer()                        TMOD &= ~4              //Ê±Æ÷0ÓÃ×ö¶¨Ê±Æ÷
+ 424      =3  #define         Timer0_ExtControlP34()          TMOD |=  4              //Ê±Æ÷0ÓÉÍâ²¿INT0¸ßµçÆ½ÔÊÐí¶¨Ê±¼ÆÊý
+ 425      =3  #define         Timer0_Run()                            TR0 = 1                         //ÔÊÐí¶¨Ê±Æ÷0¼ÆÊý
+ 426      =3  #define         Timer0_Stop()                           TR0 = 0                         //½ûÖ¹¶¨Ê±Æ÷0¼ÆÊý
+ 427      =3  #define         Timer0_InterruptEnable()        ET0 = 1                         //ÔÊÐíTimer1ÖÐ¶Ï.
+ 428      =3  #define         Timer0_InterruptDisable()       ET0 = 0                         //½ûÖ¹Timer1ÖÐ¶Ï.
+ 429      =3  
+ 430      =3  #define         Timer1_16bitAutoReload()        TMOD &= ~0x30                                   //16Î»×Ô¶¯ÖØ×°
+ 431      =3  #define         Timer1_16bit()                          TMOD  = (TMOD & ~0x30) | 0x10   //16Î»
+ 432      =3  #define         Timer1_8bitAutoReload()         TMOD  = (TMOD & ~0x30) | 0x20   //8Î»×Ô¶¯ÖØ×°
+ 433      =3  #define         Timer1_16bitAutoRL_NoMask()     TMOD |=  0x30           //16Î»×Ô¶¯ÖØ×°²»¿ÉÆÁ±ÎÖÐ¶Ï
+ 434      =3  #define         Timer1_AsCounterP33()           TMOD |=  (1<<6)         //Ê±Æ÷1ÓÃ×ö¼ÆÊýÆ÷
+ 435      =3  #define         Timer1_AsTimer()                        TMOD &= ~(1<<6)         //Ê±Æ÷1ÓÃ×ö¶¨Ê±Æ÷
+ 436      =3  #define         Timer1_ExtControlP35()          TMOD |=  (1<<7)         //Ê±Æ÷1ÓÉÍâ²¿INT1¸ßµçÆ½ÔÊÐí¶¨Ê±¼ÆÊý
+ 437      =3  #define         Timer1_Run()                            TR1 = 1                         //ÔÊÐí¶¨Ê±Æ÷1¼ÆÊý
+ 438      =3  #define         Timer1_Stop()                           TR1 = 0                         //½ûÖ¹¶¨Ê±Æ÷1¼ÆÊý
+ 439      =3  #define         Timer1_InterruptEnable()        ET1 = 1                         //ÔÊÐíTimer1ÖÐ¶Ï.
+ 440      =3  #define         Timer1_InterruptDisable()       ET1 = 0                         //½ûÖ¹Timer1ÖÐ¶Ï.
+ 441      =3  
+ 442      =3  
+ 443      =3  //                                                 7     6       5      4     3      2      1      0    Reset Value
+ 444      =3  //sfr AUXR  = 0x8E;             T0x12 T1x12 UART_M0x6  T2R  T2_C/T T2x12 EXTRAM  S1ST2  0000,0000       //Auxiliary Registe
+             -r 
+ 445      =3  
+ 446      =3  #define         Timer0_1T()                                     AUXR |=  (1<<7) //Timer0 clodk = fo
+ 447      =3  #define         Timer0_12T()                            AUXR &= ~(1<<7) //Timer0 clodk = fo/12  12·ÖÆµ, default
+ 448      =3  #define         Timer1_1T()                                     AUXR |=  (1<<6) //Timer1 clodk = fo
+ 449      =3  #define         Timer1_12T()                            AUXR &= ~(1<<6) //Timer1 clodk = fo/12  12·ÖÆµ, default
+ 450      =3  #define         S1_M0x6()                                       AUXR |=  (1<<5) //UART Mode0 Speed is 6x Standard
+ 451      =3  #define         S1_M0x1()                                       AUXR &= ~(1<<5) //default,      UART Mode0 Speed is Standard
+ 452      =3  #define         Timer2_Run()                            AUXR |=  (1<<4) //ÔÊÐí¶¨Ê±Æ÷2¼ÆÊý
+ 453      =3  #define         Timer2_Stop()                           AUXR &= ~(1<<4) //½ûÖ¹¶¨Ê±Æ÷2¼ÆÊý
+ 454      =3  #define         Timer2_AsCounterP31()           AUXR |=  (1<<3) //Ê±Æ÷2ÓÃ×ö¼ÆÊýÆ÷
+ 455      =3  #define         Timer2_AsTimer()                        AUXR &= ~(1<<3) //Ê±Æ÷2ÓÃ×ö¶¨Ê±Æ÷
+ 456      =3  #define         Timer2_1T()                                     AUXR |=  (1<<2) //Timer0 clodk = fo
+ 457      =3  #define         Timer2_12T()                            AUXR &= ~(1<<2) //Timer0 clodk = fo/12  12·ÖÆµ, default
+ 458      =3  #define         Timer2_InterruptEnable()        IE2  |=  (1<<2) //ÔÊÐíTimer2ÖÐ¶Ï.
+ 459      =3  #define         Timer2_InterruptDisable()       IE2  &= ~(1<<2) //½ûÖ¹Timer2ÖÐ¶Ï.
+ 460      =3  
+ 461      =3  #define         ExternalRAM_enable()            AUXR |=  2              //ÔÊÐíÍâ²¿XRAM£¬½ûÖ¹Ê¹ÓÃÄÚ²¿1024RAM
+ 462      =3  #define         InternalRAM_enable()            AUXR &= ~2              //½ûÖ¹Íâ²¿XRAM£¬ÔÊÐíÊ¹ÓÃÄÚ²¿1024RAM
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 12  
+
+ 463      =3  
+ 464      =3  #define         T0_pulseP34_enable()            AUXR2 |=  1             //ÔÊÐí T0 Òç³öÂö³åÔÚT0(P3.5)½ÅÊä³ö£¬Fck0 = 1/2 T0 Òç³öÂÊ£¬T0¿É
+             -ÒÔ1T»ò12T¡£
+ 465      =3  #define         T0_pulseP34_disable()           AUXR2 &= ~1
+ 466      =3  #define         T1_pulseP35_enable()            AUXR2 |=  2             //ÔÊÐí T1 Òç³öÂö³åÔÚT1(P3.4)½ÅÊä³ö£¬Fck1 = 1/2 T1 Òç³öÂÊ£¬T1¿É
+             -ÒÔ1T»ò12T¡£
+ 467      =3  #define         T1_pulseP35_disable()           AUXR2 &= ~2
+ 468      =3  #define         T2_pulseP30_enable()            AUXR2 |=  4             //ÔÊÐí T2 Òç³öÂö³åÔÚT1(P3.0)½ÅÊä³ö£¬Fck2 = 1/2 T2 Òç³öÂÊ£¬T2¿É
+             -ÒÔ1T»ò12T¡£
+ 469      =3  #define         T2_pulseP30_disable()           AUXR2 &= ~4
+ 470      =3  
+ 471      =3  #define         T0_pulseP35(n)          ET0=0,Timer0_AsTimer(),Timer0_1T(),Timer0_16bitAutoReload(),TH0=(65536-(n/2+MAIN_
+             -Fosc/2)/(n))/256,TL0=(65536-(n/2+MAIN_Fosc/2)/(n))%256,AUXR2 |= bit0,TR0=1            //fx=fosc/(2*M)/n,  M=1 or M=12
+ 472      =3  #define         T1_pulseP34(n)          ET1=0,Timer1_AsTimer(),Timer1_1T(),Timer1_16bitAutoReload(),TH1=(65536-(n/2+MAIN_
+             -Fosc/2)/(n))/256,TL1=(65536-(n/2+MAIN_Fosc/2)/(n))%256,AUXR2 |= bit1,TR1=1            //fx=fosc/(2*M)/n,  M=1 or M=12
+ 473      =3  #define         T2_pulseP30(n)          Timer2_InterruptDisable(),Timer2_AsTimer(),Timer2_1T(),TH2=(65536-(n/2+MAIN_Fosc/
+             -2)/(n))/256,TL2=(65536-(n/2+MAIN_Fosc/2)/(n))%256,AUXR2 |= bit2,Timer2_Run()  //fx=fosc/(2*M)/n,  M=1 or M=12
+ 474      =3  
+ 475      =3  #define         Timer0_Load(n)          TH0 = (n) / 256,        TL0 = (n) % 256
+ 476      =3  #define         Timer1_Load(n)          TH1 = (n) / 256,        TL1 = (n) % 256
+ 477      =3  #define         Timer2_Load(n)          TH2 = (n) / 256,        TL2 = (n) % 256
+ 478      =3  
+ 479      =3  #define         Timer0_Load_us(n)       TH0=(65536-MainFosc_KHZ*(n)/1000)/256,TL0=(65536-MainFosc_KHZ*(n)/1000)%256
+ 480      =3  #define         Timer1_Load_us(n)       TH1=(65536-MainFosc_KHZ*(n)/1000)/256,TL1=(65536-MainFosc_KHZ*(n)/1000)%256
+ 481      =3  #define         Timer2_Load_us(n)       TH2=(65536-MainFosc_KHZ*(n)/1000)/256,TL2=(65536-MainFosc_KHZ*(n)/1000)%256
+ 482      =3  
+ 483      =3  
+ 484      =3  //sfr WDT_CONTR = 0xC1; //Watch-Dog-Timer Control register
+ 485      =3  //                                      7     6     5      4       3      2   1   0     Reset Value
+ 486      =3  //                                  WDT_FLAG  -  EN_WDT CLR_WDT IDLE_WDT PS2 PS1 PS0    xx00,0000
+ 487      =3  #define D_WDT_FLAG                      (1<<7)
+ 488      =3  #define D_EN_WDT                        (1<<5)
+ 489      =3  #define D_CLR_WDT                       (1<<4)  //auto clear
+ 490      =3  #define D_IDLE_WDT                      (1<<3)  //WDT counter when Idle
+ 491      =3  #define D_WDT_SCALE_2           0
+ 492      =3  #define D_WDT_SCALE_4           1
+ 493      =3  #define D_WDT_SCALE_8           2               //T=393216*N/fo
+ 494      =3  #define D_WDT_SCALE_16          3
+ 495      =3  #define D_WDT_SCALE_32          4
+ 496      =3  #define D_WDT_SCALE_64          5
+ 497      =3  #define D_WDT_SCALE_128         6
+ 498      =3  #define D_WDT_SCALE_256         7
+ 499      =3  
+ 500      =3  #define WDT_reset(n)    WDT_CONTR = D_EN_WDT + D_CLR_WDT + D_IDLE_WDT + (n)             //³õÊ¼»¯WDT£¬Î¹¹·
+ 501      =3  
+ 502      =3  
+ 503      =3  //                                                7     6      5    4     3      2    1     0     Reset Value
+ 504      =3  //sfr PCON   = 0x87;    SMOD  SMOD0  LVDF  POF   GF1    GF0   PD   IDL    0001,0000      //Power Control 
+ 505      =3  //SMOD          //´®¿ÚË«±¶ËÙ
+ 506      =3  //SMOD0
+ 507      =3  #define         LVDF            (1<<5)  //P4.6µÍÑ¹¼ì²â±êÖ¾
+ 508      =3  //POF
+ 509      =3  //GF1
+ 510      =3  //GF0
+ 511      =3  //#define       D_PD            2               //set 1, power down mode
+ 512      =3  //#define       D_IDLE          1               //set 1, idle mode
+ 513      =3  #define         MCU_IDLE()                      PCON |= 1       //MCU ½øÈë IDLE Ä£Ê½
+ 514      =3  #define         MCU_POWER_DOWN()        PCON |= 2       //MCU ½øÈë Ë¯Ãß Ä£Ê½
+ 515      =3  
+ 516      =3  
+ 517      =3  //sfr ISP_CMD   = 0xC5;
+ 518      =3  #define         ISP_STANDBY()   ISP_CMD = 0             //ISP¿ÕÏÐÃüÁî£¨½ûÖ¹£©
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 13  
+
+ 519      =3  #define         ISP_READ()              ISP_CMD = 1             //ISP¶Á³öÃüÁî
+ 520      =3  #define         ISP_WRITE()             ISP_CMD = 2             //ISPÐ´ÈëÃüÁî
+ 521      =3  #define         ISP_ERASE()             ISP_CMD = 3             //ISP²Á³ýÃüÁî
+ 522      =3  
+ 523      =3  //sfr ISP_TRIG  = 0xC6;
+ 524      =3  #define         ISP_TRIG()      ISP_TRIG = 0x5A,        ISP_TRIG = 0xA5         //ISP´¥·¢ÃüÁî
+ 525      =3  
+ 526      =3  //                                                        7    6    5      4    3    2    1     0    Reset Value
+ 527      =3  //sfr IAP_CONTR = 0xC7;         IAPEN SWBS SWRST CFAIL  -   WT2  WT1   WT0   0000,x000  //IAP Control Register
+ 528      =3  #define ISP_EN                  (1<<7)
+ 529      =3  #define ISP_SWBS                (1<<6)
+ 530      =3  #define ISP_SWRST               (1<<5)
+ 531      =3  #define ISP_CMD_FAIL    (1<<4)
+ 532      =3  #define ISP_WAIT_1MHZ   7
+ 533      =3  #define ISP_WAIT_2MHZ   6
+ 534      =3  #define ISP_WAIT_3MHZ   5
+ 535      =3  #define ISP_WAIT_6MHZ   4
+ 536      =3  #define ISP_WAIT_12MHZ  3
+ 537      =3  #define ISP_WAIT_20MHZ  2
+ 538      =3  #define ISP_WAIT_24MHZ  1
+ 539      =3  #define ISP_WAIT_30MHZ  0
+ 540      =3  
+ 541      =3  #if (MAIN_Fosc >= 24000000L)
+           =3         #define         ISP_WAIT_FREQUENCY      ISP_WAIT_30MHZ
+           =3 #elif (MAIN_Fosc >= 20000000L)
+           =3         #define         ISP_WAIT_FREQUENCY      ISP_WAIT_24MHZ
+           =3 #elif (MAIN_Fosc >= 12000000L)
+           =3         #define         ISP_WAIT_FREQUENCY      ISP_WAIT_20MHZ
+           =3 #elif (MAIN_Fosc >= 6000000L)
+ 548      =3          #define         ISP_WAIT_FREQUENCY      ISP_WAIT_12MHZ
+ 549      =3  #elif (MAIN_Fosc >= 3000000L)
+           =3         #define         ISP_WAIT_FREQUENCY      ISP_WAIT_6MHZ
+           =3 #elif (MAIN_Fosc >= 2000000L)
+           =3         #define         ISP_WAIT_FREQUENCY      ISP_WAIT_3MHZ
+           =3 #elif (MAIN_Fosc >= 1000000L)
+           =3         #define         ISP_WAIT_FREQUENCY      ISP_WAIT_2MHZ
+           =3 #else
+           =3         #define         ISP_WAIT_FREQUENCY      ISP_WAIT_1MHZ
+           =3 #endif
+ 558      =3  
+ 559      =3  
+ 560      =3  
+ 561      =3  /* ADC Register */
+ 562      =3  //                                                              7       6      5       4         3      2    1    0   Reset Value
+ 563      =3  //sfr ADC_CONTR = 0xBC;         ADC_POWER SPEED1 SPEED0 ADC_FLAG ADC_START CHS2 CHS1 CHS0 0000,0000     //AD ×ª»»¿ØÖÆ
+             -¼Ä´æÆ÷ 
+ 564      =3  //sfr ADC_RES  = 0xBD;          ADCV.9 ADCV.8 ADCV.7 ADCV.6 ADCV.5 ADCV.4 ADCV.3 ADCV.2   0000,0000     //A/D ×ª»»½á¹û
+             -¸ß8Î» 
+ 565      =3  //sfr ADC_RESL = 0xBE;                                                                                            ADCV.1 ADCV.0   0000,0000     //A/D ×ª»»½á¹ûµÍ2Î»
+ 566      =3  //sfr ADC_CONTR  = 0xBC;        //Ö±½ÓÓÃMOV²Ù×÷£¬²»ÒªÓÃÓë»ò
+ 567      =3  
+ 568      =3  
+ 569      =3  //sfr SPCTL  = 0xCE;    SPI¿ØÖÆ¼Ä´æÆ÷
+ 570      =3  //   7       6       5       4       3       2       1       0          Reset Value
+ 571      =3  //      SSIG    SPEN    DORD    MSTR    CPOL    CPHA    SPR1    SPR0            0x00
+ 572      =3  
+ 573      =3  #define SPI_SSIG_None()         SPCTL |=  (1<<7)                //1: ºöÂÔSS½Å
+ 574      =3  #define SPI_SSIG_Enable()       SPCTL &= ~(1<<7)                //0: SS½ÅÓÃÓÚ¾ö¶¨Ö÷´Ó»ú
+ 575      =3  #define SPI_Enable()            SPCTL |=  (1<<6)                //1: ÔÊÐíSPI
+ 576      =3  #define SPI_Disable()           SPCTL &= ~(1<<6)                //0: ½ûÖ¹SPI
+ 577      =3  #define SPI_LSB_First()         SPCTL |=  (1<<5)                //1: LSBÏÈ·¢
+ 578      =3  #define SPI_MSB_First()         SPCTL &= ~(1<<5)                //0: MSBÏÈ·¢
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 14  
+
+ 579      =3  #define SPI_Master()            SPCTL |=  (1<<4)                //1: ÉèÎªÖ÷»ú
+ 580      =3  #define SPI_Slave()                     SPCTL &= ~(1<<4)                //0: ÉèÎª´Ó»ú
+ 581      =3  #define SPI_SCLK_NormalH()      SPCTL |=  (1<<3)                //1: ¿ÕÏÐÊ±SCLKÎª¸ßµçÆ½
+ 582      =3  #define SPI_SCLK_NormalL()      SPCTL &= ~(1<<3)                //0: ¿ÕÏÐÊ±SCLKÎªµÍµçÆ½
+ 583      =3  #define SPI_PhaseH()            SPCTL |=  (1<<2)                //1: 
+ 584      =3  #define SPI_PhaseL()            SPCTL &= ~(1<<2)                //0: 
+ 585      =3  #define SPI_Speed(n)            SPCTL = (SPCTL & ~3) | (n)      //ÉèÖÃËÙ¶È, 0 -- fosc/4, 1 -- fosc/16, 2 -- fosc/64, 3 --
+             - fosc/128
+ 586      =3  
+ 587      =3  //sfr SPDAT  = 0xCF; //SPI Data Register                                                     0000,0000
+ 588      =3  //sfr SPSTAT  = 0xCD;   //SPI×´Ì¬¼Ä´æÆ÷
+ 589      =3  //   7       6      5   4   3   2   1   0       Reset Value
+ 590      =3  //      SPIF    WCOL    -       -       -       -       -       -
+ 591      =3  #define SPIF    0x80            //SPI´«ÊäÍê³É±êÖ¾¡£Ð´Èë1Çå0¡£
+ 592      =3  #define WCOL    0x40            //SPIÐ´³åÍ»±êÖ¾¡£Ð´Èë1Çå0¡£
+ 593      =3  
+ 594      =3  #define         SPI_USE_P12P13P14P15()  AUXR1 &= ~0x0c  //½«SPIÇÐ»»µ½P12(SS) P13(MOSI) P14(MISO) P15(SCLK)(ÉÏµçÄ¬ÈÏ
+             -)¡£
+ 595      =3  #define         SPI_USE_P24P23P22P21()  AUXR1 = (AUXR1 & ~0x0c) | 0x04  //½«SPIÇÐ»»µ½P24(SS) P23(MOSI) P22(MISO) P2
+             -1(SCLK)¡£
+ 596      =3  #define         SPI_USE_P54P40P41P43()  AUXR1 = (AUXR1 & ~0x0c) | 0x08  //½«SPIÇÐ»»µ½P54(SS) P40(MOSI) P41(MISO) P4
+             -3(SCLK)¡£
+ 597      =3  
+ 598      =3  
+ 599      =3  /*
+ 600      =3  ;PCA_PWMn:    7       6     5   4   3   2     1       0
+ 601      =3  ;                       EBSn_1  EBSn_0  -       -       -       -       EPCnH   EPCnL
+ 602      =3  ;B5-B2:         ±£Áô
+ 603      =3  ;B1(EPCnH):     ÔÚPWMÄ£Ê½ÏÂ£¬ÓëCCAPnH×é³É9Î»Êý¡£
+ 604      =3  ;B0(EPCnL):     ÔÚPWMÄ£Ê½ÏÂ£¬ÓëCCAPnL×é³É9Î»Êý¡£
+ 605      =3  */
+ 606      =3  #define         PWM0_NORMAL()   PCA_PWM0 &= ~3                          //PWM0Õý³£Êä³ö(Ä¬ÈÏ)
+ 607      =3  #define         PWM0_OUT_0()    PCA_PWM0 |=  3                          //PWM0Ò»Ö±Êä³ö0
+ 608      =3  #define         PWM0_OUT_1()    PCA_PWM0 &= ~3, CCAP0H = 0      //PWM0Ò»Ö±Êä³ö1
+ 609      =3  
+ 610      =3  #define         PWM1_NORMAL()   PCA_PWM1 &= ~3                          //PWM0Õý³£Êä³ö(Ä¬ÈÏ)
+ 611      =3  #define         PWM1_OUT_0()    PCA_PWM1 |=  3                          //PWM0Ò»Ö±Êä³ö0
+ 612      =3  #define         PWM1_OUT_1()    PCA_PWM1 &= ~3, CCAP1H = 0      //PWM1Ò»Ö±Êä³ö1
+ 613      =3  
+ 614      =3  #define         PWM2_NORMAL()   PCA_PWM2 &= ~3                          //PWM1Õý³£Êä³ö(Ä¬ÈÏ)
+ 615      =3  #define         PWM2_OUT_0()    PCA_PWM2 |=  3                          //PWM2Ò»Ö±Êä³ö0
+ 616      =3  #define         PWM2_OUT_1()    PCA_PWM2 &= ~3, CCAP2H = 0      //PWM2Ò»Ö±Êä³ö1
+ 617      =3  
+ 618      =3  
+ 619      =3  //                                              7     6     5     4     3     2     1     0     Reset Value
+ 620      =3  //sfr CCON   = 0xD8;    CF    CR    -     -     -    CCF2  CCF1  CCF0   00xx,xx00       //PCA ¿ØÖÆ¼Ä´æÆ÷¡£
+ 621      =3  sbit CCF0  = CCON^0;    //PCA Ä£¿é0ÖÐ¶Ï±êÖ¾£¬ÓÉÓ²¼þÖÃÎ»£¬±ØÐëÓÉÈí¼þÇå0¡£
+ 622      =3  sbit CCF1  = CCON^1;    //PCA Ä£¿é1ÖÐ¶Ï±êÖ¾£¬ÓÉÓ²¼þÖÃÎ»£¬±ØÐëÓÉÈí¼þÇå0¡£
+ 623      =3  sbit CCF2  = CCON^2;    //PCA Ä£¿é2ÖÐ¶Ï±êÖ¾£¬ÓÉÓ²¼þÖÃÎ»£¬±ØÐëÓÉÈí¼þÇå0¡£
+ 624      =3  sbit CR    = CCON^6;    //1: ÔÊÐíPCA¼ÆÊýÆ÷¼ÆÊý£¬±ØÐëÓÉÈí¼þÇå0¡£
+ 625      =3  sbit CF    = CCON^7;    //PCA¼ÆÊýÆ÷Òç³ö£¨CH£¬CLÓÉFFFFH±äÎª0000H£©±êÖ¾¡£PCA¼ÆÊýÆ÷Òç³öºóÓÉÓ²¼þÖÃÎ»£¬±ØÐëÓÉÈí¼þÇ
+             -å0¡£
+ 626      =3  
+ 627      =3  //                                       7     6     5     4     3     2     1     0    Reset Value
+ 628      =3  //sfr CMOD  = 0xD9;     CIDL   -     -     -   CPS2   CPS1  CPS0  ECF   0xxx,0000       //PCA ¹¤×÷Ä£Ê½¼Ä´æÆ÷¡£
+ 629      =3  #define PCA_IDLE_OFF()          CMOD |=  (1<<7)                         //IDLE×´Ì¬PCAÍ£Ö¹¼ÆÊý¡£
+ 630      =3  #define PCA_IDLE_ON()           CMOD &= ~(1<<7)                         //IDLE×´Ì¬PCA¼ÌÐø¼ÆÊý¡£
+ 631      =3  #define PCA_CLK_12T()           CMOD &= ~0x0E                           //PCA¼ÆÊýÂö³åÑ¡ÔñÍâ²¿¾§Õñ/12¡£  fosc/12
+ 632      =3  #define PCA_CLK_2T()            CMOD = (CMOD & ~0x0E) + 2       //PCA¼ÆÊýÂö³åÑ¡ÔñÍâ²¿¾§Õñ/2¡£   fosc/2
+ 633      =3  #define PCA_CLK_T0()            CMOD = (CMOD & ~0x0E) + 4       //PCA¼ÆÊýÂö³åÑ¡ÔñTimer0ÖÐ¶Ï£¬Timer0¿ÉÍ¨¹ýAUXR¼Ä´æÆ÷ÉèÖÃ³É¹
+             -¤×÷ÔÚ12T»ò1TÄ£Ê½¡£
+ 634      =3  #define PCA_CLK_ECI()           CMOD = (CMOD & ~0x0E) + 6       //PCA¼ÆÊýÂö³åÑ¡Ôñ´ÓECI/P3.4½ÅÊäÈëµÄÍâ²¿Ê±ÖÓ£¬×î´ó fosc/2¡
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 15  
+
+             -£
+ 635      =3  #define PCA_CLK_1T()            CMOD = (CMOD & ~0x0E) + 8       //PCA¼ÆÊýÂö³åÑ¡ÔñÍâ²¿¾§Õñ¡£             Fosc/1
+ 636      =3  #define PCA_CLK_4T()            CMOD = (CMOD & ~0x0E) + 10      //PCA¼ÆÊýÂö³åÑ¡ÔñÍâ²¿¾§Õñ/4¡£   Fosc/4
+ 637      =3  #define PCA_CLK_6T()            CMOD = (CMOD & ~0x0E) + 12      //PCA¼ÆÊýÂö³åÑ¡ÔñÍâ²¿¾§Õñ/6¡£   Fosc/6
+ 638      =3  #define PCA_CLK_8T()            CMOD = (CMOD & ~0x0E) + 14      //PCA¼ÆÊýÂö³åÑ¡ÔñÍâ²¿¾§Õñ/8¡£   Fosc/8
+ 639      =3  #define PCA_INT_ENABLE()        CMOD |=  1                                      //PCA¼ÆÊýÆ÷Òç³öÖÐ¶ÏÔÊÐíÎ»£¬1---ÔÊÐíCF£¨CCON.7£©²úÉúÖÐ¶Ï¡£
+ 640      =3  #define PCA_INT_DISABLE()       CMOD &= ~1                                      //PCA¼ÆÊýÆ÷Òç³öÖÐ¶Ï½ûÖ¹¡£
+ 641      =3  
+ 642      =3  //                                          7      6       5        4       3       2       1      0    Reset Value
+ 643      =3  //sfr AUXR1 = 0xA2;       S1_S1  S1_S0  CCP_S1   CCP_S0  SPI_S1   SPI_S0    -     DPS   0100,0000       //Auxiliary 
+             -Register 1
+ 644      =3  
+ 645      =3  #define         PCA_USE_P12P11P10P37()  AUXR1 &= ~0x30          //½«PCA/PWMÇÐ»»µ½P12(ECI) P11(CCP0) P10(CCP1) P37(CCP2)(ÉÏ
+             -µçÄ¬ÈÏ)¡£
+ 646      =3  #define         PCA_USE_P34P35P36P37()  AUXR1 = (AUXR1 & ~0x30) | 0x10  //½«PCA/PWMÇÐ»»µ½P34(ECI) P35(CCP0) P36(CCP
+             -1) P37(CCP2)¡£
+ 647      =3  #define         PCA_USE_P24P25P26P27()  AUXR1 = (AUXR1 & ~0x30) | 0x20  //½«PCA/PWMÇÐ»»µ½P24(ECI) P25(CCP0) P26(CCP
+             -1) P27(CCP2)¡£
+ 648      =3  
+ 649      =3  #define         DPS_SEL1()              AUXR1 |=  1             //1£ºÑ¡ÔñDPTR1¡£
+ 650      =3  #define         DPS_SEL0()              AUXR1 &= ~1             //0£ºÑ¡ÔñDPTR0(ÉÏµçÄ¬ÈÏ)¡£
+ 651      =3  
+ 652      =3  
+ 653      =3  /*                                                                      7     6      5      4     3     2     1     0     Reset Value
+ 654      =3  //sfr CCAPM0 = 0xDA;    PWM ¼Ä´æÆ÷  -   ECOM0  CAPP0  CAPN0  MAT0  TOG0  PWM0  ECCF0   x000,0000        //PCA Ä£¿é0 
+ 655      =3  //sfr CCAPM1 = 0xDB;    PWM ¼Ä´æÆ÷  -   ECOM1  CAPP1  CAPN1  MAT1  TOG1  PWM1  ECCF1   x000,0000        //PCA Ä£¿é1
+ 656      =3  //sfr CCAPM2 = 0xDC;    PWM ¼Ä´æÆ÷  -   ECOM2  CAPP2  CAPN2  MAT2  TOG2  PWM2  ECCF2   x000,0000        //PCA Ä£¿é2
+ 657      =3  ;ECOMn = 1:     ÔÊÐí±È½Ï¹¦ÄÜ¡£
+ 658      =3  ;CAPPn = 1:     ÔÊÐíÉÏÉýÑØ´¥·¢²¶×½¹¦ÄÜ¡£
+ 659      =3  ;CAPNn = 1:     ÔÊÐíÏÂ½µÑØ´¥·¢²¶×½¹¦ÄÜ¡£
+ 660      =3  ;MATn  = 1:     µ±Æ¥ÅäÇé¿ö·¢ÉúÊ±£¬ÔÊÐíCCONÖÐµÄCCFnÖÃÎ»¡£
+ 661      =3  ;TOGn  = 1:     µ±Æ¥ÅäÇé¿ö·¢ÉúÊ±£¬CEXn½«·­×ª¡£(CEX0/PCA0/PWM0/P3.7,CEX1/PCA1/PWM1/P3.5)
+ 662      =3  ;PWMn  = 1:     ½«CEXnÉèÖÃÎªPWMÊä³ö¡£
+ 663      =3  ;ECCFn = 1:     ÔÊÐíCCONÖÐµÄCCFn´¥·¢ÖÐ¶Ï¡£
+ 664      =3  ;ECOMn CAPPn CAPNn MATn TOGn PWMn ECCFn
+ 665      =3  ;  0     0     0    0    0    0     0           00H     Î´ÆôÓÃÈÎºÎ¹¦ÄÜ¡£
+ 666      =3  ;  x     1     0    0    0    0     x           20H     16Î»CEXnÉÏÉýÑØ´¥·¢²¶×½¹¦ÄÜ¡£
+ 667      =3  ;  x     0     1    0    0    0     x           10H     16Î»CEXnÏÂ½µÑØ´¥·¢²¶×½¹¦ÄÜ¡£
+ 668      =3  ;  x     1     1    0    0    0     x           30H     16Î»CEXn/PCAn±ßÑØ£¨ÉÏ¡¢ÏÂÑØ£©´¥·¢²¶×½¹¦ÄÜ¡£
+ 669      =3  ;  1     0     0    1    0    0     x           48H     16Î»Èí¼þ¶¨Ê±Æ÷¡£
+ 670      =3  ;  1     0     0    1    1    0     x           4CH     16Î»¸ßËÙÂö³åÊä³ö¡£
+ 671      =3  ;  1     0     0    0    0    1     0           42H     8Î»PWM¡£ÎÞÖÐ¶Ï
+ 672      =3  ;  1     1     0    0    0    1     1           63H     8Î»PWM¡£µÍ±ä¸ß¿É²úÉúÖÐ¶Ï
+ 673      =3  ;  1     0     1    0    0    1     1           53H     8Î»PWM¡£¸ß±äµÍ¿É²úÉúÖÐ¶Ï
+ 674      =3  ;  1     1     1    0    0    1     1           73H     8Î»PWM¡£µÍ±ä¸ß»ò¸ß±äµÍ¾ù¿É²úÉúÖÐ¶Ï
+ 675      =3  ;*******************************************************************
+ 676      =3  ;*******************************************************************/
+ 677      =3  #define         PCA0_none()                             CCAPM0 = 0
+ 678      =3  #define         PCA0_PWM(nbit)                  CCAPM0 = 0x42,PCA_PWM0 = (PCA_PWM0 & 0x0c) | ((8-nbit)<<6)
+ 679      =3  #define         PCA0_PWM_rise_int(nbit) CCAPM0 = 0x63,PCA_PWM0 = (PCA_PWM0 & 0x0c) | ((8-nbit)<<6)
+ 680      =3  #define         PCA0_PWM_fall_int(nbit) CCAPM0 = 0x53,PCA_PWM0 = (PCA_PWM0 & 0x0c) | ((8-nbit)<<6)
+ 681      =3  #define         PCA0_PWM_edge_int(nbit) CCAPM0 = 0x73,PCA_PWM0 = (PCA_PWM0 & 0x0c) | ((8-nbit)<<6)
+ 682      =3  #define         PCA0_capture_rise()             CCAPM0 = (0x20 + 1)
+ 683      =3  #define         PCA0_capture_fall()             CCAPM0 = (0x10 + 1)
+ 684      =3  #define         PCA0_capture_edge()             CCAPM0 = (0x30 + 1)
+ 685      =3  #define         PCA0_16bit_Timer()              CCAPM0 = (0x48 + 1)
+ 686      =3  #define         PCA0_High_Pulse()               CCAPM0 = (0x4C + 1)
+ 687      =3  
+ 688      =3  #define         PCA1_none()                             CCAPM1 = 0
+ 689      =3  #define         PCA1_PWM(nbit)                  CCAPM1 = 0x42,PCA_PWM1 = (PCA_PWM1 & 0x0c) | ((8-nbit)<<6)
+ 690      =3  #define         PCA1_PWM_rise_int(nbit) CCAPM1 = 0x63,PCA_PWM1 = (PCA_PWM1 & 0x0c) | ((8-nbit)<<6)
+ 691      =3  #define         PCA1_PWM_fall_int(nbit) CCAPM1 = 0x53,PCA_PWM1 = (PCA_PWM1 & 0x0c) | ((8-nbit)<<6)
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 16  
+
+ 692      =3  #define         PCA1_PWM_edge_int(nbit) CCAPM1 = 0x73,PCA_PWM1 = (PCA_PWM1 & 0x0c) | ((8-nbit)<<6)
+ 693      =3  #define         PCA1_capture_rise()             CCAPM1 = (0x20 + 1)
+ 694      =3  #define         PCA1_capture_fall()             CCAPM1 = (0x10 + 1)
+ 695      =3  #define         PCA1_capture_edge()             CCAPM1 = (0x30 + 1)
+ 696      =3  #define         PCA1_16bit_Timer()              CCAPM1 = (0x48 + 1)
+ 697      =3  #define         PCA1_High_Pulse()               CCAPM1 = (0x4C + 1)
+ 698      =3  
+ 699      =3  #define         PCA2_none()                             CCAPM2 = 0
+ 700      =3  #define         PCA2_PWM(nbit)                  CCAPM2 = 0x42,PCA_PWM2 = (PCA_PWM2 & 0x0c) | ((8-nbit)<<6)
+ 701      =3  #define         PCA2_PWM_rise_int(nbit) CCAPM2 = 0x63,PCA_PWM2 = (PCA_PWM2 & 0x0c) | ((8-nbit)<<6)
+ 702      =3  #define         PCA2_PWM_fall_int(nbit) CCAPM2 = 0x53,PCA_PWM2 = (PCA_PWM2 & 0x0c) | ((8-nbit)<<6)
+ 703      =3  #define         PCA2_PWM_edge_int(nbit) CCAPM2 = 0x73,PCA_PWM2 = (PCA_PWM2 & 0x0c) | ((8-nbit)<<6)
+ 704      =3  #define         PCA2_capture_rise()             CCAPM2 = (0x20 + 1)
+ 705      =3  #define         PCA2_capture_fall()             CCAPM2 = (0x10 + 1)
+ 706      =3  #define         PCA2_capture_edge()             CCAPM2 = (0x30 + 1)
+ 707      =3  #define         PCA2_16bit_Timer()              CCAPM2 = (0x48 + 1)
+ 708      =3  #define         PCA2_High_Pulse()               CCAPM2 = (0x4C + 1)
+ 709      =3  
+ 710      =3  /* Above is STC additional SFR or change */
+ 711      =3  
+ 712      =3  
+ 713      =3  
+ 714      =3  
+ 715      =3  /**********************************************************/
+ 716      =3  typedef         unsigned char   u8;
+ 717      =3  typedef         unsigned int    u16;
+ 718      =3  typedef         unsigned long   u32;
+ 719      =3  
+ 720      =3  /**********************************************************/
+ 721      =3  #define NOP1()  _nop_()
+ 722      =3  #define NOP2()  NOP1(),NOP1()
+ 723      =3  #define NOP3()  NOP2(),NOP1()
+ 724      =3  #define NOP4()  NOP3(),NOP1()
+ 725      =3  #define NOP5()  NOP4(),NOP1()
+ 726      =3  #define NOP6()  NOP5(),NOP1()
+ 727      =3  #define NOP7()  NOP6(),NOP1()
+ 728      =3  #define NOP8()  NOP7(),NOP1()
+ 729      =3  #define NOP9()  NOP8(),NOP1()
+ 730      =3  #define NOP10() NOP9(),NOP1()
+ 731      =3  #define NOP11() NOP10(),NOP1()
+ 732      =3  #define NOP12() NOP11(),NOP1()
+ 733      =3  #define NOP13() NOP12(),NOP1()
+ 734      =3  #define NOP14() NOP13(),NOP1()
+ 735      =3  #define NOP15() NOP14(),NOP1()
+ 736      =3  #define NOP16() NOP15(),NOP1()
+ 737      =3  #define NOP17() NOP16(),NOP1()
+ 738      =3  #define NOP18() NOP17(),NOP1()
+ 739      =3  #define NOP19() NOP18(),NOP1()
+ 740      =3  #define NOP20() NOP19(),NOP1()
+ 741      =3  #define NOP21() NOP20(),NOP1()
+ 742      =3  #define NOP22() NOP21(),NOP1()
+ 743      =3  #define NOP23() NOP22(),NOP1()
+ 744      =3  #define NOP24() NOP23(),NOP1()
+ 745      =3  #define NOP25() NOP24(),NOP1()
+ 746      =3  #define NOP26() NOP25(),NOP1()
+ 747      =3  #define NOP27() NOP26(),NOP1()
+ 748      =3  #define NOP28() NOP27(),NOP1()
+ 749      =3  #define NOP29() NOP28(),NOP1()
+ 750      =3  #define NOP30() NOP29(),NOP1()
+ 751      =3  #define NOP31() NOP30(),NOP1()
+ 752      =3  #define NOP32() NOP31(),NOP1()
+ 753      =3  #define NOP33() NOP32(),NOP1()
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 17  
+
+ 754      =3  #define NOP34() NOP33(),NOP1()
+ 755      =3  #define NOP35() NOP34(),NOP1()
+ 756      =3  #define NOP36() NOP35(),NOP1()
+ 757      =3  #define NOP37() NOP36(),NOP1()
+ 758      =3  #define NOP38() NOP37(),NOP1()
+ 759      =3  #define NOP39() NOP38(),NOP1()
+ 760      =3  #define NOP40() NOP39(),NOP1()
+ 761      =3  #define NOP(N)  NOP##N()
+ 762      =3  
+ 763      =3  
+ 764      =3  /**********************************************/
+ 765      =3  
+ 766      =3  
+ 767      =3  /****************************************************************/
+ 768      =3  
+ 769      =3  
+ 770      =3  //sfr INT_CLKO = 0x8F;  //¸½¼ÓµÄ SFR WAKE_CLKO (µØÖ·£º0x8F)
+ 771      =3  /*
+ 772      =3      7   6    5    4   3     2        1       0         Reset Value
+ 773      =3      -  EX4  EX3  EX2  -   T2CLKO   T1CLKO  T0CLKO      0000,0000B
+ 774      =3  b6 -  EX4      : ÍâÖÐ¶ÏINT4ÔÊÐí
+ 775      =3  b5 -  EX3      : ÍâÖÐ¶ÏINT3ÔÊÐí
+ 776      =3  b4 -  EX2      : ÍâÖÐ¶ÏINT2ÔÊÐí
+ 777      =3  b2 - T1CLKO    : ÔÊÐí T2 Òç³öÂö³åÔÚP3.0½ÅÊä³ö£¬Fck1 = 1/2 T1 Òç³öÂÊ
+ 778      =3  b1 - T1CLKO    : ÔÊÐí T1 Òç³öÂö³åÔÚP3.4½ÅÊä³ö£¬Fck1 = 1/2 T1 Òç³öÂÊ
+ 779      =3  b0 - T0CLKO    : ÔÊÐí T0 Òç³öÂö³åÔÚP3.5½ÅÊä³ö£¬Fck0 = 1/2 T0 Òç³öÂÊ
+ 780      =3  */
+ 781      =3  
+ 782      =3  #define         LVD_InterruptEnable()           ELVD = 1
+ 783      =3  #define         LVD_InterruptDisable()          ELVD = 0
+ 784      =3  
+ 785      =3  
+ 786      =3  //sfr WKTCL = 0xAA;     //STC11F\10ºÍSTC15ÏµÁÐ »½ÐÑ¶¨Ê±Æ÷µÍ×Ö½Ú
+ 787      =3  //sfr WKTCH = 0xAB;     //STC11F\10ºÍSTC15ÏµÁÐ »½ÐÑ¶¨Ê±Æ÷¸ß×Ö½Ú
+ 788      =3  //      B7              B6      B5      B4      B3      B2      B1      B0              B7      B6      B5      B4      B3      B2      B1      B0
+ 789      =3  //      WKTEN                           S11     S10     S9      S8              S7      S6      S5      S4      S3      S2      S1      S0      n * 560us
+ 790      =3  #define         WakeTimerDisable()              WKTCH &= 0x7f   //WKTEN = 0             ½ûÖ¹Ë¯Ãß»½ÐÑ¶¨Ê±Æ÷
+ 791      =3  #define         WakeTimerSet(scale)             WKTCL = (scale) % 256,WKTCH = (scale) / 256 | 0x80      //WKTEN = 1     ÔÊÐíË¯Ãß»½ÐÑ¶
+             -¨Ê±Æ÷
+ 792      =3  
+ 793      =3  
+ 794      =3  //sfr CLK_DIV = 0x97; //Clock Divder ÏµÍ³Ê±ÖÓ·ÖÆµ  -     -      -       -     -  CLKS2 CLKS1 CLKS0 xxxx,x0
+             -00
+ 795      =3  #define         SYSTEM_CLK_1T()         CLK_DIV &= ~0x07        //default
+ 796      =3  #define         SYSTEM_CLK_2T()         CLK_DIV = (CLK_DIV & ~0x07) | 1
+ 797      =3  #define         SYSTEM_CLK_4T()         CLK_DIV = (CLK_DIV & ~0x07) | 2
+ 798      =3  #define         SYSTEM_CLK_8T()         CLK_DIV = (CLK_DIV & ~0x07) | 3
+ 799      =3  #define         SYSTEM_CLK_16T()        CLK_DIV = (CLK_DIV & ~0x07) | 4
+ 800      =3  #define         SYSTEM_CLK_32T()        CLK_DIV = (CLK_DIV & ~0x07) | 5
+ 801      =3  #define         SYSTEM_CLK_64T()        CLK_DIV = (CLK_DIV & ~0x07) | 6
+ 802      =3  #define         SYSTEM_CLK_128T()       CLK_DIV =  CLK_DIV          | 7
+ 803      =3  
+ 804      =3  #define         MCLKO_P54_None()        CLK_DIV &= ~0xc0                                        //Ö÷Ê±ÖÓ²»Êä³ö
+ 805      =3  #define         MCLKO_P54_DIV1()        CLK_DIV  = (CLK_DIV & ~0xc0) | 0x40     //Ö÷Ê±ÖÓ²»·ÖÆµÊä³ö
+ 806      =3  #define         MCLKO_P54_DIV2()        CLK_DIV  = (CLK_DIV & ~0xc0) | 0x80     //Ö÷Ê±ÖÓ2·ÖÆµÊä³ö
+ 807      =3  #define         MCLKO_P54_DIV4()        CLK_DIV  =  CLK_DIV | 0xc0                      //Ö÷Ê±ÖÓ4·ÖÆµÊä³ö
+ 808      =3  
+ 809      =3  #define         MCLKO_P34_None()        CLK_DIV &= ~0xc0                                        //Ö÷Ê±ÖÓ²»Êä³ö
+ 810      =3  #define         MCLKO_P34_DIV1()        CLK_DIV  = (CLK_DIV & ~0xc0) | 0x40     //Ö÷Ê±ÖÓ²»·ÖÆµÊä³ö
+ 811      =3  #define         MCLKO_P34_DIV2()        CLK_DIV  = (CLK_DIV & ~0xc0) | 0x80     //Ö÷Ê±ÖÓ2·ÖÆµÊä³ö
+ 812      =3  #define         MCLKO_P34_DIV4()        CLK_DIV  =  CLK_DIV | 0xc0                      //Ö÷Ê±ÖÓ4·ÖÆµÊä³ö
+ 813      =3  
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 18  
+
+ 814      =3  //sfr BUS_SPEED = 0xA1; //Stretch register      -   -  -  -   -   -  EXRTS1  EXRTSS0 xxxx,xx10
+ 815      =3  #define         BUS_SPEED_1T()  BUS_SPEED = 0
+ 816      =3  #define         BUS_SPEED_2T()  BUS_SPEED = 1
+ 817      =3  #define         BUS_SPEED_4T()  BUS_SPEED = 2
+ 818      =3  #define         BUS_SPEED_8T()  BUS_SPEED = 3
+ 819      =3  
+ 820      =3  /*   interrupt vector */
+ 821      =3  #define         INT0_VECTOR             0
+ 822      =3  #define         TIMER0_VECTOR   1
+ 823      =3  #define         INT1_VECTOR             2
+ 824      =3  #define         TIMER1_VECTOR   3
+ 825      =3  #define         UART1_VECTOR    4
+ 826      =3  #define         ADC_VECTOR              5
+ 827      =3  #define         LVD_VECTOR              6
+ 828      =3  #define         PCA_VECTOR              7
+ 829      =3  #define         UART2_VECTOR    8
+ 830      =3  #define         SPI_VECTOR              9
+ 831      =3  #define         INT2_VECTOR             10
+ 832      =3  #define         INT3_VECTOR             11
+ 833      =3  #define         TIMER2_VECTOR   12
+ 834      =3  #define         INT4_VECTOR             16
+ 835      =3  #define         UART3_VECTOR    17
+ 836      =3  #define         UART4_VECTOR    18
+ 837      =3  #define         TIMER3_VECTOR   19
+ 838      =3  #define         TIMER4_VECTOR   20
+ 839      =3  #define         CMP_VECTOR              21
+ 840      =3  
+ 841      =3  
+ 842      =3  #define TRUE    1
+ 843      =3  #define FALSE   0
+ 844      =3  
+ 845      =3  //=============================================================
+ 846      =3  
+ 847      =3  //========================================
+ 848      =3  
+ 849      =3  #define PolityLow                       0       //µÍÓÅÏÈ¼¶ÖÐ¶Ï
+ 850      =3  #define PolityHigh                      1       //¸ßÓÅÏÈ¼¶ÖÐ¶Ï
+ 851      =3  
+ 852      =3  //========================================
+ 853      =3  
+ 854      =3  #define         MCLKO_None      0
+ 855      =3  #define         MCLKO_DIV1      1
+ 856      =3  #define         MCLKO_DIV2      2
+ 857      =3  #define         MCLKO_DIV4      3
+ 858      =3  
+ 859      =3  #define         ENABLE          1
+ 860      =3  #define         DISABLE         0
+ 861      =3  
+ 862      =3  #define         STC15F_L2K08S2  8
+ 863      =3  #define         STC15F_L2K16S2  16
+ 864      =3  #define         STC15F_L2K24S2  24
+ 865      =3  #define         STC15F_L2K32S2  32
+ 866      =3  #define         STC15F_L2K40S2  40
+ 867      =3  #define         STC15F_L2K48S2  48
+ 868      =3  #define         STC15F_L2K56S2  56
+ 869      =3  #define         STC15F_L2K60S2  60
+ 870      =3  #define         IAP15F_L2K61S2  61
+ 871      =3  
+ 872      =3  #endif
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDLIB.H
+   3      =3  
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 19  
+
+   4      =3  Standard functions.
+   5      =3  Copyright (c) 1988-2005 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __STDLIB_H__
+  10      =3  #define __STDLIB_H__
+  11      =3  
+  12      =3  #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+  16      =3  
+  17      =3  #ifndef NULL
+           =3  #define NULL ((void *) 0L)
+           =3 #endif
+  20      =3  
+  21      =3  #ifndef _WCHAR_T_DEFINED_
+  22      =3  #define _WCHAR_T_DEFINED_
+  23      =3  typedef char wchar_t;
+  24      =3  #endif
+  25      =3  
+  26      =3  #ifndef RAND_MAX
+  27      =3   #define RAND_MAX  32767u
+  28      =3  #endif
+  29      =3  
+  30      =3  #pragma SAVE
+  31      =3  #pragma REGPARMS
+  32      =3  
+  33      =3  extern int    abs  (int   val);
+  34      =3  extern long  labs  (long  val);
+  35      =3  
+  36      =3  extern float atof (char *s1);
+  37      =3  extern long  atol (char *s1);
+  38      =3  extern int   atoi (char *s1);
+  39      =3  extern int   rand ();
+  40      =3  extern void  srand (int);
+  41      =3  
+  42      =3  extern float         strtod  (char *, char **);
+  43      =3  extern long          strtol  (char *, char **, unsigned char);
+  44      =3  extern unsigned long strtoul (char *, char **, unsigned char);
+  45      =3  
+  46      =3  #define _MALLOC_MEM_    xdata
+  47      =3  
+  48      =3  extern void init_mempool          (void _MALLOC_MEM_ *p, unsigned int size);
+  49      =3  extern void _MALLOC_MEM_ *malloc  (unsigned int size);
+  50      =3  extern void free                  (void _MALLOC_MEM_ *p);
+  51      =3  extern void _MALLOC_MEM_ *realloc (void _MALLOC_MEM_ *p, unsigned int size);
+  52      =3  extern void _MALLOC_MEM_ *calloc  (unsigned int size, unsigned int len);
+  53      =3  
+  54      =3  #pragma RESTORE
+  55      =3  
+  56      =3  #endif
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDIO.H
+   3      =3  
+   4      =3  Prototypes for standard I/O functions.
+   5      =3  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __STDIO_H__
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 20  
+
+           =3 #define __STDIO_H__
+           =3 
+           =3 #ifndef EOF
+           =3  #define EOF -1
+           =3 #endif
+           =3 
+           =3 #ifndef NULL
+           =3  #define NULL ((void *) 0)
+           =3 #endif
+           =3 
+           =3 #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+           =3 
+           =3 #pragma SAVE
+           =3 #pragma REGPARMS
+           =3 extern char _getkey (void);
+           =3 extern char getchar (void);
+           =3 extern char ungetchar (char);
+           =3 extern char putchar (char);
+           =3 extern int printf   (const char *, ...);
+           =3 extern int sprintf  (char *, const char *, ...);
+           =3 extern int vprintf  (const char *, char *);
+           =3 extern int vsprintf (char *, const char *, char *);
+           =3 extern char *gets (char *, int n);
+           =3 extern int scanf (const char *, ...);
+           =3 extern int sscanf (char *, const char *, ...);
+           =3 extern int puts (const char *);
+           =3 
+           =3 #pragma RESTORE
+           =3 
+           =3 #endif
+  43      =3  
+   1      =3  #ifndef __STDINT_H__
+           =3 #define __STDINT_H__
+           =3 
+           =3 typedef unsigned char uint8_t;  //1Î»³¤¶È
+           =3 typedef signed char int8_t;               //
+           =3 typedef unsigned short uint16_t;  //2Î»³¤¶È
+           =3 typedef signed short int16_t;
+           =3 typedef unsigned long uint32_t;   //4Î»³¤¶È
+           =3 typedef signed long int32_t;
+           =3 
+           =3 #endif
+   1      =3  #ifndef __MYSTRING__h
+   2      =3  #define __MYSTRING__H
+   3      =3  
+   4      =3  
+   5      =3  char *strpbrk(const char *cs, const char *ct);
+   6      =3  char *strsep(char **s, const char *ct);
+   7      =3  char * strtrim(char *s);
+   8      =3  void trim(char *strIn, char *strOut);
+   9      =3  char * strtrim_fast(char *s) ;
+  10      =3  #endif
+  19      =1  
+  20      =1  #define COM_TX1_Lenth   1
+  21      =1  #define COM_RX1_Lenth   1
+  22      =1  #define COM_TX2_Lenth   1
+  23      =1  #define COM_RX2_Lenth   1
+  24      =1  
+  25      =1  #define USART1  1
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 21  
+
+  26      =1  #define USART2  2
+  27      =1  
+  28      =1  #define UART_ShiftRight 0               //Í¬²½ÒÆÎ»Êä³ö
+  29      =1  #define UART_8bit_BRTx  (1<<6)  //8Î»Êý¾Ý,¿É±ä²¨ÌØÂÊ
+  30      =1  #define UART_9bit               (2<<6)  //9Î»Êý¾Ý,¹Ì¶¨²¨ÌØÂÊ
+  31      =1  #define UART_9bit_BRTx  (3<<6)  //9Î»Êý¾Ý,¿É±ä²¨ÌØÂÊ
+  32      =1  
+  33      =1  #define UART1_SW_P30_P31        0
+  34      =1  #define UART1_SW_P36_P37        (1<<6)
+  35      =1  #define UART1_SW_P16_P17        (2<<6)  //±ØÐëÊ¹ÓÃÄÚ²¿Ê±ÖÓ
+  36      =1  #define UART2_SW_P10_P11        0
+  37      =1  #define UART2_SW_P46_P47        1
+  38      =1  
+  39      =1  
+  40      =1  #define TimeOutSet1             5
+  41      =1  #define TimeOutSet2             5
+  42      =1  
+  43      =1  #define BRT_Timer1      1
+  44      =1  #define BRT_Timer2      2
+  45      =1  
+  46      =1  typedef struct
+  47      =1  { 
+  48      =1          u8      id;                             //´®¿ÚºÅ
+  49      =1  
+  50      =1          u8      TX_read;                //·¢ËÍ¶ÁÖ¸Õë
+  51      =1          u8      TX_write;               //·¢ËÍÐ´Ö¸Õë
+  52      =1          u8      B_TX_busy;              //Ã¦±êÖ¾
+  53      =1  
+  54      =1          u8      RX_Cnt;                 //½ÓÊÕ×Ö½Ú¼ÆÊý
+  55      =1          u8      RX_TimeOut;             //½ÓÊÕ³¬Ê±
+  56      =1          u8      B_RX_OK;                //½ÓÊÕ¿éÍê³É
+  57      =1  } COMx_Define; 
+  58      =1  
+  59      =1  typedef struct
+  60      =1  { 
+  61      =1          u8      UART_Mode;                      //Ä£Ê½,         UART_ShiftRight,UART_8bit_BRTx,UART_9bit,UART_9bit_BRTx
+  62      =1          u8      UART_BRT_Use;           //Ê¹ÓÃ²¨ÌØÂÊ,   BRT_Timer1,BRT_Timer2
+  63      =1          u32     UART_BaudRate;          //²¨ÌØÂÊ,       ENABLE,DISABLE
+  64      =1          u8      Morecommunicate;        //¶à»úÍ¨Ñ¶ÔÊÐí, ENABLE,DISABLE
+  65      =1          u8      UART_RxEnable;          //ÔÊÐí½ÓÊÕ,   ENABLE,DISABLE
+  66      =1          u8      BaudRateDouble;         //²¨ÌØÂÊ¼Ó±¶, ENABLE,DISABLE
+  67      =1          u8      UART_Interrupt;         //ÖÐ¶Ï¿ØÖÆ,   ENABLE,DISABLE
+  68      =1          u8      UART_Polity;            //ÓÅÏÈ¼¶,     PolityLow,PolityHigh
+  69      =1          u8      UART_P_SW;                      //ÇÐ»»¶Ë¿Ú,   UART1_SW_P30_P31,UART1_SW_P36_P37,UART1_SW_P16_P17(±ØÐëÊ¹ÓÃÄÚ²¿Ê±ÖÓ)
+  70      =1          u8      UART_RXD_TXD_Short;     //ÄÚ²¿¶ÌÂ·RXDÓëTXD, ×öÖÐ¼Ì, ENABLE,DISABLE
+  71      =1  
+  72      =1  } COMx_InitDefine; 
+  73      =1  
+  74      =1  extern volatile COMx_Define     COM1,COM2;
+  75      =1  extern  u8 xdata  TX1_Buffer[COM_TX1_Lenth];    //·¢ËÍ»º³å
+  76      =1  extern  u8 xdata  RX1_Buffer[COM_RX1_Lenth];    //½ÓÊÕ»º³å
+  77      =1  extern  u8 xdata  TX2_Buffer[COM_TX2_Lenth];    //·¢ËÍ»º³å
+  78      =1  extern  u8 xdata  RX2_Buffer[COM_RX2_Lenth];    //½ÓÊÕ»º³å
+  79      =1  extern volatile uint8_t uart1_cmd;
+  80      =1  extern volatile uint16_t uart1_cnt;
+  81      =1  extern volatile uint8_t config_mode;
+  82      =1  
+  83      =1  u8      USART_Configuration(u8 UARTx, COMx_InitDefine *COMx);
+  84      =1  void TX1_write2buff(u8 dat);    //Ð´Èë·¢ËÍ»º³å£¬Ö¸Õë+1
+  85      =1  void TX2_write2buff(u8 dat);    //Ð´Èë·¢ËÍ»º³å£¬Ö¸Õë+1
+  86      =1  void PrintString1(u8 *puts);
+  87      =1  void PrintString2(u8 *puts);
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 22  
+
+  88      =1  void Printf1(u8 *puts, u8 len);
+  89      =1  
+  90      =1  //void COMx_write2buff(COMx_Define *COMx, u8 dat);      //Ð´Èë·¢ËÍ»º³å£¬Ö¸Õë+1
+  91      =1  void Printf1(u8 *puts, u8 len);
+  92      =1  void Printf2(u8 *puts, u8 len);
+  93      =1  #endif
+  94      =1  
+   6          #include "GPRS.h"
+   1      =1  #ifndef __GPRS_H
+   2      =1  #define __GPRS_H
+   3      =1  
+   4      =1  sbit Power = P0^0;
+   5      =1  #define Power_ON  Power=0;
+   6      =1  #define Power_OFF  Power=1;
+   7      =1  
+   8      =1  typedef struct{
+   9      =1          uint8_t *baud;
+  10      =1          uint8_t *server;
+  11      =1  }S_config;
+  12      =1  
+  13      =1  extern S_config s_config;
+  14      =1  extern u8 gprs_status;
+  15      =1  
+  16      =1  void init_GPRS( S_config *s);
+  17      =1  void check_gprs();
+  18      =1  u8 gprs_cmd(u8 *cmd, u8 *input, u8 *ck_str, u8 outtime_s);
+  19      =1  
+  20      =1  
+  21      =1  
+  22      =1  #endif
+   7          #include "delay.h"
+   1      =1  /*------------------------------------------------------------------*/
+   2      =1  /* --- STC MCU International Limited -------------------------------*/
+   3      =1  /* --- STC 1T Series MCU RC Demo -----------------------------------*/
+   4      =1  /* --- Mobile: (86)13922805190 -------------------------------------*/
+   5      =1  /* --- Fax: 86-0513-55012956,55012947,55012969 ---------------------*/
+   6      =1  /* --- Tel: 86-0513-55012928,55012929,55012966 ---------------------*/
+   7      =1  /* --- Web: www.GXWMCU.com -----------------------------------------*/
+   8      =1  /* --- QQ:  800003751 ----------------------------------------------*/
+   9      =1  /* If you want to use the program or the program referenced in the  */
+  10      =1  /* article, please specify in which data and procedures from STC    */
+  11      =1  /*------------------------------------------------------------------*/
+  12      =1  
+  13      =1  
+  14      =1  #ifndef __DELAY_H
+  15      =1  #define __DELAY_H
+  16      =1  
+  17      =1  void  delay_ms(unsigned int ms);
+  18      =1  void Delay1000ms();             //@11.0592MHz
+  19      =1  #endif
+   8          #include "sys_clock.h"
+   1      =1  
+   2      =1  // Created by anche on 2018/8/14.
+   3      =1  //
+   4      =1  
+   5      =1  #ifndef _SYS_CLOCK__H
+   6      =1  #define _SYS_CLOCK__H
+   7      =1  
+   8      =1  #include "config.h"
+   1      =2  
+   2      =2  #ifndef         __CONFIG_H
+           =2 #define         __CONFIG_H
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 23  
+
+           =2 
+           =2 //#include      "rtx51tny.h"
+           =2 
+           =2 /*********************************************************/
+           =2 
+           =2 //#define MAIN_Fosc             22118400L       //¶¨ÒåÖ÷Ê±ÖÓ
+           =2 //#define MAIN_Fosc             12000000L       //¶¨ÒåÖ÷Ê±ÖÓ
+           =2 #define MAIN_Fosc               11059200L       //¶¨ÒåÖ÷Ê±ÖÓ
+           =2 //#define MAIN_Fosc              5529600L       //¶¨ÒåÖ÷Ê±ÖÓ
+           =2 //#define MAIN_Fosc             24000000L       //¶¨ÒåÖ÷Ê±ÖÓ
+           =2 typedef  unsigned int uint;
+           =2 typedef  unsigned char uchar;
+           =2 
+           =2 
+           =2 /*********************************************************/
+           =2 #include        "STC15Fxxxx.H"
+           =2 
+           =2 
+           =2 #include "stdlib.h"
+           =2 #include <stdio.h>
+           =2 #include <stdint.h>
+           =2 #include "mystring.h"
+           =2 
+           =2 sbit LED1 = P0^0         ;
+           =2 sbit LED2 = P0^1;
+           =2 #define LED_SYS_STATE_ON  LED1=0;
+           =2 #define LED_SYS_STATE_OFF  LED1=1;
+           =2 #define LED_ROUTER_STATE_ON  LED2=0;
+           =2 #define LED_ROUTER_STATE_OFF  LED2=1;
+           =2 
+           =2 #endif
+   9      =1  #include <stdint.h>
+   1      =2  #ifndef __STDINT_H__
+           =2 #define __STDINT_H__
+           =2 
+           =2 typedef unsigned char uint8_t;  //1Î»³¤¶È
+           =2 typedef signed char int8_t;               //
+           =2 typedef unsigned short uint16_t;  //2Î»³¤¶È
+           =2 typedef signed short int16_t;
+           =2 typedef unsigned long uint32_t;   //4Î»³¤¶È
+           =2 typedef signed long int32_t;
+           =2 
+           =2 #endif
+  10      =1  
+  11      =1  
+  12      =1  typedef uint16_t tick_t;
+  13      =1  
+  14      =1  typedef struct
+  15      =1  {
+  16      =1    tick_t start;
+  17      =1    tick_t interval;
+  18      =1  } timer_t;
+  19      =1  
+  20      =1  typedef struct{
+  21      =1      u16 ms;
+  22      =1      u16 start;
+  23      =1  //    u16 end;
+  24      =1  }timer_out;
+  25      =1  
+  26      =1  extern timer_out timerout1, timerout2;
+  27      =1  
+  28      =1  extern data volatile uint16_t sys_ticks;
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 24  
+
+  29      =1  extern void sys_clock_init(void);
+  30      =1  extern uint16_t get_sys_ticks(void);
+  31      =1  
+  32      =1  #endif //_SYS_CLOCK_H
+   9          #include "aes128app.h"
+   1      =1  #ifndef __AES128APP_H
+   2      =1  #define __AES128APP_H
+   3      =1  
+   4      =1  typedef struct{
+   5      =1          uint8_t id[8];
+   6      =1          uint8_t key[16];
+   7      =1          uint8_t iv[16];
+   8      =1          uint8_t state;
+   9      =1  }AES128;
+  10      =1  
+  11      =1  extern AES128 aes128;                                                                                                                                                   
+  12      =1  
+  13      =1  int app_encrypt_cbc(uint8_t *key, uint8_t *iv, uint8_t *in, uint8_t len, uint8_t *out); //EBC¼ÓÃÜ
+  14      =1  int app_decrypt_cbc(uint8_t *key, uint8_t *iv, uint8_t *in, uint8_t *out); //EBC½âÃÜ
+  15      =1  
+  16      =1  
+  17      =1  #endif
+  10          #include "mystring.h"
+   1      =1  #ifndef __MYSTRING__h
+   2      =1  #define __MYSTRING__H
+   3      =1  
+   4      =1  
+   5      =1  char *strpbrk(const char *cs, const char *ct);
+   6      =1  char *strsep(char **s, const char *ct);
+   7      =1  char * strtrim(char *s);
+   8      =1  void trim(char *strIn, char *strOut);
+   9      =1  char * strtrim_fast(char *s) ;
+  10      =1  #endif
+  11          
+  12          uint8_t code *AT   ="AT";
+  13          uint8_t code *GMM  ="AT+GMM";                   //»ñÈ¡ÐÍºÅ
+  14          uint8_t code *CGSN ="AT+CGSN";                  //»ñÈ¡IME"
+  15          uint8_t code *ATF  ="AT&F";                     //ÉèÖÃËùÓÐ TA ²ÎÊýÎª³ö³§ÅäÖÃ
+  16          uint8_t code *ATW  ="AT&W";                     //±£´æÓÃ»§ÅäÖÃ²ÎÊý
+  17          uint8_t code *CFUN ="AT+CFUN=1";                //ÉèÖÃÄ£¿é¹¦ÄÜ
+  18          uint8_t code *ICF  ="AT+ICF=3,0";       // Êý¾ÝÎ»8 ÎÞÆæÅ¼Ð£Ñé Í£Ö¹Î»1
+  19          uint8_t code *IPR  ="AT+IPR=115200";    // ²¨ÌØÂÊÉèÖÃÎª115200
+  20          uint8_t code *CLCK ="AT+CLCK=SC,2";         //·µ»ØeerÔò¿¨²»¿ÉÓÃ»òÎÞsim¿¨
+  21          
+  22          uint8_t code *CPIN ="AT+CPIN?";
+  23          
+  24          uint8_t code *COPS ="AT+COPS?";         // ²é¿´Ä£Ê½=0/1ÊÇÄÜÉÏÍø
+  25          uint8_t code *CREG1 ="AT+CREG=1";        //ÆôÓÃÍøÂç×¢²á·ÇÇëÇó½á¹ûÂë     
+  26          uint8_t code *CREG2 ="AT+CREG?";                        // ·µ»Ø½Ó»õ1,1ÍøÂç×¢²á³É
+  27          
+  28          uint8_t code *CSQ  ="AT+CSQ";           // ²éÑ¯ÐÅºÅÖÊÁ¿
+  29          uint8_t code *CGREG="AT+CGREG?";
+  30          uint8_t code *CGATT="AT+CGATT=1";               //Ê¹ÓÃÄ£¿é¸½×ÅGPRSÍøÂç"
+  31          uint8_t code *CCSTT ="AT+CSTT=\"CMNET\"";                       //APN
+  32          uint8_t code *UCSTT ="AT+CSTT=\"3gnet\"";
+  33          uint8_t code *CGAUTO="AT+CGAUTO=1";    //×Ô¶¯ÏìÓ¦ÍøÂçÇëÇó PDP PDPÉÏ
+  34          uint8_t code *CIFSR="AT+CIFSR";        //»ñÈ¡IPµØÖ·
+  35          uint8_t code *CIPMUX0 = "AT+CIPMUX=0";
+  36          uint8_t code *CIPMUX1 = "AT+CIPMUX=1";
+  37          
+  38          //uint8_t code *CIPSTART = "AT+CIPSTART=\"UDP\",\"139.159.141.194\",2249    ";   //½¨Á¢ TCP/UDPÁ´½Ó
+  39          uint8_t code *CIPSTART = "AT+CIPSTART=" ;
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 25  
+
+  40          
+  41          uint8_t code *CIPSEND = "AT+CIPSEND"; //·¢ËÍÃüÁî
+  42          uint8_t code *CIPSHUT  = "AT+CIPSHUT";  //¹Ø±Õ GPRS/CSD PDP³¡ 
+  43          uint8_t code *CIICR    = "AT+CIICR";  //¼¤»îÒÆ¶¯³¡¾°£¨»ò·¢ÆðGPST/CSDÎÞÏßÁ´½Ó£©
+  44          uint8_t code *CIPSTATUS = "AT+CIPSTATUS";  //²éÑ¯Á¬½Ó×´Ì¬
+  45          
+  46          uint8_t code *CDNSGIP = "AT+CDNSGIP=";   //ÉèÖÃÓòÃû½âÎö·þÎñÆ÷
+  47          uint8_t code *DNSserver="8.8.8.8";              //DNS
+  48          uint8_t code *CIPMODE   ="AT+CIPMODE=1"; //ÊÇ·ñ½øÈëÍ¸´«Ä£Ê½£»
+  49          void send_string(uint8_t *s)
+  50          {
+  51   1        while(*s != '\0') {
+  52   2               TX2_write2buff(*s++);
+  53   2       }
+  54   1      }
+  55          
+  56          void AT_Send(uint8_t *ATX)                                     //·¢ËÍATÖ¸Áî£ºsim¿¨»ú³õÊ¼»¯   
+  57          {    
+  58   1        (void)memset(RX2_Buffer,0,COM_RX2_Lenth);     //¶Ô½ÓÊÕÊý¾Ý»º³åÇø³õÊ¼»¯        
+  59   1        COM2.RX_Cnt=0;                                          
+  60   1        send_string(ATX);                                      //·¢ËÍATÃüÁî
+  61   1        send_string("\r");  
+  62   1        delay_ms(500);                                 //ÑÓÊ±1s£¬µÈ´ýÓ¦´ð   
+  63   1      }
+  64          
+  65          u8 gprs_status;
+  66          u8 gprs_cmd(u8 *cmd, u8 *input, u8 *ck_str, u8 outtime_s)
+  67          {
+  68   1              uint16_t tartt_time, second_time;
+  69   1              uint8_t res=0;
+  70   1      
+  71   1              COM2.RX_Cnt = 0;
+  72   1              tartt_time = get_sys_ticks();
+  73   1              AT_Send(cmd);
+  74   1              delay_ms(500);
+  75   1              res=1;
+  76   1              while(!strstr(input,ck_str)) //È·ÈÏÄ£¿éÕý³£
+  77   1              {   
+  78   2                      second_time     = get_sys_ticks();
+  79   2                      if(second_time%100==0)
+  80   2                      printf("t=:%d\n",second_time/100);              
+  81   2                      if((second_time - tartt_time)>outtime_s) 
+  82   2                      {                       
+  83   3                              return res=0; 
+  84   3                              break;
+  85   3                      }               
+  86   2              }//5sÎÞÓ¦´ðÌø³ö}
+  87   1              COM2.RX_Cnt = 0;
+  88   1              return  res;
+  89   1      }
+  90          
+  91          S_config s_config;
+  92          void init_GPRS(S_config *s)
+  93          {       
+  94   1              uint8_t *addr;
+  95   1              uint8_t res;
+  96   1              /*½¨Á¢ATÃüÁîÁ´½Ó£¬ÖÁÉÙ·¢ËÍÎå´ÎAT*/
+  97   1              printf("AT_init\n");
+  98   1      
+  99   1              gprs_cmd(AT,RX2_Buffer,"OK",500);
+ 100   1          gprs_cmd(AT,RX2_Buffer,"OK",500);
+ 101   1              gprs_cmd(AT,RX2_Buffer,"OK",500);
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 26  
+
+ 102   1              gprs_cmd(AT,RX2_Buffer,"OK",500);
+ 103   1              gprs_cmd(AT,RX2_Buffer,"OK",500);
+ 104   1              gprs_cmd(AT,RX2_Buffer,"OK",500);
+ 105   1              printf("%s%s%s","AT5:",RX2_Buffer,"\n");
+ 106   1              /*
+ 107   1               *²¨ÌØÂÊÉèÖÃ
+ 108   1              */
+ 109   1              res = gprs_cmd(IPR,RX2_Buffer,"OK",500);
+ 110   1              if(res==1)
+ 111   1                      printf("%s%s%s","²¨ÌØÂÊ:",RX2_Buffer,"\n");
+ 112   1              else
+ 113   1                      printf("%s","²¨ÌØÂÊÉèÖÃÊ§°Ü£¡");
+ 114   1         /*
+ 115   1              *±£´æÉèÖÃ
+ 116   1         */
+ 117   1         gprs_cmd(ATW,RX2_Buffer,"OK",500);   
+ 118   1         /*
+ 119   1              * ¼ì²â
+ 120   1         */
+ 121   1              res = gprs_cmd(CPIN,RX2_Buffer,"OK",500);
+ 122   1              if(res==1)
+ 123   1                      printf("%s%s%s","SIM×´Ì¬:",RX2_Buffer,"\n");
+ 124   1              else
+ 125   1                      printf("%s","SIM¿¨¼ì²âÊ§°Ü£¡");
+ 126   1      
+ 127   1              res = gprs_cmd(CSQ,RX2_Buffer,"OK",500);
+ 128   1              if(res==1)
+ 129   1                      printf("%s%s%s","ÐÅºÅÇ¿¶È:",RX2_Buffer,"\n");
+ 130   1              else
+ 131   1                      printf("%s","ÎÞÐÅºÅÇ¿¶È£¡");
+ 132   1      
+ 133   1              res = gprs_cmd(CREG2,RX2_Buffer,"OK",500);
+ 134   1              if(res==1)
+ 135   1                      printf("%s%s%s","GSM×¢²á×´Ì¬:",RX2_Buffer,"\n");
+ 136   1              else
+ 137   1                      printf("%s","GSM¿¨×¢²áÊ§°Ü£¡");
+ 138   1              
+ 139   1              res = gprs_cmd(CGREG,RX2_Buffer,"OK",500);
+ 140   1              if(res==1)
+ 141   1                      printf("%s%s%s","GPRS×¢²á×´Ì¬:",RX2_Buffer,"\n");
+ 142   1              else
+ 143   1                      printf("%s","GPRS×´Ì¬×¢²áÊ§°Ü£¡");
+ 144   1              /*
+ 145   1               *ÍøÂç·þÎñ×¢²á
+ 146   1              */
+ 147   1              res = gprs_cmd(COPS,RX2_Buffer,"OK",500);
+ 148   1              if(res==1)
+ 149   1                      printf("%s%s%s","ÍøÂç×´Ì¬:",RX2_Buffer,"\n");
+ 150   1              else
+ 151   1                      printf("%s","²éÑ¯ÍøÂç×´Ì¬Ê§°Ü£¡");
+ 152   1      
+ 153   1              res = gprs_cmd(CIPMUX0,RX2_Buffer,"OK",500);
+ 154   1              if(res==1)
+ 155   1                      printf("%s%s%s","µ¥·þÎñÆ÷Ä£Ê½:",RX2_Buffer,"\n");
+ 156   1              else
+ 157   1                      printf("%s","ÉèÖÃµ¥·þÎñÄ£Ê½Ê§°Ü£¡");
+ 158   1      
+ 159   1              /*
+ 160   1               *Ê¹ÓÃÄ£¿é¸½×ÅGPRSÍøÂç
+ 161   1              */
+ 162   1              res = gprs_cmd(CGATT,RX2_Buffer,"OK",500);
+ 163   1              if(res==1)
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 27  
+
+ 164   1                      printf("%s%s%s","GPRS¸½×Å:",RX2_Buffer,"\n");
+ 165   1              else
+ 166   1                      printf("%s","GPRS¸½×ÅÊ§°Ü£¡");
+ 167   1              /*
+ 168   1               * GPRS·þÎñ×¢²á
+ 169   1              */
+ 170   1              res = gprs_cmd(COPS,RX2_Buffer,"OK",500); //²éÑ¯µ±Ç°ÔËÐÐÉÌ±àºÅ
+ 171   1              if(res==1)
+ 172   1                      printf("%s%s%s","ÔËÐÐÉÌ:",RX2_Buffer,"\n");
+ 173   1              else 
+ 174   1                      printf("%s","¶ÁÈ¡ÔËÐÐÉÌÊ§°Ü£¡");
+ 175   1      
+ 176   1              res = gprs_cmd(CIPMODE,RX2_Buffer,"OK",500);    //ÈëÍ¸´«Ä£Ê½£»
+ 177   1              if(res==1)
+ 178   1                      printf("%s%s%s","ÈëÍ¸´«Ä£Ê½:",RX2_Buffer,"\n");
+ 179   1              else
+ 180   1                      printf("%s","½øÈëÍ¸´«Ê§°Ü£¡");
+ 181   1      
+ 182   1              if(!strstr(RX2_Buffer,"46000"))         //ÉèÖÃAPN
+ 183   1              {       
+ 184   2                      gprs_cmd(CCSTT,RX2_Buffer,"OK",500);
+ 185   2                      printf("%s%s%s","CMNET:",RX2_Buffer,"\n");                                                      
+ 186   2              }
+ 187   1              else if(!strstr(RX2_Buffer,"46001")){
+ 188   2                      gprs_cmd(UCSTT,RX2_Buffer,"OK",500);
+ 189   2                      printf("%s%s%s","3GNET:",RX2_Buffer,"\n");
+ 190   2              }
+ 191   1              /*
+ 192   1               * TCP/IP ·þÎñÅäÖÃ
+ 193   1              */
+ 194   1      
+ 195   1      
+ 196   1              res = gprs_cmd(CIICR,RX2_Buffer,"OK",500);  // ¼¤»îÒÆ¶¯³¡¾°£¨»ò·¢ÆðGPST/CSDÎÞÏßÁ´½Ó£©
+ 197   1              if(res==1)
+ 198   1                      printf("%s%s%s","¼¤»îÒÆ¶¯³¡¾°:",RX2_Buffer,"\n");
+ 199   1              else
+ 200   1                      printf("%s","¼¤»îÒÆ¶¯³¡¾°Ê§°Ü£¡");                                                      
+ 201   1              
+ 202   1              res = gprs_cmd(CIFSR,RX2_Buffer,"OK",500);              //»ñÈ¡IPµØÖ·
+ 203   1      //      if(res==1)
+ 204   1                      printf("%s%s%s","»ñÈ¡IPµØÖ·:",RX2_Buffer,"\n");
+ 205   1      //      else
+ 206   1      //              printf("%s","»ñÈ¡IPÊ§°Ü£¡");
+ 207   1              
+ 208   1              strcat(addr,CIPSTART);
+ 209   1              strcat(addr,s->server);
+ 210   1      //      trim(addr, p1);
+ 211   1      //      sprintf(addr,"%s%s",CIPSTART,s->server);
+ 212   1              printf("server=%s\r\n",addr);
+ 213   1              gprs_status = gprs_cmd(addr, RX2_Buffer, "CONNECT", 1000);                 //·þÎñÆ÷Á¬½Ó³É¹¦
+ 214   1              if(gprs_status==1)
+ 215   1                      printf("%s%s%s","Á¬½Ó·þÎñÆ÷:",RX2_Buffer,"\n");
+ 216   1              else
+ 217   1                      printf("%s","Á´½Ó·þÎñÆ÷Ê§°Ü£¡");                
+ 218   1                                                                      
+ 219   1      }                                                                         
+ 220          
+ 221          
+ 222          
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 28  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _send_string (BEGIN)
+                                           ; SOURCE LINE # 49
+0000 900000      R     MOV     DPTR,#s
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 50
+000B         ?C0001:
+                                           ; SOURCE LINE # 51
+000B 900000      R     MOV     DPTR,#s
+000E E0                MOVX    A,@DPTR
+000F FB                MOV     R3,A
+0010 A3                INC     DPTR
+0011 E0                MOVX    A,@DPTR
+0012 FA                MOV     R2,A
+0013 A3                INC     DPTR
+0014 E0                MOVX    A,@DPTR
+0015 F9                MOV     R1,A
+0016 120000      E     LCALL   ?C?CLDPTR
+0019 6017              JZ      ?C0003
+                                           ; SOURCE LINE # 52
+001B 900000      R     MOV     DPTR,#s
+001E A3                INC     DPTR
+001F E4                CLR     A
+0020 75F001            MOV     B,#01H
+0023 120000      E     LCALL   ?C?ILDIX
+0026 A9F0              MOV     R1,B
+0028 FA                MOV     R2,A
+0029 120000      E     LCALL   ?C?CLDPTR
+002C FF                MOV     R7,A
+002D 120000      E     LCALL   _TX2_write2buff
+                                           ; SOURCE LINE # 53
+0030 80D9              SJMP    ?C0001
+                                           ; SOURCE LINE # 54
+0032         ?C0003:
+0032 22                RET     
+             ; FUNCTION _send_string (END)
+
+             ; FUNCTION _AT_Send (BEGIN)
+                                           ; SOURCE LINE # 56
+0000 900000      R     MOV     DPTR,#ATX
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 57
+                                           ; SOURCE LINE # 58
+000B 7E00              MOV     R6,#00H
+000D 7F01              MOV     R7,#01H
+000F 7D00              MOV     R5,#00H
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 29  
+
+0011 7B01              MOV     R3,#01H
+0013 7A00        E     MOV     R2,#HIGH RX2_Buffer
+0015 7900        E     MOV     R1,#LOW RX2_Buffer
+0017 120000      E     LCALL   ?C?MEMSET
+                                           ; SOURCE LINE # 59
+001A E4                CLR     A
+001B 900000      E     MOV     DPTR,#COM2+04H
+001E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 60
+001F 900000      R     MOV     DPTR,#ATX
+0022 E0                MOVX    A,@DPTR
+0023 FB                MOV     R3,A
+0024 A3                INC     DPTR
+0025 E0                MOVX    A,@DPTR
+0026 FA                MOV     R2,A
+0027 A3                INC     DPTR
+0028 E0                MOVX    A,@DPTR
+0029 F9                MOV     R1,A
+002A 120000      R     LCALL   _send_string
+                                           ; SOURCE LINE # 61
+002D 7BFF              MOV     R3,#0FFH
+002F 7A00        R     MOV     R2,#HIGH ?SC_308
+0031 7900        R     MOV     R1,#LOW ?SC_308
+0033 120000      R     LCALL   _send_string
+                                           ; SOURCE LINE # 62
+0036 7FF4              MOV     R7,#0F4H
+0038 7E01              MOV     R6,#01H
+003A 020000      E     LJMP    _delay_ms
+             ; FUNCTION _AT_Send (END)
+
+             ; FUNCTION _gprs_cmd (BEGIN)
+                                           ; SOURCE LINE # 66
+0000 900000      R     MOV     DPTR,#cmd
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 67
+                                           ; SOURCE LINE # 69
+000B E4                CLR     A
+000C 900000      R     MOV     DPTR,#res
+000F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 71
+0010 900000      E     MOV     DPTR,#COM2+04H
+0013 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 72
+0014 120000      E     LCALL   get_sys_ticks
+0017 900000      R     MOV     DPTR,#tartt_time
+001A EE                MOV     A,R6
+001B F0                MOVX    @DPTR,A
+001C A3                INC     DPTR
+001D EF                MOV     A,R7
+001E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 73
+001F 900000      R     MOV     DPTR,#cmd
+0022 E0                MOVX    A,@DPTR
+0023 FB                MOV     R3,A
+0024 A3                INC     DPTR
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 30  
+
+0025 E0                MOVX    A,@DPTR
+0026 FA                MOV     R2,A
+0027 A3                INC     DPTR
+0028 E0                MOVX    A,@DPTR
+0029 F9                MOV     R1,A
+002A 120000      R     LCALL   _AT_Send
+                                           ; SOURCE LINE # 74
+002D 7FF4              MOV     R7,#0F4H
+002F 7E01              MOV     R6,#01H
+0031 120000      E     LCALL   _delay_ms
+                                           ; SOURCE LINE # 75
+0034 900000      R     MOV     DPTR,#res
+0037 7401              MOV     A,#01H
+0039 F0                MOVX    @DPTR,A
+003A         ?C0005:
+                                           ; SOURCE LINE # 76
+003A 900000      R     MOV     DPTR,#ck_str
+003D E0                MOVX    A,@DPTR
+003E F9                MOV     R1,A
+003F A3                INC     DPTR
+0040 E0                MOVX    A,@DPTR
+0041 FA                MOV     R2,A
+0042 A3                INC     DPTR
+0043 E0                MOVX    A,@DPTR
+0044 900000      E     MOV     DPTR,#?_strstr?BYTE+03H
+0047 C9                XCH     A,R1
+0048 F0                MOVX    @DPTR,A
+0049 A3                INC     DPTR
+004A EA                MOV     A,R2
+004B F0                MOVX    @DPTR,A
+004C A3                INC     DPTR
+004D E9                MOV     A,R1
+004E F0                MOVX    @DPTR,A
+004F 900000      R     MOV     DPTR,#input
+0052 E0                MOVX    A,@DPTR
+0053 FB                MOV     R3,A
+0054 A3                INC     DPTR
+0055 E0                MOVX    A,@DPTR
+0056 FA                MOV     R2,A
+0057 A3                INC     DPTR
+0058 E0                MOVX    A,@DPTR
+0059 F9                MOV     R1,A
+005A 120000      E     LCALL   _strstr
+005D EA                MOV     A,R2
+005E 49                ORL     A,R1
+005F 4B                ORL     A,R3
+0060 705F              JNZ     ?C0006
+                                           ; SOURCE LINE # 77
+                                           ; SOURCE LINE # 78
+0062 120000      E     LCALL   get_sys_ticks
+0065 900000      R     MOV     DPTR,#second_time
+0068 EE                MOV     A,R6
+0069 F0                MOVX    @DPTR,A
+006A A3                INC     DPTR
+006B EF                MOV     A,R7
+006C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 79
+006D 7C00              MOV     R4,#00H
+006F 7D64              MOV     R5,#064H
+0071 120000      E     LCALL   ?C?UIDIV
+0074 ED                MOV     A,R5
+0075 4C                ORL     A,R4
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 31  
+
+0076 7020              JNZ     ?C0007
+                                           ; SOURCE LINE # 80
+0078 900000      R     MOV     DPTR,#second_time
+007B E0                MOVX    A,@DPTR
+007C FE                MOV     R6,A
+007D A3                INC     DPTR
+007E E0                MOVX    A,@DPTR
+007F FF                MOV     R7,A
+0080 7C00              MOV     R4,#00H
+0082 7D64              MOV     R5,#064H
+0084 120000      E     LCALL   ?C?UIDIV
+0087 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+008A EE                MOV     A,R6
+008B F0                MOVX    @DPTR,A
+008C A3                INC     DPTR
+008D EF                MOV     A,R7
+008E F0                MOVX    @DPTR,A
+008F 7BFF              MOV     R3,#0FFH
+0091 7A00        R     MOV     R2,#HIGH ?SC_310
+0093 7900        R     MOV     R1,#LOW ?SC_310
+0095 120000      E     LCALL   _printf
+0098         ?C0007:
+                                           ; SOURCE LINE # 81
+0098 900000      R     MOV     DPTR,#tartt_time
+009B E0                MOVX    A,@DPTR
+009C FE                MOV     R6,A
+009D A3                INC     DPTR
+009E E0                MOVX    A,@DPTR
+009F FF                MOV     R7,A
+00A0 C3                CLR     C
+00A1 900000      R     MOV     DPTR,#second_time+01H
+00A4 E0                MOVX    A,@DPTR
+00A5 9F                SUBB    A,R7
+00A6 FF                MOV     R7,A
+00A7 900000      R     MOV     DPTR,#second_time
+00AA E0                MOVX    A,@DPTR
+00AB 9E                SUBB    A,R6
+00AC FE                MOV     R6,A
+00AD 900000      R     MOV     DPTR,#outtime_s
+00B0 E0                MOVX    A,@DPTR
+00B1 FD                MOV     R5,A
+00B2 D3                SETB    C
+00B3 EF                MOV     A,R7
+00B4 9D                SUBB    A,R5
+00B5 EE                MOV     A,R6
+00B6 9400              SUBB    A,#00H
+00B8 4080              JC      ?C0005
+                                           ; SOURCE LINE # 82
+                                           ; SOURCE LINE # 83
+00BA E4                CLR     A
+00BB 900000      R     MOV     DPTR,#res
+00BE F0                MOVX    @DPTR,A
+00BF FF                MOV     R7,A
+00C0 22                RET     
+                                           ; SOURCE LINE # 84
+                                           ; SOURCE LINE # 85
+                                           ; SOURCE LINE # 86
+00C1         ?C0006:
+                                           ; SOURCE LINE # 87
+00C1 E4                CLR     A
+00C2 900000      E     MOV     DPTR,#COM2+04H
+00C5 F0                MOVX    @DPTR,A
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 32  
+
+                                           ; SOURCE LINE # 88
+00C6 900000      R     MOV     DPTR,#res
+00C9 E0                MOVX    A,@DPTR
+00CA FF                MOV     R7,A
+                                           ; SOURCE LINE # 89
+00CB         ?C0009:
+00CB 22                RET     
+             ; FUNCTION _gprs_cmd (END)
+
+             ; FUNCTION _init_GPRS (BEGIN)
+                                           ; SOURCE LINE # 92
+0000 900000      R     MOV     DPTR,#s
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 93
+                                           ; SOURCE LINE # 97
+000B 7BFF              MOV     R3,#0FFH
+000D 7A00        R     MOV     R2,#HIGH ?SC_317
+000F 7900        R     MOV     R1,#LOW ?SC_317
+0011 120000      E     LCALL   _printf
+                                           ; SOURCE LINE # 99
+0014 900000      R     MOV     DPTR,#AT
+0017 E0                MOVX    A,@DPTR
+0018 FE                MOV     R6,A
+0019 A3                INC     DPTR
+001A E0                MOVX    A,@DPTR
+001B AA06              MOV     R2,AR6
+001D F9                MOV     R1,A
+001E 7BFF              MOV     R3,#0FFH
+0020 C003              PUSH    AR3
+0022 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+0025 7401              MOV     A,#01H
+0027 F0                MOVX    @DPTR,A
+0028 A3                INC     DPTR
+0029 7400        E     MOV     A,#HIGH RX2_Buffer
+002B F0                MOVX    @DPTR,A
+002C A3                INC     DPTR
+002D 7400        E     MOV     A,#LOW RX2_Buffer
+002F F0                MOVX    @DPTR,A
+0030 A3                INC     DPTR
+0031 EB                MOV     A,R3
+0032 F0                MOVX    @DPTR,A
+0033 A3                INC     DPTR
+0034 7400        R     MOV     A,#HIGH ?SC_326
+0036 F0                MOVX    @DPTR,A
+0037 A3                INC     DPTR
+0038 7400        R     MOV     A,#LOW ?SC_326
+003A F0                MOVX    @DPTR,A
+003B A3                INC     DPTR
+003C 74F4              MOV     A,#0F4H
+003E F0                MOVX    @DPTR,A
+003F D003              POP     AR3
+0041 120000      R     LCALL   _gprs_cmd
+                                           ; SOURCE LINE # 100
+0044 900000      R     MOV     DPTR,#AT
+0047 E0                MOVX    A,@DPTR
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 33  
+
+0048 FE                MOV     R6,A
+0049 A3                INC     DPTR
+004A E0                MOVX    A,@DPTR
+004B AA06              MOV     R2,AR6
+004D F9                MOV     R1,A
+004E 7BFF              MOV     R3,#0FFH
+0050 C003              PUSH    AR3
+0052 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+0055 7401              MOV     A,#01H
+0057 F0                MOVX    @DPTR,A
+0058 A3                INC     DPTR
+0059 7400        E     MOV     A,#HIGH RX2_Buffer
+005B F0                MOVX    @DPTR,A
+005C A3                INC     DPTR
+005D 7400        E     MOV     A,#LOW RX2_Buffer
+005F F0                MOVX    @DPTR,A
+0060 A3                INC     DPTR
+0061 EB                MOV     A,R3
+0062 F0                MOVX    @DPTR,A
+0063 A3                INC     DPTR
+0064 7400        R     MOV     A,#HIGH ?SC_326
+0066 F0                MOVX    @DPTR,A
+0067 A3                INC     DPTR
+0068 7400        R     MOV     A,#LOW ?SC_326
+006A F0                MOVX    @DPTR,A
+006B A3                INC     DPTR
+006C 74F4              MOV     A,#0F4H
+006E F0                MOVX    @DPTR,A
+006F D003              POP     AR3
+0071 120000      R     LCALL   _gprs_cmd
+                                           ; SOURCE LINE # 101
+0074 900000      R     MOV     DPTR,#AT
+0077 E0                MOVX    A,@DPTR
+0078 FE                MOV     R6,A
+0079 A3                INC     DPTR
+007A E0                MOVX    A,@DPTR
+007B AA06              MOV     R2,AR6
+007D F9                MOV     R1,A
+007E 7BFF              MOV     R3,#0FFH
+0080 C003              PUSH    AR3
+0082 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+0085 7401              MOV     A,#01H
+0087 F0                MOVX    @DPTR,A
+0088 A3                INC     DPTR
+0089 7400        E     MOV     A,#HIGH RX2_Buffer
+008B F0                MOVX    @DPTR,A
+008C A3                INC     DPTR
+008D 7400        E     MOV     A,#LOW RX2_Buffer
+008F F0                MOVX    @DPTR,A
+0090 A3                INC     DPTR
+0091 EB                MOV     A,R3
+0092 F0                MOVX    @DPTR,A
+0093 A3                INC     DPTR
+0094 7400        R     MOV     A,#HIGH ?SC_326
+0096 F0                MOVX    @DPTR,A
+0097 A3                INC     DPTR
+0098 7400        R     MOV     A,#LOW ?SC_326
+009A F0                MOVX    @DPTR,A
+009B A3                INC     DPTR
+009C 74F4              MOV     A,#0F4H
+009E F0                MOVX    @DPTR,A
+009F D003              POP     AR3
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 34  
+
+00A1 120000      R     LCALL   _gprs_cmd
+                                           ; SOURCE LINE # 102
+00A4 900000      R     MOV     DPTR,#AT
+00A7 E0                MOVX    A,@DPTR
+00A8 FE                MOV     R6,A
+00A9 A3                INC     DPTR
+00AA E0                MOVX    A,@DPTR
+00AB AA06              MOV     R2,AR6
+00AD F9                MOV     R1,A
+00AE 7BFF              MOV     R3,#0FFH
+00B0 C003              PUSH    AR3
+00B2 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+00B5 7401              MOV     A,#01H
+00B7 F0                MOVX    @DPTR,A
+00B8 A3                INC     DPTR
+00B9 7400        E     MOV     A,#HIGH RX2_Buffer
+00BB F0                MOVX    @DPTR,A
+00BC A3                INC     DPTR
+00BD 7400        E     MOV     A,#LOW RX2_Buffer
+00BF F0                MOVX    @DPTR,A
+00C0 A3                INC     DPTR
+00C1 EB                MOV     A,R3
+00C2 F0                MOVX    @DPTR,A
+00C3 A3                INC     DPTR
+00C4 7400        R     MOV     A,#HIGH ?SC_326
+00C6 F0                MOVX    @DPTR,A
+00C7 A3                INC     DPTR
+00C8 7400        R     MOV     A,#LOW ?SC_326
+00CA F0                MOVX    @DPTR,A
+00CB A3                INC     DPTR
+00CC 74F4              MOV     A,#0F4H
+00CE F0                MOVX    @DPTR,A
+00CF D003              POP     AR3
+00D1 120000      R     LCALL   _gprs_cmd
+                                           ; SOURCE LINE # 103
+00D4 900000      R     MOV     DPTR,#AT
+00D7 E0                MOVX    A,@DPTR
+00D8 FE                MOV     R6,A
+00D9 A3                INC     DPTR
+00DA E0                MOVX    A,@DPTR
+00DB AA06              MOV     R2,AR6
+00DD F9                MOV     R1,A
+00DE 7BFF              MOV     R3,#0FFH
+00E0 C003              PUSH    AR3
+00E2 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+00E5 7401              MOV     A,#01H
+00E7 F0                MOVX    @DPTR,A
+00E8 A3                INC     DPTR
+00E9 7400        E     MOV     A,#HIGH RX2_Buffer
+00EB F0                MOVX    @DPTR,A
+00EC A3                INC     DPTR
+00ED 7400        E     MOV     A,#LOW RX2_Buffer
+00EF F0                MOVX    @DPTR,A
+00F0 A3                INC     DPTR
+00F1 EB                MOV     A,R3
+00F2 F0                MOVX    @DPTR,A
+00F3 A3                INC     DPTR
+00F4 7400        R     MOV     A,#HIGH ?SC_326
+00F6 F0                MOVX    @DPTR,A
+00F7 A3                INC     DPTR
+00F8 7400        R     MOV     A,#LOW ?SC_326
+00FA F0                MOVX    @DPTR,A
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 35  
+
+00FB A3                INC     DPTR
+00FC 74F4              MOV     A,#0F4H
+00FE F0                MOVX    @DPTR,A
+00FF D003              POP     AR3
+0101 120000      R     LCALL   _gprs_cmd
+                                           ; SOURCE LINE # 104
+0104 900000      R     MOV     DPTR,#AT
+0107 E0                MOVX    A,@DPTR
+0108 FE                MOV     R6,A
+0109 A3                INC     DPTR
+010A E0                MOVX    A,@DPTR
+010B AA06              MOV     R2,AR6
+010D F9                MOV     R1,A
+010E 7BFF              MOV     R3,#0FFH
+0110 C003              PUSH    AR3
+0112 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+0115 7401              MOV     A,#01H
+0117 F0                MOVX    @DPTR,A
+0118 A3                INC     DPTR
+0119 7400        E     MOV     A,#HIGH RX2_Buffer
+011B F0                MOVX    @DPTR,A
+011C A3                INC     DPTR
+011D 7400        E     MOV     A,#LOW RX2_Buffer
+011F F0                MOVX    @DPTR,A
+0120 A3                INC     DPTR
+0121 EB                MOV     A,R3
+0122 F0                MOVX    @DPTR,A
+0123 A3                INC     DPTR
+0124 7400        R     MOV     A,#HIGH ?SC_326
+0126 F0                MOVX    @DPTR,A
+0127 A3                INC     DPTR
+0128 7400        R     MOV     A,#LOW ?SC_326
+012A F0                MOVX    @DPTR,A
+012B A3                INC     DPTR
+012C 74F4              MOV     A,#0F4H
+012E F0                MOVX    @DPTR,A
+012F D003              POP     AR3
+0131 120000      R     LCALL   _gprs_cmd
+                                           ; SOURCE LINE # 105
+0134 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+0137 74FF              MOV     A,#0FFH
+0139 F0                MOVX    @DPTR,A
+013A A3                INC     DPTR
+013B 7400        R     MOV     A,#HIGH ?SC_336
+013D F0                MOVX    @DPTR,A
+013E A3                INC     DPTR
+013F 7400        R     MOV     A,#LOW ?SC_336
+0141 F0                MOVX    @DPTR,A
+0142 A3                INC     DPTR
+0143 7401              MOV     A,#01H
+0145 F0                MOVX    @DPTR,A
+0146 A3                INC     DPTR
+0147 7400        E     MOV     A,#HIGH RX2_Buffer
+0149 F0                MOVX    @DPTR,A
+014A A3                INC     DPTR
+014B 7400        E     MOV     A,#LOW RX2_Buffer
+014D F0                MOVX    @DPTR,A
+014E A3                INC     DPTR
+014F 74FF              MOV     A,#0FFH
+0151 F0                MOVX    @DPTR,A
+0152 A3                INC     DPTR
+0153 7400        R     MOV     A,#HIGH ?SC_341
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 36  
+
+0155 F0                MOVX    @DPTR,A
+0156 A3                INC     DPTR
+0157 7400        R     MOV     A,#LOW ?SC_341
+0159 F0                MOVX    @DPTR,A
+015A 7BFF              MOV     R3,#0FFH
+015C 7A00        R     MOV     R2,#HIGH ?SC_329
+015E 7900        R     MOV     R1,#LOW ?SC_329
+0160 120000      E     LCALL   _printf
+                                           ; SOURCE LINE # 109
+0163 900000      R     MOV     DPTR,#IPR
+0166 E0                MOVX    A,@DPTR
+0167 FE                MOV     R6,A
+0168 A3                INC     DPTR
+0169 E0                MOVX    A,@DPTR
+016A AA06              MOV     R2,AR6
+016C F9                MOV     R1,A
+016D 7BFF              MOV     R3,#0FFH
+016F C003              PUSH    AR3
+0171 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+0174 7401              MOV     A,#01H
+0176 F0                MOVX    @DPTR,A
+0177 A3                INC     DPTR
+0178 7400        E     MOV     A,#HIGH RX2_Buffer
+017A F0                MOVX    @DPTR,A
+017B A3                INC     DPTR
+017C 7400        E     MOV     A,#LOW RX2_Buffer
+017E F0                MOVX    @DPTR,A
+017F A3                INC     DPTR
+0180 EB                MOV     A,R3
+0181 F0                MOVX    @DPTR,A
+0182 A3                INC     DPTR
+0183 7400        R     MOV     A,#HIGH ?SC_326
+0185 F0                MOVX    @DPTR,A
+0186 A3                INC     DPTR
+0187 7400        R     MOV     A,#LOW ?SC_326
+0189 F0                MOVX    @DPTR,A
+018A A3                INC     DPTR
+018B 74F4              MOV     A,#0F4H
+018D F0                MOVX    @DPTR,A
+018E D003              POP     AR3
+0190 120000      R     LCALL   _gprs_cmd
+0193 900000      R     MOV     DPTR,#res
+0196 EF                MOV     A,R7
+0197 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 110
+0198 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+019B 74FF              MOV     A,#0FFH
+019D BF0129            CJNE    R7,#01H,?C0010
+                                           ; SOURCE LINE # 111
+01A0 F0                MOVX    @DPTR,A
+01A1 A3                INC     DPTR
+01A2 7400        R     MOV     A,#HIGH ?SC_343
+01A4 F0                MOVX    @DPTR,A
+01A5 A3                INC     DPTR
+01A6 7400        R     MOV     A,#LOW ?SC_343
+01A8 F0                MOVX    @DPTR,A
+01A9 A3                INC     DPTR
+01AA 7401              MOV     A,#01H
+01AC F0                MOVX    @DPTR,A
+01AD A3                INC     DPTR
+01AE 7400        E     MOV     A,#HIGH RX2_Buffer
+01B0 F0                MOVX    @DPTR,A
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 37  
+
+01B1 A3                INC     DPTR
+01B2 7400        E     MOV     A,#LOW RX2_Buffer
+01B4 F0                MOVX    @DPTR,A
+01B5 A3                INC     DPTR
+01B6 74FF              MOV     A,#0FFH
+01B8 F0                MOVX    @DPTR,A
+01B9 A3                INC     DPTR
+01BA 7400        R     MOV     A,#HIGH ?SC_341
+01BC F0                MOVX    @DPTR,A
+01BD A3                INC     DPTR
+01BE 7400        R     MOV     A,#LOW ?SC_341
+01C0 F0                MOVX    @DPTR,A
+01C1 7BFF              MOV     R3,#0FFH
+01C3 7A00        R     MOV     R2,#HIGH ?SC_329
+01C5 7900        R     MOV     R1,#LOW ?SC_329
+01C7 800F              SJMP    ?C0038
+01C9         ?C0010:
+                                           ; SOURCE LINE # 113
+01C9 F0                MOVX    @DPTR,A
+01CA A3                INC     DPTR
+01CB 7400        R     MOV     A,#HIGH ?SC_354
+01CD F0                MOVX    @DPTR,A
+01CE A3                INC     DPTR
+01CF 7400        R     MOV     A,#LOW ?SC_354
+01D1 F0                MOVX    @DPTR,A
+01D2 7BFF              MOV     R3,#0FFH
+01D4 7A00        R     MOV     R2,#HIGH ?SC_351
+01D6 7900        R     MOV     R1,#LOW ?SC_351
+01D8         ?C0038:
+01D8 120000      E     LCALL   _printf
+01DB         ?C0011:
+                                           ; SOURCE LINE # 117
+01DB 900000      R     MOV     DPTR,#ATW
+01DE E0                MOVX    A,@DPTR
+01DF FE                MOV     R6,A
+01E0 A3                INC     DPTR
+01E1 E0                MOVX    A,@DPTR
+01E2 AA06              MOV     R2,AR6
+01E4 F9                MOV     R1,A
+01E5 7BFF              MOV     R3,#0FFH
+01E7 C003              PUSH    AR3
+01E9 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+01EC 7401              MOV     A,#01H
+01EE F0                MOVX    @DPTR,A
+01EF A3                INC     DPTR
+01F0 7400        E     MOV     A,#HIGH RX2_Buffer
+01F2 F0                MOVX    @DPTR,A
+01F3 A3                INC     DPTR
+01F4 7400        E     MOV     A,#LOW RX2_Buffer
+01F6 F0                MOVX    @DPTR,A
+01F7 A3                INC     DPTR
+01F8 EB                MOV     A,R3
+01F9 F0                MOVX    @DPTR,A
+01FA A3                INC     DPTR
+01FB 7400        R     MOV     A,#HIGH ?SC_326
+01FD F0                MOVX    @DPTR,A
+01FE A3                INC     DPTR
+01FF 7400        R     MOV     A,#LOW ?SC_326
+0201 F0                MOVX    @DPTR,A
+0202 A3                INC     DPTR
+0203 74F4              MOV     A,#0F4H
+0205 F0                MOVX    @DPTR,A
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 38  
+
+0206 D003              POP     AR3
+0208 120000      R     LCALL   _gprs_cmd
+                                           ; SOURCE LINE # 121
+020B 900000      R     MOV     DPTR,#CPIN
+020E E0                MOVX    A,@DPTR
+020F FE                MOV     R6,A
+0210 A3                INC     DPTR
+0211 E0                MOVX    A,@DPTR
+0212 AA06              MOV     R2,AR6
+0214 F9                MOV     R1,A
+0215 7BFF              MOV     R3,#0FFH
+0217 C003              PUSH    AR3
+0219 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+021C 7401              MOV     A,#01H
+021E F0                MOVX    @DPTR,A
+021F A3                INC     DPTR
+0220 7400        E     MOV     A,#HIGH RX2_Buffer
+0222 F0                MOVX    @DPTR,A
+0223 A3                INC     DPTR
+0224 7400        E     MOV     A,#LOW RX2_Buffer
+0226 F0                MOVX    @DPTR,A
+0227 A3                INC     DPTR
+0228 EB                MOV     A,R3
+0229 F0                MOVX    @DPTR,A
+022A A3                INC     DPTR
+022B 7400        R     MOV     A,#HIGH ?SC_326
+022D F0                MOVX    @DPTR,A
+022E A3                INC     DPTR
+022F 7400        R     MOV     A,#LOW ?SC_326
+0231 F0                MOVX    @DPTR,A
+0232 A3                INC     DPTR
+0233 74F4              MOV     A,#0F4H
+0235 F0                MOVX    @DPTR,A
+0236 D003              POP     AR3
+0238 120000      R     LCALL   _gprs_cmd
+023B 900000      R     MOV     DPTR,#res
+023E EF                MOV     A,R7
+023F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 122
+0240 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+0243 74FF              MOV     A,#0FFH
+0245 BF0129            CJNE    R7,#01H,?C0012
+                                           ; SOURCE LINE # 123
+0248 F0                MOVX    @DPTR,A
+0249 A3                INC     DPTR
+024A 7400        R     MOV     A,#HIGH ?SC_371
+024C F0                MOVX    @DPTR,A
+024D A3                INC     DPTR
+024E 7400        R     MOV     A,#LOW ?SC_371
+0250 F0                MOVX    @DPTR,A
+0251 A3                INC     DPTR
+0252 7401              MOV     A,#01H
+0254 F0                MOVX    @DPTR,A
+0255 A3                INC     DPTR
+0256 7400        E     MOV     A,#HIGH RX2_Buffer
+0258 F0                MOVX    @DPTR,A
+0259 A3                INC     DPTR
+025A 7400        E     MOV     A,#LOW RX2_Buffer
+025C F0                MOVX    @DPTR,A
+025D A3                INC     DPTR
+025E 74FF              MOV     A,#0FFH
+0260 F0                MOVX    @DPTR,A
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 39  
+
+0261 A3                INC     DPTR
+0262 7400        R     MOV     A,#HIGH ?SC_341
+0264 F0                MOVX    @DPTR,A
+0265 A3                INC     DPTR
+0266 7400        R     MOV     A,#LOW ?SC_341
+0268 F0                MOVX    @DPTR,A
+0269 7BFF              MOV     R3,#0FFH
+026B 7A00        R     MOV     R2,#HIGH ?SC_329
+026D 7900        R     MOV     R1,#LOW ?SC_329
+026F 800F              SJMP    ?C0039
+0271         ?C0012:
+                                           ; SOURCE LINE # 125
+0271 F0                MOVX    @DPTR,A
+0272 A3                INC     DPTR
+0273 7400        R     MOV     A,#HIGH ?SC_380
+0275 F0                MOVX    @DPTR,A
+0276 A3                INC     DPTR
+0277 7400        R     MOV     A,#LOW ?SC_380
+0279 F0                MOVX    @DPTR,A
+027A 7BFF              MOV     R3,#0FFH
+027C 7A00        R     MOV     R2,#HIGH ?SC_351
+027E 7900        R     MOV     R1,#LOW ?SC_351
+0280         ?C0039:
+0280 120000      E     LCALL   _printf
+0283         ?C0013:
+                                           ; SOURCE LINE # 127
+0283 900000      R     MOV     DPTR,#CSQ
+0286 E0                MOVX    A,@DPTR
+0287 FE                MOV     R6,A
+0288 A3                INC     DPTR
+0289 E0                MOVX    A,@DPTR
+028A AA06              MOV     R2,AR6
+028C F9                MOV     R1,A
+028D 7BFF              MOV     R3,#0FFH
+028F C003              PUSH    AR3
+0291 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+0294 7401              MOV     A,#01H
+0296 F0                MOVX    @DPTR,A
+0297 A3                INC     DPTR
+0298 7400        E     MOV     A,#HIGH RX2_Buffer
+029A F0                MOVX    @DPTR,A
+029B A3                INC     DPTR
+029C 7400        E     MOV     A,#LOW RX2_Buffer
+029E F0                MOVX    @DPTR,A
+029F A3                INC     DPTR
+02A0 EB                MOV     A,R3
+02A1 F0                MOVX    @DPTR,A
+02A2 A3                INC     DPTR
+02A3 7400        R     MOV     A,#HIGH ?SC_326
+02A5 F0                MOVX    @DPTR,A
+02A6 A3                INC     DPTR
+02A7 7400        R     MOV     A,#LOW ?SC_326
+02A9 F0                MOVX    @DPTR,A
+02AA A3                INC     DPTR
+02AB 74F4              MOV     A,#0F4H
+02AD F0                MOVX    @DPTR,A
+02AE D003              POP     AR3
+02B0 120000      R     LCALL   _gprs_cmd
+02B3 900000      R     MOV     DPTR,#res
+02B6 EF                MOV     A,R7
+02B7 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 128
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 40  
+
+02B8 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+02BB 74FF              MOV     A,#0FFH
+02BD BF0129            CJNE    R7,#01H,?C0014
+                                           ; SOURCE LINE # 129
+02C0 F0                MOVX    @DPTR,A
+02C1 A3                INC     DPTR
+02C2 7400        R     MOV     A,#HIGH ?SC_396
+02C4 F0                MOVX    @DPTR,A
+02C5 A3                INC     DPTR
+02C6 7400        R     MOV     A,#LOW ?SC_396
+02C8 F0                MOVX    @DPTR,A
+02C9 A3                INC     DPTR
+02CA 7401              MOV     A,#01H
+02CC F0                MOVX    @DPTR,A
+02CD A3                INC     DPTR
+02CE 7400        E     MOV     A,#HIGH RX2_Buffer
+02D0 F0                MOVX    @DPTR,A
+02D1 A3                INC     DPTR
+02D2 7400        E     MOV     A,#LOW RX2_Buffer
+02D4 F0                MOVX    @DPTR,A
+02D5 A3                INC     DPTR
+02D6 74FF              MOV     A,#0FFH
+02D8 F0                MOVX    @DPTR,A
+02D9 A3                INC     DPTR
+02DA 7400        R     MOV     A,#HIGH ?SC_341
+02DC F0                MOVX    @DPTR,A
+02DD A3                INC     DPTR
+02DE 7400        R     MOV     A,#LOW ?SC_341
+02E0 F0                MOVX    @DPTR,A
+02E1 7BFF              MOV     R3,#0FFH
+02E3 7A00        R     MOV     R2,#HIGH ?SC_329
+02E5 7900        R     MOV     R1,#LOW ?SC_329
+02E7 800F              SJMP    ?C0040
+02E9         ?C0014:
+                                           ; SOURCE LINE # 131
+02E9 F0                MOVX    @DPTR,A
+02EA A3                INC     DPTR
+02EB 7400        R     MOV     A,#HIGH ?SC_406
+02ED F0                MOVX    @DPTR,A
+02EE A3                INC     DPTR
+02EF 7400        R     MOV     A,#LOW ?SC_406
+02F1 F0                MOVX    @DPTR,A
+02F2 7BFF              MOV     R3,#0FFH
+02F4 7A00        R     MOV     R2,#HIGH ?SC_351
+02F6 7900        R     MOV     R1,#LOW ?SC_351
+02F8         ?C0040:
+02F8 120000      E     LCALL   _printf
+02FB         ?C0015:
+                                           ; SOURCE LINE # 133
+02FB 900000      R     MOV     DPTR,#CREG2
+02FE E0                MOVX    A,@DPTR
+02FF FE                MOV     R6,A
+0300 A3                INC     DPTR
+0301 E0                MOVX    A,@DPTR
+0302 AA06              MOV     R2,AR6
+0304 F9                MOV     R1,A
+0305 7BFF              MOV     R3,#0FFH
+0307 C003              PUSH    AR3
+0309 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+030C 7401              MOV     A,#01H
+030E F0                MOVX    @DPTR,A
+030F A3                INC     DPTR
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 41  
+
+0310 7400        E     MOV     A,#HIGH RX2_Buffer
+0312 F0                MOVX    @DPTR,A
+0313 A3                INC     DPTR
+0314 7400        E     MOV     A,#LOW RX2_Buffer
+0316 F0                MOVX    @DPTR,A
+0317 A3                INC     DPTR
+0318 EB                MOV     A,R3
+0319 F0                MOVX    @DPTR,A
+031A A3                INC     DPTR
+031B 7400        R     MOV     A,#HIGH ?SC_326
+031D F0                MOVX    @DPTR,A
+031E A3                INC     DPTR
+031F 7400        R     MOV     A,#LOW ?SC_326
+0321 F0                MOVX    @DPTR,A
+0322 A3                INC     DPTR
+0323 74F4              MOV     A,#0F4H
+0325 F0                MOVX    @DPTR,A
+0326 D003              POP     AR3
+0328 120000      R     LCALL   _gprs_cmd
+032B 900000      R     MOV     DPTR,#res
+032E EF                MOV     A,R7
+032F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 134
+0330 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+0333 74FF              MOV     A,#0FFH
+0335 BF0129            CJNE    R7,#01H,?C0016
+                                           ; SOURCE LINE # 135
+0338 F0                MOVX    @DPTR,A
+0339 A3                INC     DPTR
+033A 7400        R     MOV     A,#HIGH ?SC_419
+033C F0                MOVX    @DPTR,A
+033D A3                INC     DPTR
+033E 7400        R     MOV     A,#LOW ?SC_419
+0340 F0                MOVX    @DPTR,A
+0341 A3                INC     DPTR
+0342 7401              MOV     A,#01H
+0344 F0                MOVX    @DPTR,A
+0345 A3                INC     DPTR
+0346 7400        E     MOV     A,#HIGH RX2_Buffer
+0348 F0                MOVX    @DPTR,A
+0349 A3                INC     DPTR
+034A 7400        E     MOV     A,#LOW RX2_Buffer
+034C F0                MOVX    @DPTR,A
+034D A3                INC     DPTR
+034E 74FF              MOV     A,#0FFH
+0350 F0                MOVX    @DPTR,A
+0351 A3                INC     DPTR
+0352 7400        R     MOV     A,#HIGH ?SC_341
+0354 F0                MOVX    @DPTR,A
+0355 A3                INC     DPTR
+0356 7400        R     MOV     A,#LOW ?SC_341
+0358 F0                MOVX    @DPTR,A
+0359 7BFF              MOV     R3,#0FFH
+035B 7A00        R     MOV     R2,#HIGH ?SC_329
+035D 7900        R     MOV     R1,#LOW ?SC_329
+035F 800F              SJMP    ?C0041
+0361         ?C0016:
+                                           ; SOURCE LINE # 137
+0361 F0                MOVX    @DPTR,A
+0362 A3                INC     DPTR
+0363 7400        R     MOV     A,#HIGH ?SC_432
+0365 F0                MOVX    @DPTR,A
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 42  
+
+0366 A3                INC     DPTR
+0367 7400        R     MOV     A,#LOW ?SC_432
+0369 F0                MOVX    @DPTR,A
+036A 7BFF              MOV     R3,#0FFH
+036C 7A00        R     MOV     R2,#HIGH ?SC_351
+036E 7900        R     MOV     R1,#LOW ?SC_351
+0370         ?C0041:
+0370 120000      E     LCALL   _printf
+0373         ?C0017:
+                                           ; SOURCE LINE # 139
+0373 900000      R     MOV     DPTR,#CGREG
+0376 E0                MOVX    A,@DPTR
+0377 FE                MOV     R6,A
+0378 A3                INC     DPTR
+0379 E0                MOVX    A,@DPTR
+037A AA06              MOV     R2,AR6
+037C F9                MOV     R1,A
+037D 7BFF              MOV     R3,#0FFH
+037F C003              PUSH    AR3
+0381 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+0384 7401              MOV     A,#01H
+0386 F0                MOVX    @DPTR,A
+0387 A3                INC     DPTR
+0388 7400        E     MOV     A,#HIGH RX2_Buffer
+038A F0                MOVX    @DPTR,A
+038B A3                INC     DPTR
+038C 7400        E     MOV     A,#LOW RX2_Buffer
+038E F0                MOVX    @DPTR,A
+038F A3                INC     DPTR
+0390 EB                MOV     A,R3
+0391 F0                MOVX    @DPTR,A
+0392 A3                INC     DPTR
+0393 7400        R     MOV     A,#HIGH ?SC_326
+0395 F0                MOVX    @DPTR,A
+0396 A3                INC     DPTR
+0397 7400        R     MOV     A,#LOW ?SC_326
+0399 F0                MOVX    @DPTR,A
+039A A3                INC     DPTR
+039B 74F4              MOV     A,#0F4H
+039D F0                MOVX    @DPTR,A
+039E D003              POP     AR3
+03A0 120000      R     LCALL   _gprs_cmd
+03A3 900000      R     MOV     DPTR,#res
+03A6 EF                MOV     A,R7
+03A7 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 140
+03A8 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+03AB 74FF              MOV     A,#0FFH
+03AD BF0129            CJNE    R7,#01H,?C0018
+                                           ; SOURCE LINE # 141
+03B0 F0                MOVX    @DPTR,A
+03B1 A3                INC     DPTR
+03B2 7400        R     MOV     A,#HIGH ?SC_448
+03B4 F0                MOVX    @DPTR,A
+03B5 A3                INC     DPTR
+03B6 7400        R     MOV     A,#LOW ?SC_448
+03B8 F0                MOVX    @DPTR,A
+03B9 A3                INC     DPTR
+03BA 7401              MOV     A,#01H
+03BC F0                MOVX    @DPTR,A
+03BD A3                INC     DPTR
+03BE 7400        E     MOV     A,#HIGH RX2_Buffer
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 43  
+
+03C0 F0                MOVX    @DPTR,A
+03C1 A3                INC     DPTR
+03C2 7400        E     MOV     A,#LOW RX2_Buffer
+03C4 F0                MOVX    @DPTR,A
+03C5 A3                INC     DPTR
+03C6 74FF              MOV     A,#0FFH
+03C8 F0                MOVX    @DPTR,A
+03C9 A3                INC     DPTR
+03CA 7400        R     MOV     A,#HIGH ?SC_341
+03CC F0                MOVX    @DPTR,A
+03CD A3                INC     DPTR
+03CE 7400        R     MOV     A,#LOW ?SC_341
+03D0 F0                MOVX    @DPTR,A
+03D1 7BFF              MOV     R3,#0FFH
+03D3 7A00        R     MOV     R2,#HIGH ?SC_329
+03D5 7900        R     MOV     R1,#LOW ?SC_329
+03D7 800F              SJMP    ?C0042
+03D9         ?C0018:
+                                           ; SOURCE LINE # 143
+03D9 F0                MOVX    @DPTR,A
+03DA A3                INC     DPTR
+03DB 7400        R     MOV     A,#HIGH ?SC_462
+03DD F0                MOVX    @DPTR,A
+03DE A3                INC     DPTR
+03DF 7400        R     MOV     A,#LOW ?SC_462
+03E1 F0                MOVX    @DPTR,A
+03E2 7BFF              MOV     R3,#0FFH
+03E4 7A00        R     MOV     R2,#HIGH ?SC_351
+03E6 7900        R     MOV     R1,#LOW ?SC_351
+03E8         ?C0042:
+03E8 120000      E     LCALL   _printf
+03EB         ?C0019:
+                                           ; SOURCE LINE # 147
+03EB 900000      R     MOV     DPTR,#COPS
+03EE E0                MOVX    A,@DPTR
+03EF FE                MOV     R6,A
+03F0 A3                INC     DPTR
+03F1 E0                MOVX    A,@DPTR
+03F2 AA06              MOV     R2,AR6
+03F4 F9                MOV     R1,A
+03F5 7BFF              MOV     R3,#0FFH
+03F7 C003              PUSH    AR3
+03F9 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+03FC 7401              MOV     A,#01H
+03FE F0                MOVX    @DPTR,A
+03FF A3                INC     DPTR
+0400 7400        E     MOV     A,#HIGH RX2_Buffer
+0402 F0                MOVX    @DPTR,A
+0403 A3                INC     DPTR
+0404 7400        E     MOV     A,#LOW RX2_Buffer
+0406 F0                MOVX    @DPTR,A
+0407 A3                INC     DPTR
+0408 EB                MOV     A,R3
+0409 F0                MOVX    @DPTR,A
+040A A3                INC     DPTR
+040B 7400        R     MOV     A,#HIGH ?SC_326
+040D F0                MOVX    @DPTR,A
+040E A3                INC     DPTR
+040F 7400        R     MOV     A,#LOW ?SC_326
+0411 F0                MOVX    @DPTR,A
+0412 A3                INC     DPTR
+0413 74F4              MOV     A,#0F4H
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 44  
+
+0415 F0                MOVX    @DPTR,A
+0416 D003              POP     AR3
+0418 120000      R     LCALL   _gprs_cmd
+041B 900000      R     MOV     DPTR,#res
+041E EF                MOV     A,R7
+041F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 148
+0420 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+0423 74FF              MOV     A,#0FFH
+0425 BF0129            CJNE    R7,#01H,?C0020
+                                           ; SOURCE LINE # 149
+0428 F0                MOVX    @DPTR,A
+0429 A3                INC     DPTR
+042A 7400        R     MOV     A,#HIGH ?SC_481
+042C F0                MOVX    @DPTR,A
+042D A3                INC     DPTR
+042E 7400        R     MOV     A,#LOW ?SC_481
+0430 F0                MOVX    @DPTR,A
+0431 A3                INC     DPTR
+0432 7401              MOV     A,#01H
+0434 F0                MOVX    @DPTR,A
+0435 A3                INC     DPTR
+0436 7400        E     MOV     A,#HIGH RX2_Buffer
+0438 F0                MOVX    @DPTR,A
+0439 A3                INC     DPTR
+043A 7400        E     MOV     A,#LOW RX2_Buffer
+043C F0                MOVX    @DPTR,A
+043D A3                INC     DPTR
+043E 74FF              MOV     A,#0FFH
+0440 F0                MOVX    @DPTR,A
+0441 A3                INC     DPTR
+0442 7400        R     MOV     A,#HIGH ?SC_341
+0444 F0                MOVX    @DPTR,A
+0445 A3                INC     DPTR
+0446 7400        R     MOV     A,#LOW ?SC_341
+0448 F0                MOVX    @DPTR,A
+0449 7BFF              MOV     R3,#0FFH
+044B 7A00        R     MOV     R2,#HIGH ?SC_329
+044D 7900        R     MOV     R1,#LOW ?SC_329
+044F 800F              SJMP    ?C0043
+0451         ?C0020:
+                                           ; SOURCE LINE # 151
+0451 F0                MOVX    @DPTR,A
+0452 A3                INC     DPTR
+0453 7400        R     MOV     A,#HIGH ?SC_491
+0455 F0                MOVX    @DPTR,A
+0456 A3                INC     DPTR
+0457 7400        R     MOV     A,#LOW ?SC_491
+0459 F0                MOVX    @DPTR,A
+045A 7BFF              MOV     R3,#0FFH
+045C 7A00        R     MOV     R2,#HIGH ?SC_351
+045E 7900        R     MOV     R1,#LOW ?SC_351
+0460         ?C0043:
+0460 120000      E     LCALL   _printf
+0463         ?C0021:
+                                           ; SOURCE LINE # 153
+0463 900000      R     MOV     DPTR,#CIPMUX0
+0466 E0                MOVX    A,@DPTR
+0467 FE                MOV     R6,A
+0468 A3                INC     DPTR
+0469 E0                MOVX    A,@DPTR
+046A AA06              MOV     R2,AR6
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 45  
+
+046C F9                MOV     R1,A
+046D 7BFF              MOV     R3,#0FFH
+046F C003              PUSH    AR3
+0471 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+0474 7401              MOV     A,#01H
+0476 F0                MOVX    @DPTR,A
+0477 A3                INC     DPTR
+0478 7400        E     MOV     A,#HIGH RX2_Buffer
+047A F0                MOVX    @DPTR,A
+047B A3                INC     DPTR
+047C 7400        E     MOV     A,#LOW RX2_Buffer
+047E F0                MOVX    @DPTR,A
+047F A3                INC     DPTR
+0480 EB                MOV     A,R3
+0481 F0                MOVX    @DPTR,A
+0482 A3                INC     DPTR
+0483 7400        R     MOV     A,#HIGH ?SC_326
+0485 F0                MOVX    @DPTR,A
+0486 A3                INC     DPTR
+0487 7400        R     MOV     A,#LOW ?SC_326
+0489 F0                MOVX    @DPTR,A
+048A A3                INC     DPTR
+048B 74F4              MOV     A,#0F4H
+048D F0                MOVX    @DPTR,A
+048E D003              POP     AR3
+0490 120000      R     LCALL   _gprs_cmd
+0493 900000      R     MOV     DPTR,#res
+0496 EF                MOV     A,R7
+0497 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 154
+0498 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+049B 74FF              MOV     A,#0FFH
+049D BF0129            CJNE    R7,#01H,?C0022
+                                           ; SOURCE LINE # 155
+04A0 F0                MOVX    @DPTR,A
+04A1 A3                INC     DPTR
+04A2 7400        R     MOV     A,#HIGH ?SC_510
+04A4 F0                MOVX    @DPTR,A
+04A5 A3                INC     DPTR
+04A6 7400        R     MOV     A,#LOW ?SC_510
+04A8 F0                MOVX    @DPTR,A
+04A9 A3                INC     DPTR
+04AA 7401              MOV     A,#01H
+04AC F0                MOVX    @DPTR,A
+04AD A3                INC     DPTR
+04AE 7400        E     MOV     A,#HIGH RX2_Buffer
+04B0 F0                MOVX    @DPTR,A
+04B1 A3                INC     DPTR
+04B2 7400        E     MOV     A,#LOW RX2_Buffer
+04B4 F0                MOVX    @DPTR,A
+04B5 A3                INC     DPTR
+04B6 74FF              MOV     A,#0FFH
+04B8 F0                MOVX    @DPTR,A
+04B9 A3                INC     DPTR
+04BA 7400        R     MOV     A,#HIGH ?SC_341
+04BC F0                MOVX    @DPTR,A
+04BD A3                INC     DPTR
+04BE 7400        R     MOV     A,#LOW ?SC_341
+04C0 F0                MOVX    @DPTR,A
+04C1 7BFF              MOV     R3,#0FFH
+04C3 7A00        R     MOV     R2,#HIGH ?SC_329
+04C5 7900        R     MOV     R1,#LOW ?SC_329
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 46  
+
+04C7 800F              SJMP    ?C0044
+04C9         ?C0022:
+                                           ; SOURCE LINE # 157
+04C9 F0                MOVX    @DPTR,A
+04CA A3                INC     DPTR
+04CB 7400        R     MOV     A,#HIGH ?SC_524
+04CD F0                MOVX    @DPTR,A
+04CE A3                INC     DPTR
+04CF 7400        R     MOV     A,#LOW ?SC_524
+04D1 F0                MOVX    @DPTR,A
+04D2 7BFF              MOV     R3,#0FFH
+04D4 7A00        R     MOV     R2,#HIGH ?SC_351
+04D6 7900        R     MOV     R1,#LOW ?SC_351
+04D8         ?C0044:
+04D8 120000      E     LCALL   _printf
+04DB         ?C0023:
+                                           ; SOURCE LINE # 162
+04DB 900000      R     MOV     DPTR,#CGATT
+04DE E0                MOVX    A,@DPTR
+04DF FE                MOV     R6,A
+04E0 A3                INC     DPTR
+04E1 E0                MOVX    A,@DPTR
+04E2 AA06              MOV     R2,AR6
+04E4 F9                MOV     R1,A
+04E5 7BFF              MOV     R3,#0FFH
+04E7 C003              PUSH    AR3
+04E9 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+04EC 7401              MOV     A,#01H
+04EE F0                MOVX    @DPTR,A
+04EF A3                INC     DPTR
+04F0 7400        E     MOV     A,#HIGH RX2_Buffer
+04F2 F0                MOVX    @DPTR,A
+04F3 A3                INC     DPTR
+04F4 7400        E     MOV     A,#LOW RX2_Buffer
+04F6 F0                MOVX    @DPTR,A
+04F7 A3                INC     DPTR
+04F8 EB                MOV     A,R3
+04F9 F0                MOVX    @DPTR,A
+04FA A3                INC     DPTR
+04FB 7400        R     MOV     A,#HIGH ?SC_326
+04FD F0                MOVX    @DPTR,A
+04FE A3                INC     DPTR
+04FF 7400        R     MOV     A,#LOW ?SC_326
+0501 F0                MOVX    @DPTR,A
+0502 A3                INC     DPTR
+0503 74F4              MOV     A,#0F4H
+0505 F0                MOVX    @DPTR,A
+0506 D003              POP     AR3
+0508 120000      R     LCALL   _gprs_cmd
+050B 900000      R     MOV     DPTR,#res
+050E EF                MOV     A,R7
+050F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 163
+0510 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+0513 74FF              MOV     A,#0FFH
+0515 BF0129            CJNE    R7,#01H,?C0024
+                                           ; SOURCE LINE # 164
+0518 F0                MOVX    @DPTR,A
+0519 A3                INC     DPTR
+051A 7400        R     MOV     A,#HIGH ?SC_545
+051C F0                MOVX    @DPTR,A
+051D A3                INC     DPTR
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 47  
+
+051E 7400        R     MOV     A,#LOW ?SC_545
+0520 F0                MOVX    @DPTR,A
+0521 A3                INC     DPTR
+0522 7401              MOV     A,#01H
+0524 F0                MOVX    @DPTR,A
+0525 A3                INC     DPTR
+0526 7400        E     MOV     A,#HIGH RX2_Buffer
+0528 F0                MOVX    @DPTR,A
+0529 A3                INC     DPTR
+052A 7400        E     MOV     A,#LOW RX2_Buffer
+052C F0                MOVX    @DPTR,A
+052D A3                INC     DPTR
+052E 74FF              MOV     A,#0FFH
+0530 F0                MOVX    @DPTR,A
+0531 A3                INC     DPTR
+0532 7400        R     MOV     A,#HIGH ?SC_341
+0534 F0                MOVX    @DPTR,A
+0535 A3                INC     DPTR
+0536 7400        R     MOV     A,#LOW ?SC_341
+0538 F0                MOVX    @DPTR,A
+0539 7BFF              MOV     R3,#0FFH
+053B 7A00        R     MOV     R2,#HIGH ?SC_329
+053D 7900        R     MOV     R1,#LOW ?SC_329
+053F 800F              SJMP    ?C0045
+0541         ?C0024:
+                                           ; SOURCE LINE # 166
+0541 F0                MOVX    @DPTR,A
+0542 A3                INC     DPTR
+0543 7400        R     MOV     A,#HIGH ?SC_555
+0545 F0                MOVX    @DPTR,A
+0546 A3                INC     DPTR
+0547 7400        R     MOV     A,#LOW ?SC_555
+0549 F0                MOVX    @DPTR,A
+054A 7BFF              MOV     R3,#0FFH
+054C 7A00        R     MOV     R2,#HIGH ?SC_351
+054E 7900        R     MOV     R1,#LOW ?SC_351
+0550         ?C0045:
+0550 120000      E     LCALL   _printf
+0553         ?C0025:
+                                           ; SOURCE LINE # 170
+0553 900000      R     MOV     DPTR,#COPS
+0556 E0                MOVX    A,@DPTR
+0557 FE                MOV     R6,A
+0558 A3                INC     DPTR
+0559 E0                MOVX    A,@DPTR
+055A AA06              MOV     R2,AR6
+055C F9                MOV     R1,A
+055D 7BFF              MOV     R3,#0FFH
+055F C003              PUSH    AR3
+0561 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+0564 7401              MOV     A,#01H
+0566 F0                MOVX    @DPTR,A
+0567 A3                INC     DPTR
+0568 7400        E     MOV     A,#HIGH RX2_Buffer
+056A F0                MOVX    @DPTR,A
+056B A3                INC     DPTR
+056C 7400        E     MOV     A,#LOW RX2_Buffer
+056E F0                MOVX    @DPTR,A
+056F A3                INC     DPTR
+0570 EB                MOV     A,R3
+0571 F0                MOVX    @DPTR,A
+0572 A3                INC     DPTR
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 48  
+
+0573 7400        R     MOV     A,#HIGH ?SC_326
+0575 F0                MOVX    @DPTR,A
+0576 A3                INC     DPTR
+0577 7400        R     MOV     A,#LOW ?SC_326
+0579 F0                MOVX    @DPTR,A
+057A A3                INC     DPTR
+057B 74F4              MOV     A,#0F4H
+057D F0                MOVX    @DPTR,A
+057E D003              POP     AR3
+0580 120000      R     LCALL   _gprs_cmd
+0583 900000      R     MOV     DPTR,#res
+0586 EF                MOV     A,R7
+0587 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 171
+0588 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+058B 74FF              MOV     A,#0FFH
+058D BF0129            CJNE    R7,#01H,?C0026
+                                           ; SOURCE LINE # 172
+0590 F0                MOVX    @DPTR,A
+0591 A3                INC     DPTR
+0592 7400        R     MOV     A,#HIGH ?SC_570
+0594 F0                MOVX    @DPTR,A
+0595 A3                INC     DPTR
+0596 7400        R     MOV     A,#LOW ?SC_570
+0598 F0                MOVX    @DPTR,A
+0599 A3                INC     DPTR
+059A 7401              MOV     A,#01H
+059C F0                MOVX    @DPTR,A
+059D A3                INC     DPTR
+059E 7400        E     MOV     A,#HIGH RX2_Buffer
+05A0 F0                MOVX    @DPTR,A
+05A1 A3                INC     DPTR
+05A2 7400        E     MOV     A,#LOW RX2_Buffer
+05A4 F0                MOVX    @DPTR,A
+05A5 A3                INC     DPTR
+05A6 74FF              MOV     A,#0FFH
+05A8 F0                MOVX    @DPTR,A
+05A9 A3                INC     DPTR
+05AA 7400        R     MOV     A,#HIGH ?SC_341
+05AC F0                MOVX    @DPTR,A
+05AD A3                INC     DPTR
+05AE 7400        R     MOV     A,#LOW ?SC_341
+05B0 F0                MOVX    @DPTR,A
+05B1 7BFF              MOV     R3,#0FFH
+05B3 7A00        R     MOV     R2,#HIGH ?SC_329
+05B5 7900        R     MOV     R1,#LOW ?SC_329
+05B7 800F              SJMP    ?C0046
+05B9         ?C0026:
+                                           ; SOURCE LINE # 174
+05B9 F0                MOVX    @DPTR,A
+05BA A3                INC     DPTR
+05BB 7400        R     MOV     A,#HIGH ?SC_578
+05BD F0                MOVX    @DPTR,A
+05BE A3                INC     DPTR
+05BF 7400        R     MOV     A,#LOW ?SC_578
+05C1 F0                MOVX    @DPTR,A
+05C2 7BFF              MOV     R3,#0FFH
+05C4 7A00        R     MOV     R2,#HIGH ?SC_351
+05C6 7900        R     MOV     R1,#LOW ?SC_351
+05C8         ?C0046:
+05C8 120000      E     LCALL   _printf
+05CB         ?C0027:
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 49  
+
+                                           ; SOURCE LINE # 176
+05CB 900000      R     MOV     DPTR,#CIPMODE
+05CE E0                MOVX    A,@DPTR
+05CF FE                MOV     R6,A
+05D0 A3                INC     DPTR
+05D1 E0                MOVX    A,@DPTR
+05D2 AA06              MOV     R2,AR6
+05D4 F9                MOV     R1,A
+05D5 7BFF              MOV     R3,#0FFH
+05D7 C003              PUSH    AR3
+05D9 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+05DC 7401              MOV     A,#01H
+05DE F0                MOVX    @DPTR,A
+05DF A3                INC     DPTR
+05E0 7400        E     MOV     A,#HIGH RX2_Buffer
+05E2 F0                MOVX    @DPTR,A
+05E3 A3                INC     DPTR
+05E4 7400        E     MOV     A,#LOW RX2_Buffer
+05E6 F0                MOVX    @DPTR,A
+05E7 A3                INC     DPTR
+05E8 EB                MOV     A,R3
+05E9 F0                MOVX    @DPTR,A
+05EA A3                INC     DPTR
+05EB 7400        R     MOV     A,#HIGH ?SC_326
+05ED F0                MOVX    @DPTR,A
+05EE A3                INC     DPTR
+05EF 7400        R     MOV     A,#LOW ?SC_326
+05F1 F0                MOVX    @DPTR,A
+05F2 A3                INC     DPTR
+05F3 74F4              MOV     A,#0F4H
+05F5 F0                MOVX    @DPTR,A
+05F6 D003              POP     AR3
+05F8 120000      R     LCALL   _gprs_cmd
+05FB 900000      R     MOV     DPTR,#res
+05FE EF                MOV     A,R7
+05FF F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 177
+0600 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+0603 74FF              MOV     A,#0FFH
+0605 BF0129            CJNE    R7,#01H,?C0028
+                                           ; SOURCE LINE # 178
+0608 F0                MOVX    @DPTR,A
+0609 A3                INC     DPTR
+060A 7400        R     MOV     A,#HIGH ?SC_595
+060C F0                MOVX    @DPTR,A
+060D A3                INC     DPTR
+060E 7400        R     MOV     A,#LOW ?SC_595
+0610 F0                MOVX    @DPTR,A
+0611 A3                INC     DPTR
+0612 7401              MOV     A,#01H
+0614 F0                MOVX    @DPTR,A
+0615 A3                INC     DPTR
+0616 7400        E     MOV     A,#HIGH RX2_Buffer
+0618 F0                MOVX    @DPTR,A
+0619 A3                INC     DPTR
+061A 7400        E     MOV     A,#LOW RX2_Buffer
+061C F0                MOVX    @DPTR,A
+061D A3                INC     DPTR
+061E 74FF              MOV     A,#0FFH
+0620 F0                MOVX    @DPTR,A
+0621 A3                INC     DPTR
+0622 7400        R     MOV     A,#HIGH ?SC_341
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 50  
+
+0624 F0                MOVX    @DPTR,A
+0625 A3                INC     DPTR
+0626 7400        R     MOV     A,#LOW ?SC_341
+0628 F0                MOVX    @DPTR,A
+0629 7BFF              MOV     R3,#0FFH
+062B 7A00        R     MOV     R2,#HIGH ?SC_329
+062D 7900        R     MOV     R1,#LOW ?SC_329
+062F 800F              SJMP    ?C0047
+0631         ?C0028:
+                                           ; SOURCE LINE # 180
+0631 F0                MOVX    @DPTR,A
+0632 A3                INC     DPTR
+0633 7400        R     MOV     A,#HIGH ?SC_607
+0635 F0                MOVX    @DPTR,A
+0636 A3                INC     DPTR
+0637 7400        R     MOV     A,#LOW ?SC_607
+0639 F0                MOVX    @DPTR,A
+063A 7BFF              MOV     R3,#0FFH
+063C 7A00        R     MOV     R2,#HIGH ?SC_351
+063E 7900        R     MOV     R1,#LOW ?SC_351
+0640         ?C0047:
+0640 120000      E     LCALL   _printf
+0643         ?C0029:
+                                           ; SOURCE LINE # 182
+0643 900000      E     MOV     DPTR,#?_strstr?BYTE+03H
+0646 74FF              MOV     A,#0FFH
+0648 F0                MOVX    @DPTR,A
+0649 A3                INC     DPTR
+064A 7400        R     MOV     A,#HIGH ?SC_622
+064C F0                MOVX    @DPTR,A
+064D A3                INC     DPTR
+064E 7400        R     MOV     A,#LOW ?SC_622
+0650 F0                MOVX    @DPTR,A
+0651 7B01              MOV     R3,#01H
+0653 7A00        E     MOV     R2,#HIGH RX2_Buffer
+0655 7900        E     MOV     R1,#LOW RX2_Buffer
+0657 120000      E     LCALL   _strstr
+065A EA                MOV     A,R2
+065B 49                ORL     A,R1
+065C 4B                ORL     A,R3
+065D 703F              JNZ     ?C0030
+                                           ; SOURCE LINE # 183
+                                           ; SOURCE LINE # 184
+065F 900000      R     MOV     DPTR,#CCSTT
+0662 E0                MOVX    A,@DPTR
+0663 FE                MOV     R6,A
+0664 A3                INC     DPTR
+0665 E0                MOVX    A,@DPTR
+0666 AA06              MOV     R2,AR6
+0668 F9                MOV     R1,A
+0669 7BFF              MOV     R3,#0FFH
+066B C003              PUSH    AR3
+066D 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+0670 7401              MOV     A,#01H
+0672 F0                MOVX    @DPTR,A
+0673 A3                INC     DPTR
+0674 7400        E     MOV     A,#HIGH RX2_Buffer
+0676 F0                MOVX    @DPTR,A
+0677 A3                INC     DPTR
+0678 7400        E     MOV     A,#LOW RX2_Buffer
+067A F0                MOVX    @DPTR,A
+067B A3                INC     DPTR
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 51  
+
+067C EB                MOV     A,R3
+067D F0                MOVX    @DPTR,A
+067E A3                INC     DPTR
+067F 7400        R     MOV     A,#HIGH ?SC_326
+0681 F0                MOVX    @DPTR,A
+0682 A3                INC     DPTR
+0683 7400        R     MOV     A,#LOW ?SC_326
+0685 F0                MOVX    @DPTR,A
+0686 A3                INC     DPTR
+0687 74F4              MOV     A,#0F4H
+0689 F0                MOVX    @DPTR,A
+068A D003              POP     AR3
+068C 120000      R     LCALL   _gprs_cmd
+                                           ; SOURCE LINE # 185
+068F 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+0692 74FF              MOV     A,#0FFH
+0694 F0                MOVX    @DPTR,A
+0695 A3                INC     DPTR
+0696 7400        R     MOV     A,#HIGH ?SC_628
+0698 F0                MOVX    @DPTR,A
+0699 A3                INC     DPTR
+069A 7400        R     MOV     A,#LOW ?SC_628
+                                           ; SOURCE LINE # 186
+069C 8059              SJMP    ?C0048
+069E         ?C0030:
+                                           ; SOURCE LINE # 187
+069E 900000      E     MOV     DPTR,#?_strstr?BYTE+03H
+06A1 74FF              MOV     A,#0FFH
+06A3 F0                MOVX    @DPTR,A
+06A4 A3                INC     DPTR
+06A5 7400        R     MOV     A,#HIGH ?SC_635
+06A7 F0                MOVX    @DPTR,A
+06A8 A3                INC     DPTR
+06A9 7400        R     MOV     A,#LOW ?SC_635
+06AB F0                MOVX    @DPTR,A
+06AC 7B01              MOV     R3,#01H
+06AE 7A00        E     MOV     R2,#HIGH RX2_Buffer
+06B0 7900        E     MOV     R1,#LOW RX2_Buffer
+06B2 120000      E     LCALL   _strstr
+06B5 EA                MOV     A,R2
+06B6 49                ORL     A,R1
+06B7 4B                ORL     A,R3
+06B8 705F              JNZ     ?C0031
+                                           ; SOURCE LINE # 188
+06BA 900000      R     MOV     DPTR,#UCSTT
+06BD E0                MOVX    A,@DPTR
+06BE FE                MOV     R6,A
+06BF A3                INC     DPTR
+06C0 E0                MOVX    A,@DPTR
+06C1 AA06              MOV     R2,AR6
+06C3 F9                MOV     R1,A
+06C4 7BFF              MOV     R3,#0FFH
+06C6 C003              PUSH    AR3
+06C8 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+06CB 7401              MOV     A,#01H
+06CD F0                MOVX    @DPTR,A
+06CE A3                INC     DPTR
+06CF 7400        E     MOV     A,#HIGH RX2_Buffer
+06D1 F0                MOVX    @DPTR,A
+06D2 A3                INC     DPTR
+06D3 7400        E     MOV     A,#LOW RX2_Buffer
+06D5 F0                MOVX    @DPTR,A
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 52  
+
+06D6 A3                INC     DPTR
+06D7 EB                MOV     A,R3
+06D8 F0                MOVX    @DPTR,A
+06D9 A3                INC     DPTR
+06DA 7400        R     MOV     A,#HIGH ?SC_326
+06DC F0                MOVX    @DPTR,A
+06DD A3                INC     DPTR
+06DE 7400        R     MOV     A,#LOW ?SC_326
+06E0 F0                MOVX    @DPTR,A
+06E1 A3                INC     DPTR
+06E2 74F4              MOV     A,#0F4H
+06E4 F0                MOVX    @DPTR,A
+06E5 D003              POP     AR3
+06E7 120000      R     LCALL   _gprs_cmd
+                                           ; SOURCE LINE # 189
+06EA 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+06ED 74FF              MOV     A,#0FFH
+06EF F0                MOVX    @DPTR,A
+06F0 A3                INC     DPTR
+06F1 7400        R     MOV     A,#HIGH ?SC_641
+06F3 F0                MOVX    @DPTR,A
+06F4 A3                INC     DPTR
+06F5 7400        R     MOV     A,#LOW ?SC_641
+06F7         ?C0048:
+06F7 F0                MOVX    @DPTR,A
+06F8 A3                INC     DPTR
+06F9 7401              MOV     A,#01H
+06FB F0                MOVX    @DPTR,A
+06FC A3                INC     DPTR
+06FD 7400        E     MOV     A,#HIGH RX2_Buffer
+06FF F0                MOVX    @DPTR,A
+0700 A3                INC     DPTR
+0701 7400        E     MOV     A,#LOW RX2_Buffer
+0703 F0                MOVX    @DPTR,A
+0704 A3                INC     DPTR
+0705 74FF              MOV     A,#0FFH
+0707 F0                MOVX    @DPTR,A
+0708 A3                INC     DPTR
+0709 7400        R     MOV     A,#HIGH ?SC_341
+070B F0                MOVX    @DPTR,A
+070C A3                INC     DPTR
+070D 7400        R     MOV     A,#LOW ?SC_341
+070F F0                MOVX    @DPTR,A
+0710 7BFF              MOV     R3,#0FFH
+0712 7A00        R     MOV     R2,#HIGH ?SC_329
+0714 7900        R     MOV     R1,#LOW ?SC_329
+0716 120000      E     LCALL   _printf
+                                           ; SOURCE LINE # 190
+0719         ?C0031:
+                                           ; SOURCE LINE # 196
+0719 900000      R     MOV     DPTR,#CIICR
+071C E0                MOVX    A,@DPTR
+071D FE                MOV     R6,A
+071E A3                INC     DPTR
+071F E0                MOVX    A,@DPTR
+0720 AA06              MOV     R2,AR6
+0722 F9                MOV     R1,A
+0723 7BFF              MOV     R3,#0FFH
+0725 C003              PUSH    AR3
+0727 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+072A 7401              MOV     A,#01H
+072C F0                MOVX    @DPTR,A
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 53  
+
+072D A3                INC     DPTR
+072E 7400        E     MOV     A,#HIGH RX2_Buffer
+0730 F0                MOVX    @DPTR,A
+0731 A3                INC     DPTR
+0732 7400        E     MOV     A,#LOW RX2_Buffer
+0734 F0                MOVX    @DPTR,A
+0735 A3                INC     DPTR
+0736 EB                MOV     A,R3
+0737 F0                MOVX    @DPTR,A
+0738 A3                INC     DPTR
+0739 7400        R     MOV     A,#HIGH ?SC_326
+073B F0                MOVX    @DPTR,A
+073C A3                INC     DPTR
+073D 7400        R     MOV     A,#LOW ?SC_326
+073F F0                MOVX    @DPTR,A
+0740 A3                INC     DPTR
+0741 74F4              MOV     A,#0F4H
+0743 F0                MOVX    @DPTR,A
+0744 D003              POP     AR3
+0746 120000      R     LCALL   _gprs_cmd
+0749 900000      R     MOV     DPTR,#res
+074C EF                MOV     A,R7
+074D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 197
+074E 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+0751 74FF              MOV     A,#0FFH
+0753 BF0129            CJNE    R7,#01H,?C0033
+                                           ; SOURCE LINE # 198
+0756 F0                MOVX    @DPTR,A
+0757 A3                INC     DPTR
+0758 7400        R     MOV     A,#HIGH ?SC_648
+075A F0                MOVX    @DPTR,A
+075B A3                INC     DPTR
+075C 7400        R     MOV     A,#LOW ?SC_648
+075E F0                MOVX    @DPTR,A
+075F A3                INC     DPTR
+0760 7401              MOV     A,#01H
+0762 F0                MOVX    @DPTR,A
+0763 A3                INC     DPTR
+0764 7400        E     MOV     A,#HIGH RX2_Buffer
+0766 F0                MOVX    @DPTR,A
+0767 A3                INC     DPTR
+0768 7400        E     MOV     A,#LOW RX2_Buffer
+076A F0                MOVX    @DPTR,A
+076B A3                INC     DPTR
+076C 74FF              MOV     A,#0FFH
+076E F0                MOVX    @DPTR,A
+076F A3                INC     DPTR
+0770 7400        R     MOV     A,#HIGH ?SC_341
+0772 F0                MOVX    @DPTR,A
+0773 A3                INC     DPTR
+0774 7400        R     MOV     A,#LOW ?SC_341
+0776 F0                MOVX    @DPTR,A
+0777 7BFF              MOV     R3,#0FFH
+0779 7A00        R     MOV     R2,#HIGH ?SC_329
+077B 7900        R     MOV     R1,#LOW ?SC_329
+077D 800F              SJMP    ?C0049
+077F         ?C0033:
+                                           ; SOURCE LINE # 200
+077F F0                MOVX    @DPTR,A
+0780 A3                INC     DPTR
+0781 7400        R     MOV     A,#HIGH ?SC_662
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 54  
+
+0783 F0                MOVX    @DPTR,A
+0784 A3                INC     DPTR
+0785 7400        R     MOV     A,#LOW ?SC_662
+0787 F0                MOVX    @DPTR,A
+0788 7BFF              MOV     R3,#0FFH
+078A 7A00        R     MOV     R2,#HIGH ?SC_351
+078C 7900        R     MOV     R1,#LOW ?SC_351
+078E         ?C0049:
+078E 120000      E     LCALL   _printf
+0791         ?C0034:
+                                           ; SOURCE LINE # 202
+0791 900000      R     MOV     DPTR,#CIFSR
+0794 E0                MOVX    A,@DPTR
+0795 FE                MOV     R6,A
+0796 A3                INC     DPTR
+0797 E0                MOVX    A,@DPTR
+0798 AA06              MOV     R2,AR6
+079A F9                MOV     R1,A
+079B 7BFF              MOV     R3,#0FFH
+079D C003              PUSH    AR3
+079F 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+07A2 7401              MOV     A,#01H
+07A4 F0                MOVX    @DPTR,A
+07A5 A3                INC     DPTR
+07A6 7400        E     MOV     A,#HIGH RX2_Buffer
+07A8 F0                MOVX    @DPTR,A
+07A9 A3                INC     DPTR
+07AA 7400        E     MOV     A,#LOW RX2_Buffer
+07AC F0                MOVX    @DPTR,A
+07AD A3                INC     DPTR
+07AE EB                MOV     A,R3
+07AF F0                MOVX    @DPTR,A
+07B0 A3                INC     DPTR
+07B1 7400        R     MOV     A,#HIGH ?SC_326
+07B3 F0                MOVX    @DPTR,A
+07B4 A3                INC     DPTR
+07B5 7400        R     MOV     A,#LOW ?SC_326
+07B7 F0                MOVX    @DPTR,A
+07B8 A3                INC     DPTR
+07B9 74F4              MOV     A,#0F4H
+07BB F0                MOVX    @DPTR,A
+07BC D003              POP     AR3
+07BE 120000      R     LCALL   _gprs_cmd
+07C1 900000      R     MOV     DPTR,#res
+07C4 EF                MOV     A,R7
+07C5 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 204
+07C6 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+07C9 74FF              MOV     A,#0FFH
+07CB F0                MOVX    @DPTR,A
+07CC A3                INC     DPTR
+07CD 7400        R     MOV     A,#HIGH ?SC_681
+07CF F0                MOVX    @DPTR,A
+07D0 A3                INC     DPTR
+07D1 7400        R     MOV     A,#LOW ?SC_681
+07D3 F0                MOVX    @DPTR,A
+07D4 A3                INC     DPTR
+07D5 7401              MOV     A,#01H
+07D7 F0                MOVX    @DPTR,A
+07D8 A3                INC     DPTR
+07D9 7400        E     MOV     A,#HIGH RX2_Buffer
+07DB F0                MOVX    @DPTR,A
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 55  
+
+07DC A3                INC     DPTR
+07DD 7400        E     MOV     A,#LOW RX2_Buffer
+07DF F0                MOVX    @DPTR,A
+07E0 A3                INC     DPTR
+07E1 74FF              MOV     A,#0FFH
+07E3 F0                MOVX    @DPTR,A
+07E4 A3                INC     DPTR
+07E5 7400        R     MOV     A,#HIGH ?SC_341
+07E7 F0                MOVX    @DPTR,A
+07E8 A3                INC     DPTR
+07E9 7400        R     MOV     A,#LOW ?SC_341
+07EB F0                MOVX    @DPTR,A
+07EC 7BFF              MOV     R3,#0FFH
+07EE 7A00        R     MOV     R2,#HIGH ?SC_329
+07F0 7900        R     MOV     R1,#LOW ?SC_329
+07F2 120000      E     LCALL   _printf
+                                           ; SOURCE LINE # 208
+07F5 900000      R     MOV     DPTR,#CIPSTART
+07F8 E0                MOVX    A,@DPTR
+07F9 FE                MOV     R6,A
+07FA A3                INC     DPTR
+07FB E0                MOVX    A,@DPTR
+07FC AA06              MOV     R2,AR6
+07FE F9                MOV     R1,A
+07FF 900000      E     MOV     DPTR,#?_strcat?BYTE+03H
+0802 74FF              MOV     A,#0FFH
+0804 F0                MOVX    @DPTR,A
+0805 A3                INC     DPTR
+0806 EA                MOV     A,R2
+0807 F0                MOVX    @DPTR,A
+0808 A3                INC     DPTR
+0809 E9                MOV     A,R1
+080A F0                MOVX    @DPTR,A
+080B 900000      R     MOV     DPTR,#addr
+080E E0                MOVX    A,@DPTR
+080F FB                MOV     R3,A
+0810 A3                INC     DPTR
+0811 E0                MOVX    A,@DPTR
+0812 FA                MOV     R2,A
+0813 A3                INC     DPTR
+0814 E0                MOVX    A,@DPTR
+0815 F9                MOV     R1,A
+0816 120000      E     LCALL   _strcat
+                                           ; SOURCE LINE # 209
+0819 900000      R     MOV     DPTR,#s
+081C E0                MOVX    A,@DPTR
+081D FB                MOV     R3,A
+081E A3                INC     DPTR
+081F E0                MOVX    A,@DPTR
+0820 FA                MOV     R2,A
+0821 A3                INC     DPTR
+0822 E0                MOVX    A,@DPTR
+0823 F9                MOV     R1,A
+0824 900003            MOV     DPTR,#03H
+0827 120000      E     LCALL   ?C?PLDOPTR
+082A 900000      E     MOV     DPTR,#?_strcat?BYTE+03H
+082D EB                MOV     A,R3
+082E F0                MOVX    @DPTR,A
+082F A3                INC     DPTR
+0830 EA                MOV     A,R2
+0831 F0                MOVX    @DPTR,A
+0832 A3                INC     DPTR
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 56  
+
+0833 E9                MOV     A,R1
+0834 F0                MOVX    @DPTR,A
+0835 900000      R     MOV     DPTR,#addr
+0838 E0                MOVX    A,@DPTR
+0839 FB                MOV     R3,A
+083A A3                INC     DPTR
+083B E0                MOVX    A,@DPTR
+083C FA                MOV     R2,A
+083D A3                INC     DPTR
+083E E0                MOVX    A,@DPTR
+083F F9                MOV     R1,A
+0840 120000      E     LCALL   _strcat
+                                           ; SOURCE LINE # 212
+0843 900000      R     MOV     DPTR,#addr
+0846 E0                MOVX    A,@DPTR
+0847 F9                MOV     R1,A
+0848 A3                INC     DPTR
+0849 E0                MOVX    A,@DPTR
+084A FA                MOV     R2,A
+084B A3                INC     DPTR
+084C E0                MOVX    A,@DPTR
+084D 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+0850 C9                XCH     A,R1
+0851 F0                MOVX    @DPTR,A
+0852 A3                INC     DPTR
+0853 EA                MOV     A,R2
+0854 F0                MOVX    @DPTR,A
+0855 A3                INC     DPTR
+0856 E9                MOV     A,R1
+0857 F0                MOVX    @DPTR,A
+0858 7BFF              MOV     R3,#0FFH
+085A 7A00        R     MOV     R2,#HIGH ?SC_693
+085C 7900        R     MOV     R1,#LOW ?SC_693
+085E 120000      E     LCALL   _printf
+                                           ; SOURCE LINE # 213
+0861 900000      R     MOV     DPTR,#?_gprs_cmd?BYTE+03H
+0864 7401              MOV     A,#01H
+0866 F0                MOVX    @DPTR,A
+0867 A3                INC     DPTR
+0868 7400        E     MOV     A,#HIGH RX2_Buffer
+086A F0                MOVX    @DPTR,A
+086B A3                INC     DPTR
+086C 7400        E     MOV     A,#LOW RX2_Buffer
+086E F0                MOVX    @DPTR,A
+086F A3                INC     DPTR
+0870 74FF              MOV     A,#0FFH
+0872 F0                MOVX    @DPTR,A
+0873 A3                INC     DPTR
+0874 7400        R     MOV     A,#HIGH ?SC_705
+0876 F0                MOVX    @DPTR,A
+0877 A3                INC     DPTR
+0878 7400        R     MOV     A,#LOW ?SC_705
+087A F0                MOVX    @DPTR,A
+087B A3                INC     DPTR
+087C 74E8              MOV     A,#0E8H
+087E F0                MOVX    @DPTR,A
+087F 900000      R     MOV     DPTR,#addr
+0882 E0                MOVX    A,@DPTR
+0883 FB                MOV     R3,A
+0884 A3                INC     DPTR
+0885 E0                MOVX    A,@DPTR
+0886 FA                MOV     R2,A
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 57  
+
+0887 A3                INC     DPTR
+0888 E0                MOVX    A,@DPTR
+0889 F9                MOV     R1,A
+088A 120000      R     LCALL   _gprs_cmd
+088D 900000      R     MOV     DPTR,#gprs_status
+0890 EF                MOV     A,R7
+0891 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 214
+0892 900000      E     MOV     DPTR,#?_printf?BYTE+03H
+0895 74FF              MOV     A,#0FFH
+0897 BF0129            CJNE    R7,#01H,?C0035
+                                           ; SOURCE LINE # 215
+089A F0                MOVX    @DPTR,A
+089B A3                INC     DPTR
+089C 7400        R     MOV     A,#HIGH ?SC_713
+089E F0                MOVX    @DPTR,A
+089F A3                INC     DPTR
+08A0 7400        R     MOV     A,#LOW ?SC_713
+08A2 F0                MOVX    @DPTR,A
+08A3 A3                INC     DPTR
+08A4 7401              MOV     A,#01H
+08A6 F0                MOVX    @DPTR,A
+08A7 A3                INC     DPTR
+08A8 7400        E     MOV     A,#HIGH RX2_Buffer
+08AA F0                MOVX    @DPTR,A
+08AB A3                INC     DPTR
+08AC 7400        E     MOV     A,#LOW RX2_Buffer
+08AE F0                MOVX    @DPTR,A
+08AF A3                INC     DPTR
+08B0 74FF              MOV     A,#0FFH
+08B2 F0                MOVX    @DPTR,A
+08B3 A3                INC     DPTR
+08B4 7400        R     MOV     A,#HIGH ?SC_341
+08B6 F0                MOVX    @DPTR,A
+08B7 A3                INC     DPTR
+08B8 7400        R     MOV     A,#LOW ?SC_341
+08BA F0                MOVX    @DPTR,A
+08BB 7BFF              MOV     R3,#0FFH
+08BD 7A00        R     MOV     R2,#HIGH ?SC_329
+08BF 7900        R     MOV     R1,#LOW ?SC_329
+08C1 800F              SJMP    ?C0050
+08C3         ?C0035:
+                                           ; SOURCE LINE # 217
+08C3 F0                MOVX    @DPTR,A
+08C4 A3                INC     DPTR
+08C5 7400        R     MOV     A,#HIGH ?SC_725
+08C7 F0                MOVX    @DPTR,A
+08C8 A3                INC     DPTR
+08C9 7400        R     MOV     A,#LOW ?SC_725
+08CB F0                MOVX    @DPTR,A
+08CC 7BFF              MOV     R3,#0FFH
+08CE 7A00        R     MOV     R2,#HIGH ?SC_351
+08D0 7900        R     MOV     R1,#LOW ?SC_351
+08D2         ?C0050:
+08D2 120000      E     LCALL   _printf
+                                           ; SOURCE LINE # 219
+08D5         ?C0037:
+08D5 22                RET     
+             ; FUNCTION _init_GPRS (END)
+
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 58  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+uint16_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+P0 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0080H  1
+P1 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0090H  1
+_AT_Send . . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  ATX. . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+DNSserver. . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0000H  2
+tick_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+P2 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A0H  1
+CCSTT. . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0002H  2
+P3 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B0H  1
+CIPMODE. . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0004H  2
+P4 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C0H  1
+get_sys_ticks. . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+P5 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C8H  1
+int32_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  LONG     -----  4
+COMx_Define. . . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  7
+  id . . . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  TX_read. . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  TX_write . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0002H  1
+  B_TX_busy. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0003H  1
+  RX_Cnt . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0004H  1
+  RX_TimeOut . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0005H  1
+  B_RX_OK. . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0006H  1
+CIPSEND. . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0006H  2
+CIPMUX0. . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0008H  2
+int16_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  INT      -----  2
+CIPMUX1. . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      000AH  2
+CDNSGIP. . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      000CH  2
+IE . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A8H  1
+COM2 . . . . . . . . . . . . . . . . .  EXTERN   XDATA  STRUCT   -----  7
+size_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+UCSTT. . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      000EH  2
+AT . . . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0010H  2
+_strcat. . . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+uchar. . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+_printf. . . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+IP . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B8H  1
+RX2_Buffer . . . . . . . . . . . . . .  EXTERN   XDATA  ARRAY    -----  1
+CLCK . . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0012H  2
+COMx_InitDefine. . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  13
+  UART_Mode. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  UART_BRT_Use . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  UART_BaudRate. . . . . . . . . . . .  MEMBER   -----  U_LONG   0002H  4
+  Morecommunicate. . . . . . . . . . .  MEMBER   -----  U_CHAR   0006H  1
+  UART_RxEnable. . . . . . . . . . . .  MEMBER   -----  U_CHAR   0007H  1
+  BaudRateDouble . . . . . . . . . . .  MEMBER   -----  U_CHAR   0008H  1
+  UART_Interrupt . . . . . . . . . . .  MEMBER   -----  U_CHAR   0009H  1
+  UART_Polity. . . . . . . . . . . . .  MEMBER   -----  U_CHAR   000AH  1
+  UART_P_SW. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   000BH  1
+  UART_RXD_TXD_Short . . . . . . . . .  MEMBER   -----  U_CHAR   000CH  1
+CIPSHUT. . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0014H  2
+CCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D8H  1
+_send_string . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  s. . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+CPIN . . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0016H  2
+CGSN . . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0018H  2
+CFUN . . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      001AH  2
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 59  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+S_config . . . . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  6
+  baud . . . . . . . . . . . . . . . .  MEMBER   -----  PTR      0000H  3
+  server . . . . . . . . . . . . . . .  MEMBER   -----  PTR      0003H  3
+u8 . . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+SCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0098H  1
+TCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0088H  1
+COPS . . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      001CH  2
+_strstr. . . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+B. . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F0H  1
+uint . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+CIPSTATUS. . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      001EH  2
+CGAUTO . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0020H  2
+_TX2_write2buff. . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+gprs_status. . . . . . . . . . . . . .  PUBLIC   XDATA  U_CHAR   0022H  1
+ACC. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E0H  1
+s_config . . . . . . . . . . . . . . .  PUBLIC   XDATA  STRUCT   0023H  6
+uint8_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+ICF. . . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0029H  2
+CREG1. . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      002BH  2
+_delay_ms. . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+CREG2. . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      002DH  2
+_gprs_cmd. . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  cmd. . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  input. . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0003H  3
+  ck_str . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0006H  3
+  outtime_s. . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0009H  1
+  tartt_time . . . . . . . . . . . . .  AUTO     XDATA  U_INT    000AH  2
+  second_time. . . . . . . . . . . . .  AUTO     XDATA  U_INT    000CH  2
+  res. . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   000EH  1
+_init_GPRS . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  s. . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  addr . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0003H  3
+  res. . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0006H  1
+int8_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+u32. . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_LONG   -----  4
+ATF. . . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      002FH  2
+u16. . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+timer_out. . . . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  4
+  ms . . . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0000H  2
+  start. . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0002H  2
+GMM. . . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0031H  2
+CSQ. . . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0033H  2
+CGREG. . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0035H  2
+CIICR. . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0037H  2
+IPR. . . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0039H  2
+ATW. . . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      003BH  2
+wchar_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+CIPSTART . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      003DH  2
+CGATT. . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      003FH  2
+AES128 . . . . . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  41
+  id . . . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0000H  8
+  key. . . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0008H  16
+  iv . . . . . . . . . . . . . . . . .  MEMBER   -----  ARRAY    0018H  16
+  state. . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0028H  1
+CIFSR. . . . . . . . . . . . . . . . .  PUBLIC   XDATA  PTR      0041H  2
+timer_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  4
+  start. . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0000H  2
+C51 COMPILER V9.01   GPRS                                                                  03/26/2019 16:44:03 PAGE 60  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+  interval . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0002H  2
+PSW. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D0H  1
+uint32_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_LONG   -----  4
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2578    ----
+   CONSTANT SIZE    =    742    ----
+   XDATA SIZE       =     67      28
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

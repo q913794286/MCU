@@ -1,0 +1,1 @@
+"app\sys_clock.c" LARGE BROWSE INCDIR(.\stclib;..\stc_lib;.\app;.\app\service\app;.\app\service\AES128;.\app\service\CRC16) DEBUG OBJECTEXTEND PRINT(.\list\sys_clock.lst) OBJECT(.\list\sys_clock.obj)

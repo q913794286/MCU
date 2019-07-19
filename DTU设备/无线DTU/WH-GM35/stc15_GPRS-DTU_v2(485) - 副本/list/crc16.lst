@@ -1,0 +1,525 @@
+C51 COMPILER V9.01   CRC16                                                                 06/14/2019 09:34:46 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE CRC16
+OBJECT MODULE PLACED IN .\list\crc16.obj
+COMPILER INVOKED BY: D:\Program Files (x86)\Keil\C51\BIN\C51.EXE app\service\CRC16\crc16.c LARGE BROWSE INCDIR(.\stclib;
+                    -..\stc_lib;.\app;.\app\service\app;.\app\service\AES128;.\app\service\CRC16;.\app\service\GPRS) DEBUG OBJECTEXTEND CODE 
+                    -LISTINCLUDE SYMBOLS PRINT(.\list\crc16.lst) TABS(2) PREPRINT(.\list\crc16.i) OBJECT(.\list\crc16.obj)
+
+line level    source
+
+   1          #include <stdint.h>
+   1      =1  #ifndef __STDINT_H__
+   2      =1  #define __STDINT_H__
+   3      =1  
+   4      =1  typedef unsigned char uint8_t;  //1位长度
+   5      =1  typedef signed char int8_t;     //
+   6      =1  typedef unsigned short uint16_t;  //2位长度
+   7      =1  typedef signed short int16_t;
+   8      =1  typedef unsigned long uint32_t;   //4位长度
+   9      =1  typedef signed long int32_t;
+  10      =1  
+  11      =1  #endif
+   2          #include <string.h>
+   1      =1  /*--------------------------------------------------------------------------
+   2      =1  STRING.H
+   3      =1  
+   4      =1  String functions.
+   5      =1  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =1  All rights reserved.
+   7      =1  --------------------------------------------------------------------------*/
+   8      =1  
+   9      =1  #ifndef __STRING_H__
+  10      =1  #define __STRING_H__
+  11      =1  
+  12      =1  #ifndef _SIZE_T
+  13      =1   #define _SIZE_T
+  14      =1   typedef unsigned int size_t;
+  15      =1  #endif
+  16      =1  
+  17      =1  #ifndef NULL
+  18      =1   #define NULL ((void *) 0L)
+  19      =1  #endif
+  20      =1  
+  21      =1  #pragma SAVE
+  22      =1  #pragma REGPARMS
+  23      =1  extern char *strcat (char *s1, char *s2);
+  24      =1  extern char *strncat (char *s1, char *s2, int n);
+  25      =1  
+  26      =1  extern char strcmp (char *s1, char *s2);
+  27      =1  extern char strncmp (char *s1, char *s2, int n);
+  28      =1  
+  29      =1  extern char *strcpy (char *s1, char *s2);
+  30      =1  extern char *strncpy (char *s1, char *s2, int n);
+  31      =1  
+  32      =1  extern int strlen (char *);
+  33      =1  
+  34      =1  extern char *strchr (const char *s, char c);
+  35      =1  extern int strpos (const char *s, char c);
+  36      =1  extern char *strrchr (const char *s, char c);
+  37      =1  extern int strrpos (const char *s, char c);
+  38      =1  
+  39      =1  extern int strspn (char *s, char *set);
+  40      =1  extern int strcspn (char *s, char *set);
+C51 COMPILER V9.01   CRC16                                                                 06/14/2019 09:34:46 PAGE 2   
+
+  41      =1  extern char *strpbrk (char *s, char *set);
+  42      =1  extern char *strrpbrk (char *s, char *set);
+  43      =1  extern char *strstr  (char *s, char *sub);
+  44      =1  extern char *strtok  (char *str, const char *set);
+  45      =1  
+  46      =1  extern char memcmp (void *s1, void *s2, int n);
+  47      =1  extern void *memcpy (void *s1, void *s2, int n);
+  48      =1  extern void *memchr (void *s, char val, int n);
+  49      =1  extern void *memccpy (void *s1, void *s2, char val, int n);
+  50      =1  extern void *memmove (void *s1, void *s2, int n);
+  51      =1  extern void *memset  (void *s, char val, int n);
+  52      =1  #pragma RESTORE
+  53      =1  
+  54      =1  #endif
+   3          #include <stdint.h>
+   1      =1  #ifndef __STDINT_H__
+           =1 #define __STDINT_H__
+           =1 
+           =1 typedef unsigned char uint8_t;  //1位长度
+           =1 typedef signed char int8_t;     //
+           =1 typedef unsigned short uint16_t;  //2位长度
+           =1 typedef signed short int16_t;
+           =1 typedef unsigned long uint32_t;   //4位长度
+           =1 typedef signed long int32_t;
+           =1 
+           =1 #endif
+   4          
+   5          #include "crc16.h"
+   1      =1  #ifndef __CRC16_h
+   2      =1  #define __CRC16_h
+   3      =1  
+   4      =1  /********************************************************
+   5      =1  *名称：     crc16
+   6      =1  *功能：     16位CRC校验
+   7      =1  *输入：     *puchMsg    ：待校验数组
+   8      =1                  usDataLen   : 待校验数组长度
+   9      =1  *返回：     16位校验码
+  10      =1  ********************************************************/
+  11      =1  uint16_t crc16(uint8_t *puchMsg, uint16_t usDataLen);
+  12      =1  uint16_t crc16_2(uint8_t *puchMsg1, uint16_t usDataLen1,  uint8_t *puchMsg2,  uint16_t usDataLen2);
+  13      =1  
+  14      =1  #endif
+   6          
+   7          /****************************************************************
+   8          *
+   9          *   CRC校验
+  10          *
+  11          ****************************************************************/
+  12          //字地址 0 - 255 (只取低8位)
+  13          //位地址 0 - 255 (只取低8位)
+  14          
+  15          /* CRC 高位字节值表 */
+  16          const uint8_t code auchCRCHi[] = {
+  17          0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+  18          0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+  19          0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
+  20          0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40,
+  21          0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
+  22          0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41,
+  23          0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
+  24          0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+  25          0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+C51 COMPILER V9.01   CRC16                                                                 06/14/2019 09:34:46 PAGE 3   
+
+  26          0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40,
+  27          0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
+  28          0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40,
+  29          0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+  30          0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40,
+  31          0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
+  32          0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40,
+  33          0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+  34          0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+  35          0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
+  36          0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+  37          0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
+  38          0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40,
+  39          0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1,
+  40          0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41,
+  41          0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0,
+  42          0x80, 0x41, 0x00, 0xC1, 0x81, 0x40
+  43          } ;
+  44          /* CRC低位字节值表*/
+  45          const uint8_t code  auchCRCLo[] = {
+  46          0x00, 0xC0, 0xC1, 0x01, 0xC3, 0x03, 0x02, 0xC2, 0xC6, 0x06,
+  47          0x07, 0xC7, 0x05, 0xC5, 0xC4, 0x04, 0xCC, 0x0C, 0x0D, 0xCD,
+  48          0x0F, 0xCF, 0xCE, 0x0E, 0x0A, 0xCA, 0xCB, 0x0B, 0xC9, 0x09,
+  49          0x08, 0xC8, 0xD8, 0x18, 0x19, 0xD9, 0x1B, 0xDB, 0xDA, 0x1A,
+  50          0x1E, 0xDE, 0xDF, 0x1F, 0xDD, 0x1D, 0x1C, 0xDC, 0x14, 0xD4,
+  51          0xD5, 0x15, 0xD7, 0x17, 0x16, 0xD6, 0xD2, 0x12, 0x13, 0xD3,
+  52          0x11, 0xD1, 0xD0, 0x10, 0xF0, 0x30, 0x31, 0xF1, 0x33, 0xF3,
+  53          0xF2, 0x32, 0x36, 0xF6, 0xF7, 0x37, 0xF5, 0x35, 0x34, 0xF4,
+  54          0x3C, 0xFC, 0xFD, 0x3D, 0xFF, 0x3F, 0x3E, 0xFE, 0xFA, 0x3A,
+  55          0x3B, 0xFB, 0x39, 0xF9, 0xF8, 0x38, 0x28, 0xE8, 0xE9, 0x29,
+  56          0xEB, 0x2B, 0x2A, 0xEA, 0xEE, 0x2E, 0x2F, 0xEF, 0x2D, 0xED,
+  57          0xEC, 0x2C, 0xE4, 0x24, 0x25, 0xE5, 0x27, 0xE7, 0xE6, 0x26,
+  58          0x22, 0xE2, 0xE3, 0x23, 0xE1, 0x21, 0x20, 0xE0, 0xA0, 0x60,
+  59          0x61, 0xA1, 0x63, 0xA3, 0xA2, 0x62, 0x66, 0xA6, 0xA7, 0x67,
+  60          0xA5, 0x65, 0x64, 0xA4, 0x6C, 0xAC, 0xAD, 0x6D, 0xAF, 0x6F,
+  61          0x6E, 0xAE, 0xAA, 0x6A, 0x6B, 0xAB, 0x69, 0xA9, 0xA8, 0x68,
+  62          0x78, 0xB8, 0xB9, 0x79, 0xBB, 0x7B, 0x7A, 0xBA, 0xBE, 0x7E,
+  63          0x7F, 0xBF, 0x7D, 0xBD, 0xBC, 0x7C, 0xB4, 0x74, 0x75, 0xB5,
+  64          0x77, 0xB7, 0xB6, 0x76, 0x72, 0xB2, 0xB3, 0x73, 0xB1, 0x71,
+  65          0x70, 0xB0, 0x50, 0x90, 0x91, 0x51, 0x93, 0x53, 0x52, 0x92,
+  66          0x96, 0x56, 0x57, 0x97, 0x55, 0x95, 0x94, 0x54, 0x9C, 0x5C,
+  67          0x5D, 0x9D, 0x5F, 0x9F, 0x9E, 0x5E, 0x5A, 0x9A, 0x9B, 0x5B,
+  68          0x99, 0x59, 0x58, 0x98, 0x88, 0x48, 0x49, 0x89, 0x4B, 0x8B,
+  69          0x8A, 0x4A, 0x4E, 0x8E, 0x8F, 0x4F, 0x8D, 0x4D, 0x4C, 0x8C,
+  70          0x44, 0x84, 0x85, 0x45, 0x87, 0x47, 0x46, 0x86, 0x82, 0x42,
+  71          0x43, 0x83, 0x41, 0x81, 0x80, 0x40
+  72          } ;
+  73          /********************************************************
+  74          *名称：     crc16
+  75          *功能：     16为CRC校验
+  76          *输入：     *puchMsg    ：待校验数组
+  77                          usDataLen   : 待校验数组长度
+  78          *返回：     16位校验码
+  79          ********************************************************/
+  80          uint16_t crc16(uint8_t *puchMsg, uint16_t usDataLen)
+  81          {
+  82   1          uint8_t uchCRCHi = 0xFF ; /* 高CRC字节初始化 */
+  83   1          uint8_t uchCRCLo = 0xFF ; /* 低CRC 字节初始化 */
+  84   1          uint32_t uIndex ; /* CRC循环中的索引 */
+  85   1          while (usDataLen--) /* 传输消息缓冲区 */
+  86   1          {
+  87   2              uIndex = uchCRCHi ^ *puchMsg++ ; /* 计算CRC */
+C51 COMPILER V9.01   CRC16                                                                 06/14/2019 09:34:46 PAGE 4   
+
+  88   2      
+  89   2              uchCRCHi = uchCRCLo ^ auchCRCHi[uIndex] ;
+  90   2              uchCRCLo = auchCRCLo[uIndex] ;
+  91   2          }
+  92   1          return (uchCRCHi << 8 | uchCRCLo) ;
+  93   1      }
+  94          
+  95          /********************************************************
+  96          *名称：     crc16
+  97          *功能：     16为CRC校验
+  98          *输入：     *puchMsg    ：待校验数组
+  99                          usDataLen   : 待校验数组长度
+ 100          *返回：     16位校验码
+ 101          ********************************************************/
+ 102          uint16_t crc16_2(uint8_t *puchMsg1, uint16_t usDataLen1,  uint8_t *puchMsg2,  uint16_t usDataLen2)
+ 103          {
+ 104   1          uint8_t uchCRCHi = 0xFF ; /* 高CRC字节初始化 */
+ 105   1          uint8_t uchCRCLo = 0xFF ; /* 低CRC 字节初始化 */
+ 106   1          uint32_t uIndex ; /* CRC循环中的索引 */
+ 107   1      
+ 108   1        while (usDataLen1--) /* 传输消息缓冲区 */
+ 109   1          {   
+ 110   2              uIndex = uchCRCHi ^ *puchMsg1++ ; /* 计算CRC */
+ 111   2              uchCRCHi = uchCRCLo ^ auchCRCHi[uIndex] ;
+ 112   2              uchCRCLo = auchCRCLo[uIndex] ;
+ 113   2          }
+ 114   1          while (usDataLen2--) /* 传输消息缓冲区 */
+ 115   1          {   
+ 116   2              uIndex = uchCRCHi ^ *puchMsg2++ ; /* 计算CRC */
+ 117   2              uchCRCHi = uchCRCLo ^ auchCRCHi[uIndex] ;
+ 118   2              uchCRCLo = auchCRCLo[uIndex] ;
+ 119   2          }
+ 120   1          return (uchCRCHi << 8 | uchCRCLo) ;
+ 121   1      }
+ 122          //uint16 crc16(uint8 *puchMsg, uint16 usDataLen)
+C51 COMPILER V9.01   CRC16                                                                 06/14/2019 09:34:46 PAGE 5   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _crc16 (BEGIN)
+                                           ; SOURCE LINE # 80
+0000 900000      R     MOV     DPTR,#puchMsg
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+000B A3                INC     DPTR
+000C EC                MOV     A,R4
+000D F0                MOVX    @DPTR,A
+000E A3                INC     DPTR
+000F ED                MOV     A,R5
+0010 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 81
+                                           ; SOURCE LINE # 82
+0011 A3                INC     DPTR
+0012 74FF              MOV     A,#0FFH
+0014 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 83
+0015 A3                INC     DPTR
+0016 F0                MOVX    @DPTR,A
+0017         ?C0001:
+                                           ; SOURCE LINE # 85
+0017 900000      R     MOV     DPTR,#usDataLen
+001A 74FF              MOV     A,#0FFH
+001C F5F0              MOV     B,A
+001E 120000      E     LCALL   ?C?ILDIX
+0021 45F0              ORL     A,B
+0023 6045              JZ      ?C0002
+                                           ; SOURCE LINE # 86
+                                           ; SOURCE LINE # 87
+0025 900000      R     MOV     DPTR,#puchMsg
+0028 E0                MOVX    A,@DPTR
+0029 FB                MOV     R3,A
+002A A3                INC     DPTR
+002B E4                CLR     A
+002C 75F001            MOV     B,#01H
+002F 120000      E     LCALL   ?C?ILDIX
+0032 A9F0              MOV     R1,B
+0034 FA                MOV     R2,A
+0035 120000      E     LCALL   ?C?CLDPTR
+0038 FF                MOV     R7,A
+0039 900000      R     MOV     DPTR,#uchCRCHi
+003C E0                MOVX    A,@DPTR
+003D 6F                XRL     A,R7
+003E FF                MOV     R7,A
+003F E4                CLR     A
+0040 FC                MOV     R4,A
+0041 FD                MOV     R5,A
+0042 FE                MOV     R6,A
+0043 900000      R     MOV     DPTR,#uIndex
+0046 120000      E     LCALL   ?C?LSTXDATA
+                                           ; SOURCE LINE # 89
+0049 900000      R     MOV     DPTR,#uIndex
+004C A3                INC     DPTR
+C51 COMPILER V9.01   CRC16                                                                 06/14/2019 09:34:46 PAGE 6   
+
+004D A3                INC     DPTR
+004E A3                INC     DPTR
+004F E0                MOVX    A,@DPTR
+0050 FC                MOV     R4,A
+0051 900000      R     MOV     DPTR,#auchCRCHi
+0054 93                MOVC    A,@A+DPTR
+0055 FE                MOV     R6,A
+0056 900000      R     MOV     DPTR,#uchCRCLo
+0059 E0                MOVX    A,@DPTR
+005A 6E                XRL     A,R6
+005B 900000      R     MOV     DPTR,#uchCRCHi
+005E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 90
+005F EC                MOV     A,R4
+0060 900000      R     MOV     DPTR,#auchCRCLo
+0063 93                MOVC    A,@A+DPTR
+0064 900000      R     MOV     DPTR,#uchCRCLo
+0067 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 91
+0068 80AD              SJMP    ?C0001
+006A         ?C0002:
+                                           ; SOURCE LINE # 92
+006A 900000      R     MOV     DPTR,#uchCRCHi
+006D E0                MOVX    A,@DPTR
+006E FE                MOV     R6,A
+006F A3                INC     DPTR
+0070 E0                MOVX    A,@DPTR
+0071 FD                MOV     R5,A
+0072 ED                MOV     A,R5
+0073 FF                MOV     R7,A
+                                           ; SOURCE LINE # 93
+0074         ?C0003:
+0074 22                RET     
+             ; FUNCTION _crc16 (END)
+
+             ; FUNCTION _crc16_2 (BEGIN)
+                                           ; SOURCE LINE # 102
+0000 900000      R     MOV     DPTR,#puchMsg1
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+000B A3                INC     DPTR
+000C EC                MOV     A,R4
+000D F0                MOVX    @DPTR,A
+000E A3                INC     DPTR
+000F ED                MOV     A,R5
+0010 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 103
+                                           ; SOURCE LINE # 104
+0011 900000      R     MOV     DPTR,#uchCRCHi
+0014 74FF              MOV     A,#0FFH
+0016 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 105
+0017 A3                INC     DPTR
+0018 F0                MOVX    @DPTR,A
+0019         ?C0004:
+                                           ; SOURCE LINE # 108
+C51 COMPILER V9.01   CRC16                                                                 06/14/2019 09:34:46 PAGE 7   
+
+0019 900000      R     MOV     DPTR,#usDataLen1
+001C 74FF              MOV     A,#0FFH
+001E F5F0              MOV     B,A
+0020 120000      E     LCALL   ?C?ILDIX
+0023 45F0              ORL     A,B
+0025 6045              JZ      ?C0006
+                                           ; SOURCE LINE # 109
+                                           ; SOURCE LINE # 110
+0027 900000      R     MOV     DPTR,#puchMsg1
+002A E0                MOVX    A,@DPTR
+002B FB                MOV     R3,A
+002C A3                INC     DPTR
+002D E4                CLR     A
+002E 75F001            MOV     B,#01H
+0031 120000      E     LCALL   ?C?ILDIX
+0034 A9F0              MOV     R1,B
+0036 FA                MOV     R2,A
+0037 120000      E     LCALL   ?C?CLDPTR
+003A FF                MOV     R7,A
+003B 900000      R     MOV     DPTR,#uchCRCHi
+003E E0                MOVX    A,@DPTR
+003F 6F                XRL     A,R7
+0040 FF                MOV     R7,A
+0041 E4                CLR     A
+0042 FC                MOV     R4,A
+0043 FD                MOV     R5,A
+0044 FE                MOV     R6,A
+0045 900000      R     MOV     DPTR,#uIndex
+0048 120000      E     LCALL   ?C?LSTXDATA
+                                           ; SOURCE LINE # 111
+004B 900000      R     MOV     DPTR,#uIndex
+004E A3                INC     DPTR
+004F A3                INC     DPTR
+0050 A3                INC     DPTR
+0051 E0                MOVX    A,@DPTR
+0052 FC                MOV     R4,A
+0053 900000      R     MOV     DPTR,#auchCRCHi
+0056 93                MOVC    A,@A+DPTR
+0057 FE                MOV     R6,A
+0058 900000      R     MOV     DPTR,#uchCRCLo
+005B E0                MOVX    A,@DPTR
+005C 6E                XRL     A,R6
+005D 900000      R     MOV     DPTR,#uchCRCHi
+0060 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 112
+0061 EC                MOV     A,R4
+0062 900000      R     MOV     DPTR,#auchCRCLo
+0065 93                MOVC    A,@A+DPTR
+0066 900000      R     MOV     DPTR,#uchCRCLo
+0069 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 113
+006A 80AD              SJMP    ?C0004
+006C         ?C0006:
+                                           ; SOURCE LINE # 114
+006C 900000      R     MOV     DPTR,#usDataLen2
+006F 74FF              MOV     A,#0FFH
+0071 F5F0              MOV     B,A
+0073 120000      E     LCALL   ?C?ILDIX
+0076 45F0              ORL     A,B
+0078 6045              JZ      ?C0007
+                                           ; SOURCE LINE # 115
+                                           ; SOURCE LINE # 116
+C51 COMPILER V9.01   CRC16                                                                 06/14/2019 09:34:46 PAGE 8   
+
+007A 900000      R     MOV     DPTR,#puchMsg2
+007D E0                MOVX    A,@DPTR
+007E FB                MOV     R3,A
+007F A3                INC     DPTR
+0080 E4                CLR     A
+0081 75F001            MOV     B,#01H
+0084 120000      E     LCALL   ?C?ILDIX
+0087 A9F0              MOV     R1,B
+0089 FA                MOV     R2,A
+008A 120000      E     LCALL   ?C?CLDPTR
+008D FF                MOV     R7,A
+008E 900000      R     MOV     DPTR,#uchCRCHi
+0091 E0                MOVX    A,@DPTR
+0092 6F                XRL     A,R7
+0093 FF                MOV     R7,A
+0094 E4                CLR     A
+0095 FC                MOV     R4,A
+0096 FD                MOV     R5,A
+0097 FE                MOV     R6,A
+0098 900000      R     MOV     DPTR,#uIndex
+009B 120000      E     LCALL   ?C?LSTXDATA
+                                           ; SOURCE LINE # 117
+009E 900000      R     MOV     DPTR,#uIndex
+00A1 A3                INC     DPTR
+00A2 A3                INC     DPTR
+00A3 A3                INC     DPTR
+00A4 E0                MOVX    A,@DPTR
+00A5 FC                MOV     R4,A
+00A6 900000      R     MOV     DPTR,#auchCRCHi
+00A9 93                MOVC    A,@A+DPTR
+00AA FE                MOV     R6,A
+00AB 900000      R     MOV     DPTR,#uchCRCLo
+00AE E0                MOVX    A,@DPTR
+00AF 6E                XRL     A,R6
+00B0 900000      R     MOV     DPTR,#uchCRCHi
+00B3 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 118
+00B4 EC                MOV     A,R4
+00B5 900000      R     MOV     DPTR,#auchCRCLo
+00B8 93                MOVC    A,@A+DPTR
+00B9 900000      R     MOV     DPTR,#uchCRCLo
+00BC F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 119
+00BD 80AD              SJMP    ?C0006
+00BF         ?C0007:
+                                           ; SOURCE LINE # 120
+00BF 900000      R     MOV     DPTR,#uchCRCHi
+00C2 E0                MOVX    A,@DPTR
+00C3 FE                MOV     R6,A
+00C4 A3                INC     DPTR
+00C5 E0                MOVX    A,@DPTR
+00C6 FD                MOV     R5,A
+00C7 ED                MOV     A,R5
+00C8 FF                MOV     R7,A
+                                           ; SOURCE LINE # 121
+00C9         ?C0008:
+00C9 22                RET     
+             ; FUNCTION _crc16_2 (END)
+
+C51 COMPILER V9.01   CRC16                                                                 06/14/2019 09:34:46 PAGE 9   
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+uint16_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+int32_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  LONG     -----  4
+int16_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  INT      -----  2
+size_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+_crc16 . . . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  puchMsg. . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  usDataLen. . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0003H  2
+  uchCRCHi . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0005H  1
+  uchCRCLo . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0006H  1
+  uIndex . . . . . . . . . . . . . . .  AUTO     XDATA  U_LONG   0007H  4
+auchCRCHi. . . . . . . . . . . . . . .  PUBLIC   CODE   ARRAY    0000H  256
+_crc16_2 . . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  puchMsg1 . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  usDataLen1 . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0003H  2
+  puchMsg2 . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0005H  3
+  usDataLen2 . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0008H  2
+  uchCRCHi . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   000AH  1
+  uchCRCLo . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   000BH  1
+  uIndex . . . . . . . . . . . . . . .  AUTO     XDATA  U_LONG   000CH  4
+auchCRCLo. . . . . . . . . . . . . . .  PUBLIC   CODE   ARRAY    0100H  256
+uint8_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+int8_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+uint32_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_LONG   -----  4
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    319    ----
+   CONSTANT SIZE    =    512    ----
+   XDATA SIZE       =   ----      27
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

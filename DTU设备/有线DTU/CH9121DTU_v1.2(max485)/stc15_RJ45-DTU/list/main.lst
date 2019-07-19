@@ -1,0 +1,166 @@
+C51 COMPILER V9.01   MAIN                                                                  07/19/2019 11:19:12 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\list\main.obj
+COMPILER INVOKED BY: D:\Program Files (x86)\Keil\C51\BIN\C51.EXE app\main.c LARGE BROWSE INCDIR(.\stclib;..\stc_lib;.\ap
+                    -p;.\app\service\app;.\app\service\AES128;.\app\service\CRC16;.\app\service\packet) DEBUG OBJECTEXTEND PRINT(.\list\main.
+                    -lst) TABS(2) OBJECT(.\list\main.obj)
+
+line level    source
+
+   1          /*c51 Uip 移植实例
+   2          *环境 KEIL
+   3          *www.anchey.com ancheel
+   4          */
+   5          #include  "config.h"
+   6          #include  "USART1.h"
+   7          #include  "delay.h"
+   8          #include  "GPIO.h"
+   9          #include  "usart1.h"
+  10          
+  11          #include   "sys_clock.h"
+  12          #include "function.h"
+  13          
+  14          uint8_t UsartX_send ;
+  15          
+  16          void  GPIO_config(void)
+  17          {
+  18   1        GPIO_InitTypeDef  GPIO_InitStructure;   //结构定义
+  19   1        GPIO_InitStructure.Pin  = GPIO_Pin_All;   //指定要初始化的IO, GPIO_Pin_0 ~ GPIO_Pin_7, 或操作
+  20   1        GPIO_InitStructure.Mode = GPIO_PullUp;    //指定IO的输入或输出方式,GPIO_PullUp,GPIO_HighZ,GPIO_OUT_OD,GPIO_
+             -OUT_PP
+  21   1        GPIO_Inilize(GPIO_P0,&GPIO_InitStructure);  //初始化  
+  22   1              
+  23   1      }
+  24          
+  25          /*************  串口1初始化函数 *****************/
+  26          void  UART_config(void)
+  27          {
+  28   1        COMx_InitDefine   COMx_InitStructure;         //结构定义
+  29   1        COMx_InitStructure.UART_Mode      = UART_8bit_BRTx;   //模式,       UART_ShiftRight,UART_8bit_BRTx,UART_9b
+             -it,UART_9bit_BRTx
+  30   1        COMx_InitStructure.UART_BRT_Use   = BRT_Timer1;     //使用波特率,   BRT_Timer1, BRT_Timer2 (注意: 串口2固定
+             -使用BRT_Timer2)
+  31   1        COMx_InitStructure.UART_BaudRate  = 9600ul;     //波特率, 一般 110 ~ 115200
+  32   1        COMx_InitStructure.UART_RxEnable  = ENABLE;       //接收允许,   ENABLE或DISABLE
+  33   1        COMx_InitStructure.BaudRateDouble = DISABLE;      //波特率加倍, ENABLE或DISABLE
+  34   1        COMx_InitStructure.UART_Interrupt = ENABLE;       //中断允许,   ENABLE或DISABLE
+  35   1        COMx_InitStructure.UART_Polity    = PolityLow;      //中断优先级, PolityLow,PolityHigh
+  36   1        COMx_InitStructure.UART_P_SW      = UART1_SW_P30_P31; //切换端口,   UART1_SW_P30_P31,UART1_SW_P36_P37,UAR
+             -T1_SW_P16_P17(必须使用内部时钟)
+  37   1        COMx_InitStructure.UART_RXD_TXD_Short = DISABLE;    //内部短路RXD与TXD, 做中继, ENABLE,DISABLE
+  38   1        USART_Configuration(USART1, &COMx_InitStructure);   //初始化串口1 USART1,USART2
+  39   1      
+  40   1        COMx_InitStructure.UART_Mode      = UART_8bit_BRTx;   //模式,       UART_ShiftRight,UART_8bit_BRTx,UART_9b
+             -it,UART_9bit_BRTx
+  41   1        COMx_InitStructure.UART_BaudRate  = 9600ul;     //波特率,     110 ~ 115200
+  42   1        COMx_InitStructure.UART_RxEnable  = ENABLE;       //接收允许,   ENABLE或DISABLE
+  43   1        COMx_InitStructure.UART_Interrupt = ENABLE;       //中断允许,   ENABLE或DISABLE
+  44   1        COMx_InitStructure.UART_Polity    = PolityLow;      //中断优先级, PolityLow,PolityHigh
+  45   1        COMx_InitStructure.UART_P_SW      = UART2_SW_P10_P11; //切换端口,   UART2_SW_P10_P11,UART2_SW_P46_P47
+  46   1        USART_Configuration(USART2, &COMx_InitStructure);   //初始化串口2 USART1,USART2
+  47   1      //  Printf1("123",3);
+  48   1      //  PrintString1("STC15F2K60S2 UART1 Test Prgramme!\r\n");  //SUART1发送一个字符串
+C51 COMPILER V9.01   MAIN                                                                  07/19/2019 11:19:12 PAGE 2   
+
+  49   1      //  PrintString2("STC15F2K60S2 UART2 Test Prgramme!\r\n");  //SUART2发送一个字符串
+  50   1      }
+  51          
+  52          
+  53          void dtu_config()
+  54          {
+  55   1          char start_state;
+  56   1        uint16_t tartt_time, second_time,thred_time;
+  57   1        start_state =1;
+  58   1        uart1_cmd = 0;
+  59   1      //  config_mode = 0;
+  60   1        printf("task0\r\n");                              
+  61   1      
+  62   1        tartt_time = get_sys_ticks();
+  63   1        while(1)
+  64   1        {
+  65   2          while(start_state)
+  66   2          {
+  67   3             second_time = get_sys_ticks(); 
+  68   3             
+  69   3             if(second_time%100==0)  {if(second_time!=thred_time) printf("s=%ds\r\n",second_time/100);}      
+  70   3             if((second_time - tartt_time)>500){start_state=0; goto start_x;}//10秒无操作退出
+  71   3             if(uart1_cmd==1) {printf("in-cfg-OK\r\n"); start_state=0;    break;}
+  72   3             thred_time = second_time;
+  73   3          }
+  74   2           switch(uart1_cmd)
+  75   2           {        
+  76   3             case 1:  Printf1("ok",2);    //进入配置模式
+  77   3                      break;
+  78   3             case 2:  usart1_cmd_write();   //进入参数单片机配置
+  79   3                      Printf1("ok",2);
+  80   3                      break;
+  81   3             case 3:  usart1_and_usart2();  //收到数据转发
+  82   3                      break;
+  83   3             case 4:  uart1_cmd = 0;
+  84   3                      goto start_x; //退出命令退出配置
+  85   3                      break;
+  86   3            default:  break;
+  87   3           }
+  88   2      
+  89   2          }
+  90   1      start_x: 
+  91   1         printf("quit-OK\r\n");   
+  92   1          
+  93   1      }
+  94          void main(void)
+  95          {
+  96   1        UsartX_send = 1;
+  97   1        GPIO_config();
+  98   1        UART_config();
+  99   1        sys_clock_init();
+ 100   1        EA = 1;
+ 101   1        //定时器稳定前尽可能不要操作串口
+ 102   1      //  dtu_config();
+ 103   1        LED1 = 1;
+ 104   1        LED2 = 1;
+ 105   1        function();
+ 106   1          //debug_loop();
+ 107   1      }
+ 108          
+ 109          
+ 110          char putchar(char c)
+C51 COMPILER V9.01   MAIN                                                                  07/19/2019 11:19:12 PAGE 3   
+
+ 111          {
+ 112   1      //    if(c == '\n') 
+ 113   1      //  {
+ 114   1      //        SBUF = '\r';       
+ 115   1      //        while(!TI);
+ 116   1      //    }
+ 117   1      
+ 118   1        if(UsartX_send == 1)
+ 119   1        {
+ 120   2          SBUF = c;
+ 121   2          while(!TI);
+ 122   2          TI = 0;
+ 123   2        }
+ 124   1        if(UsartX_send == 2)
+ 125   1        {
+ 126   2          S2BUF = c;
+ 127   2          while(!TI2);                 
+ 128   2          CLR_TI2();
+ 129   2        }
+ 130   1          return c;
+ 131   1      }
+ 132          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    423    ----
+   CONSTANT SIZE    =     41    ----
+   XDATA SIZE       =      1      22
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,55 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: μVision V5.21.1.0
+Copyright (C) 2016 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: z Administrator, z, LIC=AT22Z-J4ZPU-KY9V2-9Q38L-KEDBY-E0HV5
+ 
+Tool Versions:
+Toolchain:       PK51 Prof. Developers Kit  Version: 9.01
+Toolchain Path:  D:\Keil_v5\C51\BIN
+C Compiler:      C51.exe V9.01
+Assembler:       A51.exe V8.02
+Linker/Locator:  BL51.exe V6.22
+Library Manager: LIB51.exe V4.24
+Hex Converter:   OH51.exe V2.6
+CPU DLL:         S8051.DLL V3.72
+Dialog DLL:      DP51.DLL V2.59
+Target DLL:      MON51.DLL V2.45
+Dialog DLL:      TP51.DLL V2.58
+ 
+<h2>Project:</h2>
+E:\whkj----work\DTU设备\有线DTU\stc15_RJ45-DTU\project.uvproj
+Project File Date:  12/17/2018
+
+<h2>Output:</h2>
+Rebuild target 'Target 1'
+compiling main.c...
+APP\MAIN.C(92): warning C206: 'debug_loop': missing function-prototype
+compiling function.c...
+compiling aes128app.c...
+compiling aes.c...
+compiling crc16.c...
+compiling sys_clock.c...
+compiling delay.c...
+compiling GPIO.c...
+compiling USART1.C...
+compiling stc_timer.c...
+compiling eeprom.c...
+linking...
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  DEBUG_LOOP
+    MODULE:  .\list\main.obj (MAIN)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  DEBUG_LOOP
+    MODULE:  .\list\main.obj (MAIN)
+    ADDRESS: 2F46H
+Program Size: data=33.1 xdata=1569 code=12172
+creating hex file from ".\list\dtu"...
+".\list\dtu" - 0 Error(s), 3 Warning(s).
+Build Time Elapsed:  00:00:04
+</pre>
+</body>
+</html>

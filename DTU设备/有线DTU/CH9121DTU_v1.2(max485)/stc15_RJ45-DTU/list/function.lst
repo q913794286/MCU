@@ -1,0 +1,287 @@
+C51 COMPILER V9.01   FUNCTION                                                              07/19/2019 11:39:35 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE FUNCTION
+OBJECT MODULE PLACED IN .\list\function.obj
+COMPILER INVOKED BY: D:\Program Files (x86)\Keil\C51\BIN\C51.EXE app\service\app\function.c LARGE BROWSE INCDIR(.\stclib
+                    -;..\stc_lib;.\app;.\app\service\app;.\app\service\AES128;.\app\service\CRC16;.\app\service\packet) DEBUG OBJECTEXTEND PR
+                    -INT(.\list\function.lst) TABS(2) OBJECT(.\list\function.obj)
+
+line level    source
+
+   1          #include "config.h"
+   2          #include "USART1.h"
+   3          #include "delay.h"
+   4          #include "GPIO.h"
+   5          #include "eeprom.h"
+   6          
+   7          #include <stdio.h>
+   8          #include <string.h>
+   9          #include "sys_clock.h"
+  10          #include "function.h"
+  11          #include "aes.h"
+  12          #include "aes128app.h"
+  13          #include "crc16.h"
+  14          #include "packet.h"
+  15          
+  16          void UART1_AES();
+  17          
+  18          char chip_ID[20];
+  19          timer_out timerout1, timerout2;    //定义超时结构体
+  20          AES128 aes128={ 
+  21                  {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07},
+  22                  {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c },
+  23                      {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f 
+             -}        
+  24                  };
+  25          
+  26          
+  27          //void uart_check_TimeOut(void);
+  28          
+  29          void LED_reset();
+  30          
+  31          void HexToStr(uint8_t *pbDest, uint8_t *pbSrc, int nLen)
+  32          {
+  33   1      uint8_t ddl,ddh;
+  34   1      int i;
+  35   1      
+  36   1        for (i=0; i<nLen; i++)
+  37   1        {
+  38   2          ddh = 48 + pbSrc[i] / 16;
+  39   2          ddl = 48 + pbSrc[i] % 16;
+  40   2          if (ddh > 57) ddh = ddh + 7;
+  41   2          if (ddl > 57) ddl = ddl + 7;
+  42   2          pbDest[i*2] = ddh;
+  43   2          pbDest[i*2+1] = ddl;
+  44   2        }
+  45   1        pbDest[nLen*2] = '\0';
+  46   1      }
+  47          
+  48          void function(void)
+  49          {
+  50   1        char *ID;
+  51   1        
+  52   1        uart1_cmd = 0; //命令接收
+C51 COMPILER V9.01   FUNCTION                                                              07/19/2019 11:39:35 PAGE 2   
+
+  53   1      
+  54   1        EEPROM_read_n(0x00,RX2_Buffer,48);
+  55   1          delay_ms(6);
+  56   1      //  memcpy(aes128.key, &RX2_Buffer[0],16);
+  57   1      //  memcpy(aes128.iv, &RX2_Buffer[16],16);
+  58   1      //  memcpy(aes128.id, &RX2_Buffer[32],16);
+  59   1      //F6 49 83 94 43 90 05 
+  60   1        ID = (char idata *)0xf1; 
+  61   1        memset(chip_ID,0,sizeof(chip_ID));
+  62   1        HexToStr(&chip_ID,ID,7);
+  63   1        printf("ID:WH-%s\r\r\n",chip_ID);
+  64   1        WDT_CONTR = 0x27;                           //约8s
+  65   1        
+  66   1        while(1)
+  67   1        {
+  68   2          WDT_CONTR |= 0x10;                      //喂狗
+  69   2          uart1_check_TimeOut();  //串口超时检测
+  70   2          uart2_check_TimeOut();
+  71   2          
+  72   2          LED_reset();
+  73   2          if(Link == 0)        
+  74   2          RS485_coil();           
+  75   2        }
+  76   1      }
+  77          
+  78          void LED_reset()
+  79          {
+  80   1          static uint32_t timer0_1=0, timer0_2=0;
+  81   1          timer0_1 = get_sys_ticks();
+  82   1          if((timer0_1 - timer0_2)>100)  //每 30秒轮询一次
+  83   1          { 
+  84   2            /*执行函数*/
+  85   2            LED1 = 0;
+  86   2            LED2 = 0;
+  87   2            /**/
+  88   2            timer0_2 = get_sys_ticks(); 
+  89   2          }
+  90   1      }
+  91          #if 1
+  92          /*
+  93          *串口接收超时设置
+  94          * 功能：设置或刷新超时时间
+  95          */
+  96          void uart1_set_TimeOut(uint16_t ms)
+  97          {
+  98   1      
+  99   1          timerout1.start = get_sys_ticks();
+ 100   1          timerout1.ms = ms;
+ 101   1      }
+ 102          
+ 103          void uart2_set_TimeOut(uint16_t ms)
+ 104          {
+ 105   1      
+ 106   1          timerout2.start = get_sys_ticks();
+ 107   1          timerout2.ms = ms;
+ 108   1      }
+ 109          
+ 110          /*
+ 111          *串口接收超时检测
+ 112          */
+ 113          //u8 code sbuf1[]={0xc3,0x01};
+ 114          //u8 code cc[]={0xC3, 0x01, 
+C51 COMPILER V9.01   FUNCTION                                                              07/19/2019 11:39:35 PAGE 3   
+
+ 115          //        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 
+ 116          //        0x00, 0x10, 
+ 117          //        0x86, 0xE2, 0x93, 0x97, 0x4B, 0x38, 0x3F, 0xA5, 0x10, 0xF0, 0x76, 0xBF, 0xD8, 0x6E, 0x68, 0x72
+ 118          //        };
+ 119          void uart1_check_TimeOut(void)
+ 120          {
+ 121   1          static uint16_t count1;
+ 122   1      
+ 123   1          if(COM1.RX_TimeOut > 0)   //超时计数
+ 124   1          {
+ 125   2              count1 = get_sys_ticks();
+ 126   2              if((count1 - timerout1.start)>timerout1.ms)
+ 127   2              {
+ 128   3      //            COM1.RX_TimeOut = 0;  //接收超时清零
+ 129   3      //            COM1.RX_Cnt = 0;      //接收计数清零
+ 130   3      
+ 131   3              LED1 = 1;
+ 132   3              COM1.RX_TimeOut = 0;  //接收超时清零
+ 133   3              COM1.RX_Cnt = 0;      //接收计数清零
+ 134   3      //        LED1 = 0;
+ 135   3              }
+ 136   2          }
+ 137   1      }
+ 138          
+ 139          void uart2_check_TimeOut(void)
+ 140          {
+ 141   1         static uint16_t count2;
+ 142   1        
+ 143   1          if(COM2.RX_TimeOut > 0)   //超时计数
+ 144   1          {
+ 145   2              count2 = get_sys_ticks();
+ 146   2              if((count2 - timerout2.start)>timerout2.ms)
+ 147   2              {            
+ 148   3                  /*
+ 149   3                   *串口2检测超时动作
+ 150   3                   * 
+ 151   3                  */ 
+ 152   3                LED2 = 1;
+ 153   3                Printf1(RX2_Buffer,COM2.RX_Cnt);  
+ 154   3                COM2.RX_TimeOut = 0;  //接收超时清零
+ 155   3                COM2.RX_Cnt = 0;      //接收计数清零
+ 156   3      //          LED2 = 0;
+ 157   3              }
+ 158   2          }
+ 159   1      }
+ 160          #endif
+ 161          
+ 162          
+ 163          
+ 164          void usart1_cmd_write()
+ 165          {
+ 166   1      
+ 167   1      //void  EEPROM_write_n(uint16_t EE_address,uint8_t *DataAddress,uint16_t number);
+ 168   1      //void  EEPROM_SectorErase(uint16_t EE_address);
+ 169   1        memcpy(aes128.id, &RX1_Buffer[1], 8);
+ 170   1        memcpy(aes128.key, &RX1_Buffer[9], 16);
+ 171   1        memcpy(aes128.iv, &RX1_Buffer[25], 16);
+ 172   1      
+ 173   1        EEPROM_SectorErase(0x00);
+ 174   1        delay_ms(6);    //擦除时间4ms~6ms  
+ 175   1        EEPROM_write_n(0x00,&RX1_Buffer[1],COM1.RX_Cnt);    //uart1_cnt = 48Byte
+ 176   1        delay_ms(6);
+C51 COMPILER V9.01   FUNCTION                                                              07/19/2019 11:39:35 PAGE 4   
+
+ 177   1        Printf1("ok",2);
+ 178   1      //  ISP_CONTR = 0x60; //配置成功重启
+ 179   1      }
+ 180          
+ 181          
+ 182          void MCU_check(uint16_t check_time)
+ 183          {
+ 184   1        static uint16_t start_T;
+ 185   1        static uint8_t CT;
+ 186   1        if(CT == 0)
+ 187   1        {
+ 188   2          start_T = get_sys_ticks();
+ 189   2          CT = 1;
+ 190   2        }
+ 191   1      
+ 192   1        if((get_sys_ticks() - start_T)>check_time)
+ 193   1        {
+ 194   2          CT = 0;
+ 195   2        } 
+ 196   1      }
+ 197          
+ 198          void usart1_and_usart2()
+ 199          {
+ 200   1        uint16_t i;
+ 201   1        if((COM1.RX_TimeOut > 0)&&(COM2.RX_TimeOut == 0))   //超时计数
+ 202   1        {
+ 203   2          if(--COM1.RX_TimeOut == 0)
+ 204   2          {
+ 205   3            if(COM1.RX_Cnt > 0)
+ 206   3            {
+ 207   4              for(i=0; i<COM1.RX_Cnt; i++)  TX2_write2buff(RX1_Buffer[i]);  //收到的数据原样返回
+ 208   4            }
+ 209   3            COM1.RX_Cnt = 0;
+ 210   3          }
+ 211   2        }
+ 212   1        if((COM2.RX_TimeOut > 0) && (COM1.RX_TimeOut == 0))   //超时计数
+ 213   1        {
+ 214   2          if(--COM2.RX_TimeOut == 0)
+ 215   2          {
+ 216   3            if(COM2.RX_Cnt > 0)
+ 217   3            {
+ 218   4              for(i=0; i<COM2.RX_Cnt; i++)  TX1_write2buff(RX2_Buffer[i]);  //收到的数据原样返回
+ 219   4            }
+ 220   3            COM2.RX_Cnt = 0;
+ 221   3          }
+ 222   2        }
+ 223   1      }
+ 224          
+ 225          void UART1_AES()
+ 226          {
+ 227   1        uint8_t  tmp[20];
+ 228   1        uint16_t crc;
+ 229   1        uint16_t data_len;
+ 230   1                /*
+ 231   1                 *串口1检测超时动作
+ 232   1                 *加密、封包串口2发送
+ 233   1                */
+ 234   1          //app_encrypt_cbc(uint8_t *key, uint8_t *iv, uint8_t *in, uint8_t len, uint8_t *out);; //EBC加密
+ 235   1          data_len = app_encrypt_cbc(aes128.key, aes128.iv, RX1_Buffer, COM1.RX_TimeOut-1, TX2_Buffer);   //加密返
+             -回数据长度RX2_Buffer  
+ 236   1      //      Printf1(RX2_Buffer,COM1.RX_TimeOut);  //data  
+ 237   1      
+C51 COMPILER V9.01   FUNCTION                                                              07/19/2019 11:39:35 PAGE 5   
+
+ 238   1      //        tmp[0] = sbuf1[0];
+ 239   1      //      tmp[1] = sbuf1[1];
+ 240   1          memcpy(&tmp[2], aes128.id, 8);
+ 241   1          tmp[10] = (data_len>>8)&0xff;
+ 242   1          tmp[11] = data_len&0xff;
+ 243   1      
+ 244   1          crc = crc16_2(tmp, 12, TX2_Buffer, data_len);  
+ 245   1      
+ 246   1          Printf2(tmp,12);      //head cmd id(8B) len(2B)
+ 247   1          Printf2(TX2_Buffer,data_len);  //data
+ 248   1          TX2_write2buff((crc>>8)&0xff);    //crc
+ 249   1          TX2_write2buff(crc&0xff);     //crc
+ 250   1          TX2_write2buff(0xe7);       //end
+ 251   1      }
+ 252          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1210    ----
+   CONSTANT SIZE    =     15    ----
+   XDATA SIZE       =     83      47
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
